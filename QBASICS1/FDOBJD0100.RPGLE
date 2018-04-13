@@ -1,0 +1,20 @@
+      /IF NOT DEFINED(objd0100_t)
+      /DEFINE objd0100_t
+      *===============================================================*
+      *  QUSROBJD API - OBJD0300                                      *
+      *===============================================================*
+      *
+     D objd0100_t      DS                  qualified           based(pDummy)
+     D  bytRet                       10I 0
+     D  bytAvl                       10I 0
+     D  name                         10A
+     D  lib                          10A
+     D  type                         10A
+     D  rtnLib                       10A
+     D  auxStgP                      10I 0
+     D  owner                        10A
+     D  domain                        2A
+     D  crtDatTim                    13A
+     D  chgDatTim                    13A
+      *
+      /ENDIF

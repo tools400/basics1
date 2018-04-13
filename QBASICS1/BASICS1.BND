@@ -1,0 +1,3145 @@
+     /* ====================================================================== */
+     /* >>PRE-COMPILER<<                                                       */
+     /*                                                                        */
+     /*   >>CRTCMD<< CRTSRVPGM    SRVPGM(&LI/&OB);                             */
+     /*                                                                        */
+     /*   >>COMPILE<<                                                          */
+     /*     >>PARM<< MODULE(&LI/BASICS1R1 +                                    */
+     /*                     &LI/BASICS1R2 +                                    */
+     /*                     &LI/BASICS1R3 +                                    */
+     /*                     &LI/BASICS1R4 +                                    */
+     /*                     &LI/BASICS1R5 +                                    */
+     /*                     &LI/BASICS1R6 +                                    */
+     /*                     &LI/BASICS1R7 +                                    */
+     /*                     &LI/BASICS1R8 +                                    */
+     /*                     &LI/BASICS1R9 +                                    */
+     /*                     &LI/BASICS1RA +                                    */
+     /*                     &LI/BASICS1RB +                                    */
+     /*                     &LI/BASICS1RC +                                    */
+     /*                     &LI/BASICS1C7 +                                    */
+     /*                     &LI/BASICS1RD +                                    */
+     /*                     &LI/BASICS1RE +                                    */
+     /*                     &LI/BASICS1RF +                                    */
+     /*                     &LI/BASICS1RG +                                    */
+     /*                     &LI/BASICS1RH +                                    */
+     /*                                );                                      */
+     /*     >>PARM<< EXPORT(*SRCFILE);                                         */
+     /*     >>PARM<<   SRCFILE(&SL/&SF);                                       */
+     /*     >>PARM<<   SRCMBR(&SM);                                            */
+     /*     >>PARM<< ACTGRP(*CALLER);                                          */
+     /*     >>PARM<< ALWUPD(*YES);                                             */
+     /*     >>PARM<< ALWLIBUPD(*YES);                                          */
+     /*     >>PARM<< BNDDIR(QC2LE);                                            */
+     /*     >>PARM<< TEXT('Tools/400 - Runtime Library');                      */
+     /*     >>PARM<< TGTRLS(V6R1M0);                                           */
+     /*     >>PARM<< DETAIL(*BASIC);                                           */
+     /*   >>END-COMPILE<<                                                      */
+     /*                                                                        */
+     /*   >>LINK<<                                                             */
+     /*   >>END-LINK<<                                                         */
+     /*                                                                        */
+     /*   >>EXECUTE<<                                                          */
+     /*                                                                        */
+     /* >>END-PRE-COMPILER<<                                                   */
+     /* ====================================================================== */
+
+STRPGMEXP PGMLVL(*CURRENT) SIGNATURE('Version 1.14')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_newMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpText')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgText')
+  EXPORT SYMBOL('BASICS1R1_f_sndPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_rmvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_setAppMsgFile')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_clrErrno')
+  EXPORT SYMBOL('BASICS1R2_f_cvtApiErrCodeToMsg')
+  EXPORT SYMBOL('BASICS1R2_f_errno')
+  EXPORT SYMBOL('BASICS1R2_f_isApiError')
+  EXPORT SYMBOL('BASICS1R2_f_newApiErrCode')
+  EXPORT SYMBOL('BASICS1R2_f_strerror')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_ebcdic')
+  EXPORT SYMBOL('BASICS1R3_f_left')
+  EXPORT SYMBOL('BASICS1R3_f_replace')
+  EXPORT SYMBOL('BASICS1R3_f_right')
+  EXPORT SYMBOL('BASICS1R3_f_space')
+  EXPORT SYMBOL('BASICS1R3_f_lcase')
+  EXPORT SYMBOL('BASICS1R3_f_ucase')
+  EXPORT SYMBOL('BASICS1R3_f_val')
+  EXPORT SYMBOL('BASICS1R3_f_wordWrap')
+
+  /*   Module: BASICS1R4   */
+  EXPORT SYMBOL('BASICS1R4_p_assert')
+  EXPORT SYMBOL('BASICS1R4_f_this')
+  EXPORT SYMBOL('BASICS1R4_f_caller')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_exist')
+  EXPORT SYMBOL('BASICS1R5_f_rtvMbrD')
+  EXPORT SYMBOL('BASICS1R5_f_rtvObjD')
+  EXPORT SYMBOL('BASICS1R5_f_getTmpName')
+  EXPORT SYMBOL('BASICS1R5_f_getUniqueName')
+
+  /*   Module: BASICS1R6   */
+  EXPORT SYMBOL('BASICS1R6_f_execute')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_setEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_delEnvVar')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_isBitOn')
+
+  /* --------------------- */
+  /*   Added with V1.1     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_editCode')
+  EXPORT SYMBOL('BASICS1R3_f_editWord')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditCode')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditWord')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_log10')
+  EXPORT SYMBOL('BASICS1R7_f_clcLengthOfRPGIntFieldFromBufSize')
+
+  /* --------------------- */
+  /*   Added with V1.2     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_rmvKeyword')
+  EXPORT SYMBOL('BASICS1R3_f_rmvQuotes')
+  EXPORT SYMBOL('BASICS1R3_f_addQuotes')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_crtUsrSpc')
+  EXPORT SYMBOL('BASICS1R5_f_rtvUsrSpcPtr')
+  EXPORT SYMBOL('BASICS1R5_f_dltUsrSpc')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_HANDLE_new')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_null')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isNull')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isTypeOf')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_getPointer')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_delete')
+
+  /* --------------------- */
+  /*   Added with V1.3     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgTextRaw')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpTextRaw')
+  EXPORT SYMBOL('BASICS1R3_f_center')
+  EXPORT SYMBOL('BASICS1R3_f_alignR')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmp')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmpIgnCase')
+  EXPORT SYMBOL('BASICS1R3_f_scanR')
+
+  /* --------------------- */
+  /*   Added with V1.4     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_cvtBufferToHexString')
+  EXPORT SYMBOL('BASICS1R3_f_cvtHexStringToBuffer')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_genUUID')
+  EXPORT SYMBOL('BASICS1R7_f_genMD5')
+  EXPORT SYMBOL('BASICS1R7_f_genSHA1')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_cvtErrnoToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.5     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R9   */
+  EXPORT SYMBOL('BASICS1R9_Display_getMode')
+  EXPORT SYMBOL('BASICS1R6_f_getNumEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVarByIndex')
+  EXPORT SYMBOL('BASICS1R7_f_genCRC32')
+
+  /* --------------------- */
+  /*   Added with V1.6     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_allocate')
+  EXPORT SYMBOL('BASICS1R8_MEMORY_freeAll')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_activateSrvPgm')
+  EXPORT SYMBOL('BASICS1R5_f_getProcPtrByName')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_free')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_add')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_delete')
+  EXPORT SYMBOL('BASICS1RA_BasicList_find')
+  EXPORT SYMBOL('BASICS1RA_BasicList_findString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_get')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getListType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getNumE')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getSize')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isListTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_new')
+  EXPORT SYMBOL('BASICS1RA_BasicList_null')
+  EXPORT SYMBOL('BASICS1RA_BasicList_remove')
+  EXPORT SYMBOL('BASICS1RA_BasicList_set')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setAutoSort')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_sort')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_delete')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getNumE')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getSize')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_isNull')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_new')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_null')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_pop')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_push')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_containsKey')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_delete')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_get')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getKeyByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getValueByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getNumE')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSize')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_isNull')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_new')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_null')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_put')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_remove')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_startsWith')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_peek')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_clear')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_clear')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_clear')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_cvtRcvMsgToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.7     */
+  /* --------------------- */
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSizeByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_putString')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getString')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_endsWith')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_putInteger')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getInteger')
+  EXPORT SYMBOL('BASICS1R3_f_containsInvalidCharAt')
+  EXPORT SYMBOL('BASICS1R3_f_containsStringAt')
+
+  /*   Module: BASICS1RD   */
+  EXPORT SYMBOL('BASICS1RD_Url_new')
+  EXPORT SYMBOL('BASICS1RD_Url_getProtocol')
+  EXPORT SYMBOL('BASICS1RD_Url_setProtocol')
+  EXPORT SYMBOL('BASICS1RD_Url_getHost')
+  EXPORT SYMBOL('BASICS1RD_Url_setHost')
+  EXPORT SYMBOL('BASICS1RD_Url_getPort')
+  EXPORT SYMBOL('BASICS1RD_Url_setPort')
+  EXPORT SYMBOL('BASICS1RD_Url_getPath')
+  EXPORT SYMBOL('BASICS1RD_Url_setPath')
+  EXPORT SYMBOL('BASICS1RD_Url_getQuery')
+  EXPORT SYMBOL('BASICS1RD_Url_setQuery')
+  EXPORT SYMBOL('BASICS1RD_Url_getFile')
+  EXPORT SYMBOL('BASICS1RD_Url_setFile')
+  EXPORT SYMBOL('BASICS1RD_Url_toString')
+  EXPORT SYMBOL('BASICS1RD_Url_getMbr')
+
+  /* --------------------- */
+  /*   Added with V1.8     */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1RA_BasicList_isSorted')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isNullValue')
+
+  EXPORT SYMBOL('BASICS1RC_BasicMap_newKeySet')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_getFirst')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_getNext')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_delete')
+
+  /* --------------------- */
+  /*   Added with V1.9     */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1RA_BasicList_clone')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_clone')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_clone')
+
+  /* --------------------- */
+  /*   Added with V1.10    */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1R3_f_objName')
+  EXPORT SYMBOL('BASICS1R5_f_getObjLib')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsgObj')
+
+  /* --------------------- */
+  /*   Added with V1.11    */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1R5_f_chgUsrSpcSize')
+  EXPORT SYMBOL('BASICS1R5_f_getUsrSpcSize')
+  EXPORT SYMBOL('BASICS1R5_f_chgUsrSpcAutoExt')
+  EXPORT SYMBOL('BASICS1R5_f_getUsrSpcAutoExt')
+  EXPORT SYMBOL('BASICS1R5_f_chgUsrSpcInitValue')
+  EXPORT SYMBOL('BASICS1R5_f_getUsrSpcInitValue')
+
+  EXPORT SYMBOL('BASICS1R3_f_rplUnPrtChars')
+  EXPORT SYMBOL('BASICS1R3_f_formatDate')
+  EXPORT SYMBOL('BASICS1R3_f_parseDate')
+  EXPORT SYMBOL('BASICS1R3_f_formatMemSize')
+  EXPORT SYMBOL('BASICS1R9_Display_supportsDS4')
+  EXPORT SYMBOL('BASICS1R9_Display_supportsGUI')
+  EXPORT SYMBOL('BASICS1R9_Display_getRows')
+  EXPORT SYMBOL('BASICS1R9_Display_getColumns')
+  EXPORT SYMBOL('BASICS1R6_p_wait')
+
+  EXPORT SYMBOL('BASICS1RE_f_dateSerial')
+
+  /* --------------------- */
+  /*   Added with V1.12    */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_getDefaultManager')
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_createHeap')
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_deleteHeap')
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_allocate')
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_reallocate')
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_free')
+
+  /* --------------------- */
+  /*   Added with V1.13    */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getKeys')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getValues')
+
+  EXPORT SYMBOL('BASICS1R1_f_getSndInfOfRcvMsg')
+
+  EXPORT SYMBOL('BASICS1RE_f_rtvSysVal_char')
+  EXPORT SYMBOL('BASICS1RE_f_rtvSysVal_num')
+
+  EXPORT SYMBOL('BASICS1R3_f_cvtPtrToHexString')
+
+  EXPORT SYMBOL('BASICS1RA_BasicList_getHeapID')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getHeapID')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getHeapID')
+
+  EXPORT SYMBOL('BASICS1R3_f_startsWithIgnoreCase')
+
+  /* --------------------- */
+  /*   Added with V1.14    */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_new')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_loadFromMember')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_loadFromStmf')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_clone')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_containsKey')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_putString')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_putInteger')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_putBoolean')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_putDecimal')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_getString')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_getInteger')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_getBoolean')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_getDecimal')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_remove')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_getHeapID')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_getNumE')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_clear')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_delete')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_null')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_isNull')
+  EXPORT SYMBOL('BASICS1RG_BasicProperties_newKeySet')
+
+  EXPORT SYMBOL('BASICS1R2_f_setErrno')
+
+  EXPORT SYMBOL('BASICS1RH_MemoryWriter_new')
+  EXPORT SYMBOL('BASICS1RH_MemoryWriter_write')
+  EXPORT SYMBOL('BASICS1RH_MemoryWriter_delete')
+  EXPORT SYMBOL('BASICS1RH_MemoryWriter_writeProc')
+  EXPORT SYMBOL('BASICS1RH_MemoryReader_new')
+  EXPORT SYMBOL('BASICS1RH_MemoryReader_read')
+  EXPORT SYMBOL('BASICS1RH_MemoryReader_delete')
+  EXPORT SYMBOL('BASICS1RH_MemoryReader_readProc')
+
+  EXPORT SYMBOL('BASICS1RA_BasicList_getTotalSize')
+
+  EXPORT SYMBOL('BASICS1R3_f_mid')
+
+  EXPORT SYMBOL('BASICS1RE_f_cvtEpochTS')
+  EXPORT SYMBOL('BASICS1RE_f_cvtTSEpoch')
+  EXPORT SYMBOL('BASICS1RE_f_cvtMiTimeTS')
+  EXPORT SYMBOL('BASICS1RE_f_cvtTSMiTime')
+  EXPORT SYMBOL('BASICS1R5_f_cvtQSYSObjNameToPath')
+  EXPORT SYMBOL('BASICS1R5_f_cvtPathToQSYSObjName')
+
+ENDPGMEXP
+
+STRPGMEXP PGMLVL(*PRV    ) SIGNATURE('Version 1.13')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_newMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpText')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgText')
+  EXPORT SYMBOL('BASICS1R1_f_sndPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_rmvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_setAppMsgFile')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_clrErrno')
+  EXPORT SYMBOL('BASICS1R2_f_cvtApiErrCodeToMsg')
+  EXPORT SYMBOL('BASICS1R2_f_errno')
+  EXPORT SYMBOL('BASICS1R2_f_isApiError')
+  EXPORT SYMBOL('BASICS1R2_f_newApiErrCode')
+  EXPORT SYMBOL('BASICS1R2_f_strerror')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_ebcdic')
+  EXPORT SYMBOL('BASICS1R3_f_left')
+  EXPORT SYMBOL('BASICS1R3_f_replace')
+  EXPORT SYMBOL('BASICS1R3_f_right')
+  EXPORT SYMBOL('BASICS1R3_f_space')
+  EXPORT SYMBOL('BASICS1R3_f_lcase')
+  EXPORT SYMBOL('BASICS1R3_f_ucase')
+  EXPORT SYMBOL('BASICS1R3_f_val')
+  EXPORT SYMBOL('BASICS1R3_f_wordWrap')
+
+  /*   Module: BASICS1R4   */
+  EXPORT SYMBOL('BASICS1R4_p_assert')
+  EXPORT SYMBOL('BASICS1R4_f_this')
+  EXPORT SYMBOL('BASICS1R4_f_caller')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_exist')
+  EXPORT SYMBOL('BASICS1R5_f_rtvMbrD')
+  EXPORT SYMBOL('BASICS1R5_f_rtvObjD')
+  EXPORT SYMBOL('BASICS1R5_f_getTmpName')
+  EXPORT SYMBOL('BASICS1R5_f_getUniqueName')
+
+  /*   Module: BASICS1R6   */
+  EXPORT SYMBOL('BASICS1R6_f_execute')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_setEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_delEnvVar')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_isBitOn')
+
+  /* --------------------- */
+  /*   Added with V1.1     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_editCode')
+  EXPORT SYMBOL('BASICS1R3_f_editWord')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditCode')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditWord')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_log10')
+  EXPORT SYMBOL('BASICS1R7_f_clcLengthOfRPGIntFieldFromBufSize')
+
+  /* --------------------- */
+  /*   Added with V1.2     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_rmvKeyword')
+  EXPORT SYMBOL('BASICS1R3_f_rmvQuotes')
+  EXPORT SYMBOL('BASICS1R3_f_addQuotes')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_crtUsrSpc')
+  EXPORT SYMBOL('BASICS1R5_f_rtvUsrSpcPtr')
+  EXPORT SYMBOL('BASICS1R5_f_dltUsrSpc')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_HANDLE_new')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_null')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isNull')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isTypeOf')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_getPointer')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_delete')
+
+  /* --------------------- */
+  /*   Added with V1.3     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgTextRaw')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpTextRaw')
+  EXPORT SYMBOL('BASICS1R3_f_center')
+  EXPORT SYMBOL('BASICS1R3_f_alignR')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmp')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmpIgnCase')
+  EXPORT SYMBOL('BASICS1R3_f_scanR')
+
+  /* --------------------- */
+  /*   Added with V1.4     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_cvtBufferToHexString')
+  EXPORT SYMBOL('BASICS1R3_f_cvtHexStringToBuffer')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_genUUID')
+  EXPORT SYMBOL('BASICS1R7_f_genMD5')
+  EXPORT SYMBOL('BASICS1R7_f_genSHA1')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_cvtErrnoToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.5     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R9   */
+  EXPORT SYMBOL('BASICS1R9_Display_getMode')
+  EXPORT SYMBOL('BASICS1R6_f_getNumEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVarByIndex')
+  EXPORT SYMBOL('BASICS1R7_f_genCRC32')
+
+  /* --------------------- */
+  /*   Added with V1.6     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_allocate')
+  EXPORT SYMBOL('BASICS1R8_MEMORY_freeAll')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_activateSrvPgm')
+  EXPORT SYMBOL('BASICS1R5_f_getProcPtrByName')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_free')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_add')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_delete')
+  EXPORT SYMBOL('BASICS1RA_BasicList_find')
+  EXPORT SYMBOL('BASICS1RA_BasicList_findString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_get')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getListType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getNumE')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getSize')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isListTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_new')
+  EXPORT SYMBOL('BASICS1RA_BasicList_null')
+  EXPORT SYMBOL('BASICS1RA_BasicList_remove')
+  EXPORT SYMBOL('BASICS1RA_BasicList_set')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setAutoSort')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_sort')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_delete')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getNumE')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getSize')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_isNull')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_new')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_null')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_pop')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_push')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_containsKey')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_delete')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_get')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getKeyByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getValueByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getNumE')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSize')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_isNull')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_new')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_null')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_put')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_remove')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_startsWith')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_peek')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_clear')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_clear')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_clear')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_cvtRcvMsgToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.7     */
+  /* --------------------- */
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSizeByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_putString')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getString')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_endsWith')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_putInteger')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getInteger')
+  EXPORT SYMBOL('BASICS1R3_f_containsInvalidCharAt')
+  EXPORT SYMBOL('BASICS1R3_f_containsStringAt')
+
+  /*   Module: BASICS1RD   */
+  EXPORT SYMBOL('BASICS1RD_Url_new')
+  EXPORT SYMBOL('BASICS1RD_Url_getProtocol')
+  EXPORT SYMBOL('BASICS1RD_Url_setProtocol')
+  EXPORT SYMBOL('BASICS1RD_Url_getHost')
+  EXPORT SYMBOL('BASICS1RD_Url_setHost')
+  EXPORT SYMBOL('BASICS1RD_Url_getPort')
+  EXPORT SYMBOL('BASICS1RD_Url_setPort')
+  EXPORT SYMBOL('BASICS1RD_Url_getPath')
+  EXPORT SYMBOL('BASICS1RD_Url_setPath')
+  EXPORT SYMBOL('BASICS1RD_Url_getQuery')
+  EXPORT SYMBOL('BASICS1RD_Url_setQuery')
+  EXPORT SYMBOL('BASICS1RD_Url_getFile')
+  EXPORT SYMBOL('BASICS1RD_Url_setFile')
+  EXPORT SYMBOL('BASICS1RD_Url_toString')
+  EXPORT SYMBOL('BASICS1RD_Url_getMbr')
+
+  /* --------------------- */
+  /*   Added with V1.8     */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1RA_BasicList_isSorted')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isNullValue')
+
+  EXPORT SYMBOL('BASICS1RC_BasicMap_newKeySet')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_getFirst')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_getNext')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_delete')
+
+  /* --------------------- */
+  /*   Added with V1.9     */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1RA_BasicList_clone')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_clone')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_clone')
+
+  /* --------------------- */
+  /*   Added with V1.10    */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1R3_f_objName')
+  EXPORT SYMBOL('BASICS1R5_f_getObjLib')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsgObj')
+
+  /* --------------------- */
+  /*   Added with V1.11    */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1R5_f_chgUsrSpcSize')
+  EXPORT SYMBOL('BASICS1R5_f_getUsrSpcSize')
+  EXPORT SYMBOL('BASICS1R5_f_chgUsrSpcAutoExt')
+  EXPORT SYMBOL('BASICS1R5_f_getUsrSpcAutoExt')
+  EXPORT SYMBOL('BASICS1R5_f_chgUsrSpcInitValue')
+  EXPORT SYMBOL('BASICS1R5_f_getUsrSpcInitValue')
+
+  EXPORT SYMBOL('BASICS1R3_f_rplUnPrtChars')
+  EXPORT SYMBOL('BASICS1R3_f_formatDate')
+  EXPORT SYMBOL('BASICS1R3_f_parseDate')
+  EXPORT SYMBOL('BASICS1R3_f_formatMemSize')
+  EXPORT SYMBOL('BASICS1R9_Display_supportsDS4')
+  EXPORT SYMBOL('BASICS1R9_Display_supportsGUI')
+  EXPORT SYMBOL('BASICS1R9_Display_getRows')
+  EXPORT SYMBOL('BASICS1R9_Display_getColumns')
+  EXPORT SYMBOL('BASICS1R6_p_wait')
+
+  EXPORT SYMBOL('BASICS1RE_f_dateSerial')
+
+  /* --------------------- */
+  /*   Added with V1.12    */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_getDefaultManager')
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_createHeap')
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_deleteHeap')
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_allocate')
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_reallocate')
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_free')
+
+  /* --------------------- */
+  /*   Added with V1.13    */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getKeys')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getValues')
+
+  EXPORT SYMBOL('BASICS1R1_f_getSndInfOfRcvMsg')
+
+  EXPORT SYMBOL('BASICS1RE_f_rtvSysVal_char')
+  EXPORT SYMBOL('BASICS1RE_f_rtvSysVal_num')
+
+  EXPORT SYMBOL('BASICS1R3_f_cvtPtrToHexString')
+
+  EXPORT SYMBOL('BASICS1RA_BasicList_getHeapID')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getHeapID')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getHeapID')
+
+  EXPORT SYMBOL('BASICS1R3_f_startsWithIgnoreCase')
+
+ENDPGMEXP
+
+STRPGMEXP PGMLVL(*PRV    ) SIGNATURE('Version 1.12')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_newMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpText')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgText')
+  EXPORT SYMBOL('BASICS1R1_f_sndPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_rmvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_setAppMsgFile')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_clrErrno')
+  EXPORT SYMBOL('BASICS1R2_f_cvtApiErrCodeToMsg')
+  EXPORT SYMBOL('BASICS1R2_f_errno')
+  EXPORT SYMBOL('BASICS1R2_f_isApiError')
+  EXPORT SYMBOL('BASICS1R2_f_newApiErrCode')
+  EXPORT SYMBOL('BASICS1R2_f_strerror')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_ebcdic')
+  EXPORT SYMBOL('BASICS1R3_f_left')
+  EXPORT SYMBOL('BASICS1R3_f_replace')
+  EXPORT SYMBOL('BASICS1R3_f_right')
+  EXPORT SYMBOL('BASICS1R3_f_space')
+  EXPORT SYMBOL('BASICS1R3_f_lcase')
+  EXPORT SYMBOL('BASICS1R3_f_ucase')
+  EXPORT SYMBOL('BASICS1R3_f_val')
+  EXPORT SYMBOL('BASICS1R3_f_wordWrap')
+
+  /*   Module: BASICS1R4   */
+  EXPORT SYMBOL('BASICS1R4_p_assert')
+  EXPORT SYMBOL('BASICS1R4_f_this')
+  EXPORT SYMBOL('BASICS1R4_f_caller')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_exist')
+  EXPORT SYMBOL('BASICS1R5_f_rtvMbrD')
+  EXPORT SYMBOL('BASICS1R5_f_rtvObjD')
+  EXPORT SYMBOL('BASICS1R5_f_getTmpName')
+  EXPORT SYMBOL('BASICS1R5_f_getUniqueName')
+
+  /*   Module: BASICS1R6   */
+  EXPORT SYMBOL('BASICS1R6_f_execute')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_setEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_delEnvVar')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_isBitOn')
+
+  /* --------------------- */
+  /*   Added with V1.1     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_editCode')
+  EXPORT SYMBOL('BASICS1R3_f_editWord')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditCode')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditWord')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_log10')
+  EXPORT SYMBOL('BASICS1R7_f_clcLengthOfRPGIntFieldFromBufSize')
+
+  /* --------------------- */
+  /*   Added with V1.2     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_rmvKeyword')
+  EXPORT SYMBOL('BASICS1R3_f_rmvQuotes')
+  EXPORT SYMBOL('BASICS1R3_f_addQuotes')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_crtUsrSpc')
+  EXPORT SYMBOL('BASICS1R5_f_rtvUsrSpcPtr')
+  EXPORT SYMBOL('BASICS1R5_f_dltUsrSpc')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_HANDLE_new')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_null')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isNull')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isTypeOf')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_getPointer')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_delete')
+
+  /* --------------------- */
+  /*   Added with V1.3     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgTextRaw')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpTextRaw')
+  EXPORT SYMBOL('BASICS1R3_f_center')
+  EXPORT SYMBOL('BASICS1R3_f_alignR')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmp')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmpIgnCase')
+  EXPORT SYMBOL('BASICS1R3_f_scanR')
+
+  /* --------------------- */
+  /*   Added with V1.4     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_cvtBufferToHexString')
+  EXPORT SYMBOL('BASICS1R3_f_cvtHexStringToBuffer')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_genUUID')
+  EXPORT SYMBOL('BASICS1R7_f_genMD5')
+  EXPORT SYMBOL('BASICS1R7_f_genSHA1')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_cvtErrnoToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.5     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R9   */
+  EXPORT SYMBOL('BASICS1R9_Display_getMode')
+  EXPORT SYMBOL('BASICS1R6_f_getNumEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVarByIndex')
+  EXPORT SYMBOL('BASICS1R7_f_genCRC32')
+
+  /* --------------------- */
+  /*   Added with V1.6     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_allocate')
+  EXPORT SYMBOL('BASICS1R8_MEMORY_freeAll')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_activateSrvPgm')
+  EXPORT SYMBOL('BASICS1R5_f_getProcPtrByName')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_free')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_add')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_delete')
+  EXPORT SYMBOL('BASICS1RA_BasicList_find')
+  EXPORT SYMBOL('BASICS1RA_BasicList_findString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_get')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getListType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getNumE')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getSize')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isListTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_new')
+  EXPORT SYMBOL('BASICS1RA_BasicList_null')
+  EXPORT SYMBOL('BASICS1RA_BasicList_remove')
+  EXPORT SYMBOL('BASICS1RA_BasicList_set')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setAutoSort')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_sort')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_delete')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getNumE')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getSize')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_isNull')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_new')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_null')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_pop')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_push')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_containsKey')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_delete')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_get')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getKeyByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getValueByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getNumE')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSize')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_isNull')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_new')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_null')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_put')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_remove')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_startsWith')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_peek')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_clear')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_clear')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_clear')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_cvtRcvMsgToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.7     */
+  /* --------------------- */
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSizeByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_putString')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getString')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_endsWith')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_putInteger')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getInteger')
+  EXPORT SYMBOL('BASICS1R3_f_containsInvalidCharAt')
+  EXPORT SYMBOL('BASICS1R3_f_containsStringAt')
+
+  /*   Module: BASICS1RD   */
+  EXPORT SYMBOL('BASICS1RD_Url_new')
+  EXPORT SYMBOL('BASICS1RD_Url_getProtocol')
+  EXPORT SYMBOL('BASICS1RD_Url_setProtocol')
+  EXPORT SYMBOL('BASICS1RD_Url_getHost')
+  EXPORT SYMBOL('BASICS1RD_Url_setHost')
+  EXPORT SYMBOL('BASICS1RD_Url_getPort')
+  EXPORT SYMBOL('BASICS1RD_Url_setPort')
+  EXPORT SYMBOL('BASICS1RD_Url_getPath')
+  EXPORT SYMBOL('BASICS1RD_Url_setPath')
+  EXPORT SYMBOL('BASICS1RD_Url_getQuery')
+  EXPORT SYMBOL('BASICS1RD_Url_setQuery')
+  EXPORT SYMBOL('BASICS1RD_Url_getFile')
+  EXPORT SYMBOL('BASICS1RD_Url_setFile')
+  EXPORT SYMBOL('BASICS1RD_Url_toString')
+  EXPORT SYMBOL('BASICS1RD_Url_getMbr')
+
+  /* --------------------- */
+  /*   Added with V1.8     */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1RA_BasicList_isSorted')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isNullValue')
+
+  EXPORT SYMBOL('BASICS1RC_BasicMap_newKeySet')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_getFirst')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_getNext')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_delete')
+
+  /* --------------------- */
+  /*   Added with V1.9     */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1RA_BasicList_clone')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_clone')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_clone')
+
+  /* --------------------- */
+  /*   Added with V1.10    */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1R3_f_objName')
+  EXPORT SYMBOL('BASICS1R5_f_getObjLib')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsgObj')
+
+  /* --------------------- */
+  /*   Added with V1.11    */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1R5_f_chgUsrSpcSize')
+  EXPORT SYMBOL('BASICS1R5_f_getUsrSpcSize')
+  EXPORT SYMBOL('BASICS1R5_f_chgUsrSpcAutoExt')
+  EXPORT SYMBOL('BASICS1R5_f_getUsrSpcAutoExt')
+  EXPORT SYMBOL('BASICS1R5_f_chgUsrSpcInitValue')
+  EXPORT SYMBOL('BASICS1R5_f_getUsrSpcInitValue')
+
+  EXPORT SYMBOL('BASICS1R3_f_rplUnPrtChars')
+  EXPORT SYMBOL('BASICS1R3_f_formatDate')
+  EXPORT SYMBOL('BASICS1R3_f_parseDate')
+  EXPORT SYMBOL('BASICS1R3_f_formatMemSize')
+  EXPORT SYMBOL('BASICS1R9_Display_supportsDS4')
+  EXPORT SYMBOL('BASICS1R9_Display_supportsGUI')
+  EXPORT SYMBOL('BASICS1R9_Display_getRows')
+  EXPORT SYMBOL('BASICS1R9_Display_getColumns')
+  EXPORT SYMBOL('BASICS1R6_p_wait')
+
+  EXPORT SYMBOL('BASICS1RE_f_dateSerial')
+
+  /* --------------------- */
+  /*   Added with V1.12    */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_getDefaultManager')
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_createHeap')
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_deleteHeap')
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_allocate')
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_reallocate')
+  EXPORT SYMBOL('BASICS1R8_MemoryManager_free')
+
+ENDPGMEXP
+
+STRPGMEXP PGMLVL(*PRV    ) SIGNATURE('Version 1.11')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_newMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpText')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgText')
+  EXPORT SYMBOL('BASICS1R1_f_sndPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_rmvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_setAppMsgFile')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_clrErrno')
+  EXPORT SYMBOL('BASICS1R2_f_cvtApiErrCodeToMsg')
+  EXPORT SYMBOL('BASICS1R2_f_errno')
+  EXPORT SYMBOL('BASICS1R2_f_isApiError')
+  EXPORT SYMBOL('BASICS1R2_f_newApiErrCode')
+  EXPORT SYMBOL('BASICS1R2_f_strerror')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_ebcdic')
+  EXPORT SYMBOL('BASICS1R3_f_left')
+  EXPORT SYMBOL('BASICS1R3_f_replace')
+  EXPORT SYMBOL('BASICS1R3_f_right')
+  EXPORT SYMBOL('BASICS1R3_f_space')
+  EXPORT SYMBOL('BASICS1R3_f_lcase')
+  EXPORT SYMBOL('BASICS1R3_f_ucase')
+  EXPORT SYMBOL('BASICS1R3_f_val')
+  EXPORT SYMBOL('BASICS1R3_f_wordWrap')
+
+  /*   Module: BASICS1R4   */
+  EXPORT SYMBOL('BASICS1R4_p_assert')
+  EXPORT SYMBOL('BASICS1R4_f_this')
+  EXPORT SYMBOL('BASICS1R4_f_caller')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_exist')
+  EXPORT SYMBOL('BASICS1R5_f_rtvMbrD')
+  EXPORT SYMBOL('BASICS1R5_f_rtvObjD')
+  EXPORT SYMBOL('BASICS1R5_f_getTmpName')
+  EXPORT SYMBOL('BASICS1R5_f_getUniqueName')
+
+  /*   Module: BASICS1R6   */
+  EXPORT SYMBOL('BASICS1R6_f_execute')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_setEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_delEnvVar')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_isBitOn')
+
+  /* --------------------- */
+  /*   Added with V1.1     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_editCode')
+  EXPORT SYMBOL('BASICS1R3_f_editWord')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditCode')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditWord')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_log10')
+  EXPORT SYMBOL('BASICS1R7_f_clcLengthOfRPGIntFieldFromBufSize')
+
+  /* --------------------- */
+  /*   Added with V1.2     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_rmvKeyword')
+  EXPORT SYMBOL('BASICS1R3_f_rmvQuotes')
+  EXPORT SYMBOL('BASICS1R3_f_addQuotes')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_crtUsrSpc')
+  EXPORT SYMBOL('BASICS1R5_f_rtvUsrSpcPtr')
+  EXPORT SYMBOL('BASICS1R5_f_dltUsrSpc')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_HANDLE_new')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_null')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isNull')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isTypeOf')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_getPointer')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_delete')
+
+  /* --------------------- */
+  /*   Added with V1.3     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgTextRaw')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpTextRaw')
+  EXPORT SYMBOL('BASICS1R3_f_center')
+  EXPORT SYMBOL('BASICS1R3_f_alignR')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmp')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmpIgnCase')
+  EXPORT SYMBOL('BASICS1R3_f_scanR')
+
+  /* --------------------- */
+  /*   Added with V1.4     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_cvtBufferToHexString')
+  EXPORT SYMBOL('BASICS1R3_f_cvtHexStringToBuffer')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_genUUID')
+  EXPORT SYMBOL('BASICS1R7_f_genMD5')
+  EXPORT SYMBOL('BASICS1R7_f_genSHA1')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_cvtErrnoToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.5     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R9   */
+  EXPORT SYMBOL('BASICS1R9_Display_getMode')
+  EXPORT SYMBOL('BASICS1R6_f_getNumEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVarByIndex')
+  EXPORT SYMBOL('BASICS1R7_f_genCRC32')
+
+  /* --------------------- */
+  /*   Added with V1.6     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_allocate')
+  EXPORT SYMBOL('BASICS1R8_MEMORY_freeAll')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_activateSrvPgm')
+  EXPORT SYMBOL('BASICS1R5_f_getProcPtrByName')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_free')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_add')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_delete')
+  EXPORT SYMBOL('BASICS1RA_BasicList_find')
+  EXPORT SYMBOL('BASICS1RA_BasicList_findString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_get')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getListType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getNumE')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getSize')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isListTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_new')
+  EXPORT SYMBOL('BASICS1RA_BasicList_null')
+  EXPORT SYMBOL('BASICS1RA_BasicList_remove')
+  EXPORT SYMBOL('BASICS1RA_BasicList_set')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setAutoSort')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_sort')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_delete')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getNumE')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getSize')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_isNull')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_new')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_null')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_pop')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_push')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_containsKey')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_delete')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_get')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getKeyByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getValueByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getNumE')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSize')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_isNull')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_new')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_null')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_put')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_remove')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_startsWith')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_peek')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_clear')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_clear')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_clear')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_cvtRcvMsgToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.7     */
+  /* --------------------- */
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSizeByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_putString')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getString')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_endsWith')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_putInteger')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getInteger')
+  EXPORT SYMBOL('BASICS1R3_f_containsInvalidCharAt')
+  EXPORT SYMBOL('BASICS1R3_f_containsStringAt')
+
+  /*   Module: BASICS1RD   */
+  EXPORT SYMBOL('BASICS1RD_Url_new')
+  EXPORT SYMBOL('BASICS1RD_Url_getProtocol')
+  EXPORT SYMBOL('BASICS1RD_Url_setProtocol')
+  EXPORT SYMBOL('BASICS1RD_Url_getHost')
+  EXPORT SYMBOL('BASICS1RD_Url_setHost')
+  EXPORT SYMBOL('BASICS1RD_Url_getPort')
+  EXPORT SYMBOL('BASICS1RD_Url_setPort')
+  EXPORT SYMBOL('BASICS1RD_Url_getPath')
+  EXPORT SYMBOL('BASICS1RD_Url_setPath')
+  EXPORT SYMBOL('BASICS1RD_Url_getQuery')
+  EXPORT SYMBOL('BASICS1RD_Url_setQuery')
+  EXPORT SYMBOL('BASICS1RD_Url_getFile')
+  EXPORT SYMBOL('BASICS1RD_Url_setFile')
+  EXPORT SYMBOL('BASICS1RD_Url_toString')
+  EXPORT SYMBOL('BASICS1RD_Url_getMbr')
+
+  /* --------------------- */
+  /*   Added with V1.8     */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1RA_BasicList_isSorted')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isNullValue')
+
+  EXPORT SYMBOL('BASICS1RC_BasicMap_newKeySet')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_getFirst')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_getNext')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_delete')
+
+  /* --------------------- */
+  /*   Added with V1.9     */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1RA_BasicList_clone')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_clone')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_clone')
+
+  /* --------------------- */
+  /*   Added with V1.10    */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1R3_f_objName')
+  EXPORT SYMBOL('BASICS1R5_f_getObjLib')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsgObj')
+
+  /* --------------------- */
+  /*   Added with V1.11    */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1R5_f_chgUsrSpcSize')
+  EXPORT SYMBOL('BASICS1R5_f_getUsrSpcSize')
+  EXPORT SYMBOL('BASICS1R5_f_chgUsrSpcAutoExt')
+  EXPORT SYMBOL('BASICS1R5_f_getUsrSpcAutoExt')
+  EXPORT SYMBOL('BASICS1R5_f_chgUsrSpcInitValue')
+  EXPORT SYMBOL('BASICS1R5_f_getUsrSpcInitValue')
+
+  EXPORT SYMBOL('BASICS1R3_f_rplUnPrtChars')
+  EXPORT SYMBOL('BASICS1R3_f_formatDate')
+  EXPORT SYMBOL('BASICS1R3_f_parseDate')
+  EXPORT SYMBOL('BASICS1R3_f_formatMemSize')
+  EXPORT SYMBOL('BASICS1R9_Display_supportsDS4')
+  EXPORT SYMBOL('BASICS1R9_Display_supportsGUI')
+  EXPORT SYMBOL('BASICS1R9_Display_getRows')
+  EXPORT SYMBOL('BASICS1R9_Display_getColumns')
+  EXPORT SYMBOL('BASICS1R6_p_wait')
+
+  EXPORT SYMBOL('BASICS1RE_f_dateSerial')
+
+ENDPGMEXP
+
+STRPGMEXP PGMLVL(*PRV    ) SIGNATURE('Version 1.10')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_newMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpText')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgText')
+  EXPORT SYMBOL('BASICS1R1_f_sndPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_rmvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_setAppMsgFile')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_clrErrno')
+  EXPORT SYMBOL('BASICS1R2_f_cvtApiErrCodeToMsg')
+  EXPORT SYMBOL('BASICS1R2_f_errno')
+  EXPORT SYMBOL('BASICS1R2_f_isApiError')
+  EXPORT SYMBOL('BASICS1R2_f_newApiErrCode')
+  EXPORT SYMBOL('BASICS1R2_f_strerror')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_ebcdic')
+  EXPORT SYMBOL('BASICS1R3_f_left')
+  EXPORT SYMBOL('BASICS1R3_f_replace')
+  EXPORT SYMBOL('BASICS1R3_f_right')
+  EXPORT SYMBOL('BASICS1R3_f_space')
+  EXPORT SYMBOL('BASICS1R3_f_lcase')
+  EXPORT SYMBOL('BASICS1R3_f_ucase')
+  EXPORT SYMBOL('BASICS1R3_f_val')
+  EXPORT SYMBOL('BASICS1R3_f_wordWrap')
+
+  /*   Module: BASICS1R4   */
+  EXPORT SYMBOL('BASICS1R4_p_assert')
+  EXPORT SYMBOL('BASICS1R4_f_this')
+  EXPORT SYMBOL('BASICS1R4_f_caller')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_exist')
+  EXPORT SYMBOL('BASICS1R5_f_rtvMbrD')
+  EXPORT SYMBOL('BASICS1R5_f_rtvObjD')
+  EXPORT SYMBOL('BASICS1R5_f_getTmpName')
+  EXPORT SYMBOL('BASICS1R5_f_getUniqueName')
+
+  /*   Module: BASICS1R6   */
+  EXPORT SYMBOL('BASICS1R6_f_execute')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_setEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_delEnvVar')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_isBitOn')
+
+  /* --------------------- */
+  /*   Added with V1.1     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_editCode')
+  EXPORT SYMBOL('BASICS1R3_f_editWord')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditCode')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditWord')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_log10')
+  EXPORT SYMBOL('BASICS1R7_f_clcLengthOfRPGIntFieldFromBufSize')
+
+  /* --------------------- */
+  /*   Added with V1.2     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_rmvKeyword')
+  EXPORT SYMBOL('BASICS1R3_f_rmvQuotes')
+  EXPORT SYMBOL('BASICS1R3_f_addQuotes')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_crtUsrSpc')
+  EXPORT SYMBOL('BASICS1R5_f_rtvUsrSpcPtr')
+  EXPORT SYMBOL('BASICS1R5_f_dltUsrSpc')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_HANDLE_new')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_null')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isNull')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isTypeOf')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_getPointer')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_delete')
+
+  /* --------------------- */
+  /*   Added with V1.3     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgTextRaw')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpTextRaw')
+  EXPORT SYMBOL('BASICS1R3_f_center')
+  EXPORT SYMBOL('BASICS1R3_f_alignR')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmp')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmpIgnCase')
+  EXPORT SYMBOL('BASICS1R3_f_scanR')
+
+  /* --------------------- */
+  /*   Added with V1.4     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_cvtBufferToHexString')
+  EXPORT SYMBOL('BASICS1R3_f_cvtHexStringToBuffer')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_genUUID')
+  EXPORT SYMBOL('BASICS1R7_f_genMD5')
+  EXPORT SYMBOL('BASICS1R7_f_genSHA1')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_cvtErrnoToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.5     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R9   */
+  EXPORT SYMBOL('BASICS1R9_f_getDisplayMode')
+  EXPORT SYMBOL('BASICS1R6_f_getNumEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVarByIndex')
+  EXPORT SYMBOL('BASICS1R7_f_genCRC32')
+
+  /* --------------------- */
+  /*   Added with V1.6     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_allocate')
+  EXPORT SYMBOL('BASICS1R8_MEMORY_freeAll')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_activateSrvPgm')
+  EXPORT SYMBOL('BASICS1R5_f_getProcPtrByName')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_free')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_add')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_delete')
+  EXPORT SYMBOL('BASICS1RA_BasicList_find')
+  EXPORT SYMBOL('BASICS1RA_BasicList_findString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_get')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getListType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getNumE')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getSize')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isListTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_new')
+  EXPORT SYMBOL('BASICS1RA_BasicList_null')
+  EXPORT SYMBOL('BASICS1RA_BasicList_remove')
+  EXPORT SYMBOL('BASICS1RA_BasicList_set')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setAutoSort')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_sort')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_delete')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getNumE')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getSize')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_isNull')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_new')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_null')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_pop')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_push')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_containsKey')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_delete')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_get')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getKeyByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getValueByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getNumE')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSize')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_isNull')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_new')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_null')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_put')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_remove')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_startsWith')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_peek')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_clear')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_clear')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_clear')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_cvtRcvMsgToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.7     */
+  /* --------------------- */
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSizeByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_putString')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getString')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_endsWith')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_putInteger')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getInteger')
+  EXPORT SYMBOL('BASICS1R3_f_containsInvalidCharAt')
+  EXPORT SYMBOL('BASICS1R3_f_containsStringAt')
+
+  /*   Module: BASICS1RD   */
+  EXPORT SYMBOL('BASICS1RD_Url_new')
+  EXPORT SYMBOL('BASICS1RD_Url_getProtocol')
+  EXPORT SYMBOL('BASICS1RD_Url_setProtocol')
+  EXPORT SYMBOL('BASICS1RD_Url_getHost')
+  EXPORT SYMBOL('BASICS1RD_Url_setHost')
+  EXPORT SYMBOL('BASICS1RD_Url_getPort')
+  EXPORT SYMBOL('BASICS1RD_Url_setPort')
+  EXPORT SYMBOL('BASICS1RD_Url_getPath')
+  EXPORT SYMBOL('BASICS1RD_Url_setPath')
+  EXPORT SYMBOL('BASICS1RD_Url_getQuery')
+  EXPORT SYMBOL('BASICS1RD_Url_setQuery')
+  EXPORT SYMBOL('BASICS1RD_Url_getFile')
+  EXPORT SYMBOL('BASICS1RD_Url_setFile')
+  EXPORT SYMBOL('BASICS1RD_Url_toString')
+  EXPORT SYMBOL('BASICS1RD_Url_getMbr')
+
+  /* --------------------- */
+  /*   Added with V1.8     */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1RA_BasicList_isSorted')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isNullValue')
+
+  EXPORT SYMBOL('BASICS1RC_BasicMap_newKeySet')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_getFirst')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_getNext')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_delete')
+
+  /* --------------------- */
+  /*   Added with V1.9     */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1RA_BasicList_clone')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_clone')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_clone')
+
+  /* --------------------- */
+  /*   Added with V1.10    */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1R3_f_objName')
+  EXPORT SYMBOL('BASICS1R5_f_getObjLib')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsgObj')
+
+ENDPGMEXP
+
+STRPGMEXP PGMLVL(*PRV    ) SIGNATURE('Version 1.9')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_newMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpText')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgText')
+  EXPORT SYMBOL('BASICS1R1_f_sndPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_rmvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_setAppMsgFile')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_clrErrno')
+  EXPORT SYMBOL('BASICS1R2_f_cvtApiErrCodeToMsg')
+  EXPORT SYMBOL('BASICS1R2_f_errno')
+  EXPORT SYMBOL('BASICS1R2_f_isApiError')
+  EXPORT SYMBOL('BASICS1R2_f_newApiErrCode')
+  EXPORT SYMBOL('BASICS1R2_f_strerror')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_ebcdic')
+  EXPORT SYMBOL('BASICS1R3_f_left')
+  EXPORT SYMBOL('BASICS1R3_f_replace')
+  EXPORT SYMBOL('BASICS1R3_f_right')
+  EXPORT SYMBOL('BASICS1R3_f_space')
+  EXPORT SYMBOL('BASICS1R3_f_lcase')
+  EXPORT SYMBOL('BASICS1R3_f_ucase')
+  EXPORT SYMBOL('BASICS1R3_f_val')
+  EXPORT SYMBOL('BASICS1R3_f_wordWrap')
+
+  /*   Module: BASICS1R4   */
+  EXPORT SYMBOL('BASICS1R4_p_assert')
+  EXPORT SYMBOL('BASICS1R4_f_this')
+  EXPORT SYMBOL('BASICS1R4_f_caller')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_exist')
+  EXPORT SYMBOL('BASICS1R5_f_rtvMbrD')
+  EXPORT SYMBOL('BASICS1R5_f_rtvObjD')
+  EXPORT SYMBOL('BASICS1R5_f_getTmpName')
+  EXPORT SYMBOL('BASICS1R5_f_getUniqueName')
+
+  /*   Module: BASICS1R6   */
+  EXPORT SYMBOL('BASICS1R6_f_execute')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_setEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_delEnvVar')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_isBitOn')
+
+  /* --------------------- */
+  /*   Added with V1.1     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_editCode')
+  EXPORT SYMBOL('BASICS1R3_f_editWord')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditCode')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditWord')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_log10')
+  EXPORT SYMBOL('BASICS1R7_f_clcLengthOfRPGIntFieldFromBufSize')
+
+  /* --------------------- */
+  /*   Added with V1.2     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_rmvKeyword')
+  EXPORT SYMBOL('BASICS1R3_f_rmvQuotes')
+  EXPORT SYMBOL('BASICS1R3_f_addQuotes')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_crtUsrSpc')
+  EXPORT SYMBOL('BASICS1R5_f_rtvUsrSpcPtr')
+  EXPORT SYMBOL('BASICS1R5_f_dltUsrSpc')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_HANDLE_new')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_null')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isNull')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isTypeOf')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_getPointer')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_delete')
+
+  /* --------------------- */
+  /*   Added with V1.3     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgTextRaw')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpTextRaw')
+  EXPORT SYMBOL('BASICS1R3_f_center')
+  EXPORT SYMBOL('BASICS1R3_f_alignR')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmp')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmpIgnCase')
+  EXPORT SYMBOL('BASICS1R3_f_scanR')
+
+  /* --------------------- */
+  /*   Added with V1.4     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_cvtBufferToHexString')
+  EXPORT SYMBOL('BASICS1R3_f_cvtHexStringToBuffer')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_genUUID')
+  EXPORT SYMBOL('BASICS1R7_f_genMD5')
+  EXPORT SYMBOL('BASICS1R7_f_genSHA1')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_cvtErrnoToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.5     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R9   */
+  EXPORT SYMBOL('BASICS1R9_f_getDisplayMode')
+  EXPORT SYMBOL('BASICS1R6_f_getNumEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVarByIndex')
+  EXPORT SYMBOL('BASICS1R7_f_genCRC32')
+
+  /* --------------------- */
+  /*   Added with V1.6     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_allocate')
+  EXPORT SYMBOL('BASICS1R8_MEMORY_freeAll')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_activateSrvPgm')
+  EXPORT SYMBOL('BASICS1R5_f_getProcPtrByName')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_free')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_add')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_delete')
+  EXPORT SYMBOL('BASICS1RA_BasicList_find')
+  EXPORT SYMBOL('BASICS1RA_BasicList_findString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_get')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getListType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getNumE')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getSize')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isListTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_new')
+  EXPORT SYMBOL('BASICS1RA_BasicList_null')
+  EXPORT SYMBOL('BASICS1RA_BasicList_remove')
+  EXPORT SYMBOL('BASICS1RA_BasicList_set')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setAutoSort')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_sort')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_delete')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getNumE')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getSize')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_isNull')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_new')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_null')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_pop')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_push')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_containsKey')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_delete')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_get')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getKeyByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getValueByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getNumE')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSize')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_isNull')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_new')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_null')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_put')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_remove')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_startsWith')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_peek')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_clear')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_clear')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_clear')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_cvtRcvMsgToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.7     */
+  /* --------------------- */
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSizeByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_putString')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getString')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_endsWith')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_putInteger')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getInteger')
+  EXPORT SYMBOL('BASICS1R3_f_containsInvalidCharAt')
+  EXPORT SYMBOL('BASICS1R3_f_containsStringAt')
+
+  /*   Module: BASICS1RD   */
+  EXPORT SYMBOL('BASICS1RD_Url_new')
+  EXPORT SYMBOL('BASICS1RD_Url_getProtocol')
+  EXPORT SYMBOL('BASICS1RD_Url_setProtocol')
+  EXPORT SYMBOL('BASICS1RD_Url_getHost')
+  EXPORT SYMBOL('BASICS1RD_Url_setHost')
+  EXPORT SYMBOL('BASICS1RD_Url_getPort')
+  EXPORT SYMBOL('BASICS1RD_Url_setPort')
+  EXPORT SYMBOL('BASICS1RD_Url_getPath')
+  EXPORT SYMBOL('BASICS1RD_Url_setPath')
+  EXPORT SYMBOL('BASICS1RD_Url_getQuery')
+  EXPORT SYMBOL('BASICS1RD_Url_setQuery')
+  EXPORT SYMBOL('BASICS1RD_Url_getFile')
+  EXPORT SYMBOL('BASICS1RD_Url_setFile')
+  EXPORT SYMBOL('BASICS1RD_Url_toString')
+  EXPORT SYMBOL('BASICS1RD_Url_getMbr')
+
+  /* --------------------- */
+  /*   Added with V1.8     */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1RA_BasicList_isSorted')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isNullValue')
+
+  EXPORT SYMBOL('BASICS1RC_BasicMap_newKeySet')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_getFirst')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_getNext')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_delete')
+
+  /* --------------------- */
+  /*   Added with V1.9     */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1RA_BasicList_clone')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_clone')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_clone')
+
+ENDPGMEXP
+
+STRPGMEXP PGMLVL(*PRV    ) SIGNATURE('Version 1.8')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_newMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpText')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgText')
+  EXPORT SYMBOL('BASICS1R1_f_sndPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_rmvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_setAppMsgFile')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_clrErrno')
+  EXPORT SYMBOL('BASICS1R2_f_cvtApiErrCodeToMsg')
+  EXPORT SYMBOL('BASICS1R2_f_errno')
+  EXPORT SYMBOL('BASICS1R2_f_isApiError')
+  EXPORT SYMBOL('BASICS1R2_f_newApiErrCode')
+  EXPORT SYMBOL('BASICS1R2_f_strerror')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_ebcdic')
+  EXPORT SYMBOL('BASICS1R3_f_left')
+  EXPORT SYMBOL('BASICS1R3_f_replace')
+  EXPORT SYMBOL('BASICS1R3_f_right')
+  EXPORT SYMBOL('BASICS1R3_f_space')
+  EXPORT SYMBOL('BASICS1R3_f_lcase')
+  EXPORT SYMBOL('BASICS1R3_f_ucase')
+  EXPORT SYMBOL('BASICS1R3_f_val')
+  EXPORT SYMBOL('BASICS1R3_f_wordWrap')
+
+  /*   Module: BASICS1R4   */
+  EXPORT SYMBOL('BASICS1R4_p_assert')
+  EXPORT SYMBOL('BASICS1R4_f_this')
+  EXPORT SYMBOL('BASICS1R4_f_caller')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_exist')
+  EXPORT SYMBOL('BASICS1R5_f_rtvMbrD')
+  EXPORT SYMBOL('BASICS1R5_f_rtvObjD')
+  EXPORT SYMBOL('BASICS1R5_f_getTmpName')
+  EXPORT SYMBOL('BASICS1R5_f_getUniqueName')
+
+  /*   Module: BASICS1R6   */
+  EXPORT SYMBOL('BASICS1R6_f_execute')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_setEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_delEnvVar')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_isBitOn')
+
+  /* --------------------- */
+  /*   Added with V1.1     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_editCode')
+  EXPORT SYMBOL('BASICS1R3_f_editWord')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditCode')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditWord')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_log10')
+  EXPORT SYMBOL('BASICS1R7_f_clcLengthOfRPGIntFieldFromBufSize')
+
+  /* --------------------- */
+  /*   Added with V1.2     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_rmvKeyword')
+  EXPORT SYMBOL('BASICS1R3_f_rmvQuotes')
+  EXPORT SYMBOL('BASICS1R3_f_addQuotes')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_crtUsrSpc')
+  EXPORT SYMBOL('BASICS1R5_f_rtvUsrSpcPtr')
+  EXPORT SYMBOL('BASICS1R5_f_dltUsrSpc')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_HANDLE_new')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_null')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isNull')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isTypeOf')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_getPointer')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_delete')
+
+  /* --------------------- */
+  /*   Added with V1.3     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgTextRaw')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpTextRaw')
+  EXPORT SYMBOL('BASICS1R3_f_center')
+  EXPORT SYMBOL('BASICS1R3_f_alignR')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmp')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmpIgnCase')
+  EXPORT SYMBOL('BASICS1R3_f_scanR')
+
+  /* --------------------- */
+  /*   Added with V1.4     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_cvtBufferToHexString')
+  EXPORT SYMBOL('BASICS1R3_f_cvtHexStringToBuffer')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_genUUID')
+  EXPORT SYMBOL('BASICS1R7_f_genMD5')
+  EXPORT SYMBOL('BASICS1R7_f_genSHA1')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_cvtErrnoToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.5     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R9   */
+  EXPORT SYMBOL('BASICS1R9_f_getDisplayMode')
+  EXPORT SYMBOL('BASICS1R6_f_getNumEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVarByIndex')
+  EXPORT SYMBOL('BASICS1R7_f_genCRC32')
+
+  /* --------------------- */
+  /*   Added with V1.6     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_allocate')
+  EXPORT SYMBOL('BASICS1R8_MEMORY_freeAll')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_activateSrvPgm')
+  EXPORT SYMBOL('BASICS1R5_f_getProcPtrByName')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_free')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_add')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_delete')
+  EXPORT SYMBOL('BASICS1RA_BasicList_find')
+  EXPORT SYMBOL('BASICS1RA_BasicList_findString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_get')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getListType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getNumE')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getSize')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isListTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_new')
+  EXPORT SYMBOL('BASICS1RA_BasicList_null')
+  EXPORT SYMBOL('BASICS1RA_BasicList_remove')
+  EXPORT SYMBOL('BASICS1RA_BasicList_set')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setAutoSort')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_sort')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_delete')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getNumE')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getSize')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_isNull')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_new')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_null')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_pop')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_push')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_containsKey')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_delete')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_get')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getKeyByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getValueByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getNumE')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSize')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_isNull')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_new')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_null')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_put')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_remove')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_startsWith')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_peek')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_clear')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_clear')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_clear')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_cvtRcvMsgToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.7     */
+  /* --------------------- */
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSizeByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_putString')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getString')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_endsWith')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_putInteger')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getInteger')
+  EXPORT SYMBOL('BASICS1R3_f_containsInvalidCharAt')
+  EXPORT SYMBOL('BASICS1R3_f_containsStringAt')
+
+  /*   Module: BASICS1RD   */
+  EXPORT SYMBOL('BASICS1RD_Url_new')
+  EXPORT SYMBOL('BASICS1RD_Url_getProtocol')
+  EXPORT SYMBOL('BASICS1RD_Url_setProtocol')
+  EXPORT SYMBOL('BASICS1RD_Url_getHost')
+  EXPORT SYMBOL('BASICS1RD_Url_setHost')
+  EXPORT SYMBOL('BASICS1RD_Url_getPort')
+  EXPORT SYMBOL('BASICS1RD_Url_setPort')
+  EXPORT SYMBOL('BASICS1RD_Url_getPath')
+  EXPORT SYMBOL('BASICS1RD_Url_setPath')
+  EXPORT SYMBOL('BASICS1RD_Url_getQuery')
+  EXPORT SYMBOL('BASICS1RD_Url_setQuery')
+  EXPORT SYMBOL('BASICS1RD_Url_getFile')
+  EXPORT SYMBOL('BASICS1RD_Url_setFile')
+  EXPORT SYMBOL('BASICS1RD_Url_toString')
+  EXPORT SYMBOL('BASICS1RD_Url_getMbr')
+
+  /* --------------------- */
+  /*   Added with V1.8     */
+  /* --------------------- */
+
+  EXPORT SYMBOL('BASICS1RA_BasicList_isSorted')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isNullValue')
+
+  EXPORT SYMBOL('BASICS1RC_BasicMap_newKeySet')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_getFirst')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_getNext')
+  EXPORT SYMBOL('BASICS1RC_BasicKeySet_delete')
+
+ENDPGMEXP
+
+STRPGMEXP PGMLVL(*PRV    ) SIGNATURE('Version 1.7')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_newMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpText')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgText')
+  EXPORT SYMBOL('BASICS1R1_f_sndPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_rmvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_setAppMsgFile')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_clrErrno')
+  EXPORT SYMBOL('BASICS1R2_f_cvtApiErrCodeToMsg')
+  EXPORT SYMBOL('BASICS1R2_f_errno')
+  EXPORT SYMBOL('BASICS1R2_f_isApiError')
+  EXPORT SYMBOL('BASICS1R2_f_newApiErrCode')
+  EXPORT SYMBOL('BASICS1R2_f_strerror')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_ebcdic')
+  EXPORT SYMBOL('BASICS1R3_f_left')
+  EXPORT SYMBOL('BASICS1R3_f_replace')
+  EXPORT SYMBOL('BASICS1R3_f_right')
+  EXPORT SYMBOL('BASICS1R3_f_space')
+  EXPORT SYMBOL('BASICS1R3_f_lcase')
+  EXPORT SYMBOL('BASICS1R3_f_ucase')
+  EXPORT SYMBOL('BASICS1R3_f_val')
+  EXPORT SYMBOL('BASICS1R3_f_wordWrap')
+
+  /*   Module: BASICS1R4   */
+  EXPORT SYMBOL('BASICS1R4_p_assert')
+  EXPORT SYMBOL('BASICS1R4_f_this')
+  EXPORT SYMBOL('BASICS1R4_f_caller')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_exist')
+  EXPORT SYMBOL('BASICS1R5_f_rtvMbrD')
+  EXPORT SYMBOL('BASICS1R5_f_rtvObjD')
+  EXPORT SYMBOL('BASICS1R5_f_getTmpName')
+  EXPORT SYMBOL('BASICS1R5_f_getUniqueName')
+
+  /*   Module: BASICS1R6   */
+  EXPORT SYMBOL('BASICS1R6_f_execute')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_setEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_delEnvVar')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_isBitOn')
+
+  /* --------------------- */
+  /*   Added with V1.1     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_editCode')
+  EXPORT SYMBOL('BASICS1R3_f_editWord')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditCode')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditWord')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_log10')
+  EXPORT SYMBOL('BASICS1R7_f_clcLengthOfRPGIntFieldFromBufSize')
+
+  /* --------------------- */
+  /*   Added with V1.2     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_rmvKeyword')
+  EXPORT SYMBOL('BASICS1R3_f_rmvQuotes')
+  EXPORT SYMBOL('BASICS1R3_f_addQuotes')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_crtUsrSpc')
+  EXPORT SYMBOL('BASICS1R5_f_rtvUsrSpcPtr')
+  EXPORT SYMBOL('BASICS1R5_f_dltUsrSpc')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_HANDLE_new')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_null')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isNull')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isTypeOf')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_getPointer')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_delete')
+
+  /* --------------------- */
+  /*   Added with V1.3     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgTextRaw')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpTextRaw')
+  EXPORT SYMBOL('BASICS1R3_f_center')
+  EXPORT SYMBOL('BASICS1R3_f_alignR')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmp')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmpIgnCase')
+  EXPORT SYMBOL('BASICS1R3_f_scanR')
+
+  /* --------------------- */
+  /*   Added with V1.4     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_cvtBufferToHexString')
+  EXPORT SYMBOL('BASICS1R3_f_cvtHexStringToBuffer')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_genUUID')
+  EXPORT SYMBOL('BASICS1R7_f_genMD5')
+  EXPORT SYMBOL('BASICS1R7_f_genSHA1')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_cvtErrnoToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.5     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R9   */
+  EXPORT SYMBOL('BASICS1R9_f_getDisplayMode')
+  EXPORT SYMBOL('BASICS1R6_f_getNumEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVarByIndex')
+  EXPORT SYMBOL('BASICS1R7_f_genCRC32')
+
+  /* --------------------- */
+  /*   Added with V1.6     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_allocate')
+  EXPORT SYMBOL('BASICS1R8_MEMORY_freeAll')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_activateSrvPgm')
+  EXPORT SYMBOL('BASICS1R5_f_getProcPtrByName')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_free')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_add')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_delete')
+  EXPORT SYMBOL('BASICS1RA_BasicList_find')
+  EXPORT SYMBOL('BASICS1RA_BasicList_findString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_get')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getListType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getNumE')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getSize')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isListTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_new')
+  EXPORT SYMBOL('BASICS1RA_BasicList_null')
+  EXPORT SYMBOL('BASICS1RA_BasicList_remove')
+  EXPORT SYMBOL('BASICS1RA_BasicList_set')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setAutoSort')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_sort')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_delete')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getNumE')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getSize')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_isNull')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_new')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_null')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_pop')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_push')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_containsKey')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_delete')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_get')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getKeyByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getValueByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getNumE')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSize')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_isNull')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_new')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_null')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_put')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_remove')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_startsWith')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_peek')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_clear')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_clear')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_clear')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_cvtRcvMsgToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.7     */
+  /* --------------------- */
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSizeByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_putString')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getString')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_endsWith')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_putInteger')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getInteger')
+  EXPORT SYMBOL('BASICS1R3_f_containsInvalidCharAt')
+  EXPORT SYMBOL('BASICS1R3_f_containsStringAt')
+
+  /*   Module: BASICS1RD   */
+  EXPORT SYMBOL('BASICS1RD_Url_new')
+  EXPORT SYMBOL('BASICS1RD_Url_getProtocol')
+  EXPORT SYMBOL('BASICS1RD_Url_setProtocol')
+  EXPORT SYMBOL('BASICS1RD_Url_getHost')
+  EXPORT SYMBOL('BASICS1RD_Url_setHost')
+  EXPORT SYMBOL('BASICS1RD_Url_getPort')
+  EXPORT SYMBOL('BASICS1RD_Url_setPort')
+  EXPORT SYMBOL('BASICS1RD_Url_getPath')
+  EXPORT SYMBOL('BASICS1RD_Url_setPath')
+  EXPORT SYMBOL('BASICS1RD_Url_getQuery')
+  EXPORT SYMBOL('BASICS1RD_Url_setQuery')
+  EXPORT SYMBOL('BASICS1RD_Url_getFile')
+  EXPORT SYMBOL('BASICS1RD_Url_setFile')
+  EXPORT SYMBOL('BASICS1RD_Url_toString')
+  EXPORT SYMBOL('BASICS1RD_Url_getMbr')
+
+ENDPGMEXP
+
+STRPGMEXP PGMLVL(*PRV    ) SIGNATURE('Version 1.6')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_newMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpText')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgText')
+  EXPORT SYMBOL('BASICS1R1_f_sndPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_rmvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_setAppMsgFile')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_clrErrno')
+  EXPORT SYMBOL('BASICS1R2_f_cvtApiErrCodeToMsg')
+  EXPORT SYMBOL('BASICS1R2_f_errno')
+  EXPORT SYMBOL('BASICS1R2_f_isApiError')
+  EXPORT SYMBOL('BASICS1R2_f_newApiErrCode')
+  EXPORT SYMBOL('BASICS1R2_f_strerror')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_ebcdic')
+  EXPORT SYMBOL('BASICS1R3_f_left')
+  EXPORT SYMBOL('BASICS1R3_f_replace')
+  EXPORT SYMBOL('BASICS1R3_f_right')
+  EXPORT SYMBOL('BASICS1R3_f_space')
+  EXPORT SYMBOL('BASICS1R3_f_lcase')
+  EXPORT SYMBOL('BASICS1R3_f_ucase')
+  EXPORT SYMBOL('BASICS1R3_f_val')
+  EXPORT SYMBOL('BASICS1R3_f_wordWrap')
+
+  /*   Module: BASICS1R4   */
+  EXPORT SYMBOL('BASICS1R4_p_assert')
+  EXPORT SYMBOL('BASICS1R4_f_this')
+  EXPORT SYMBOL('BASICS1R4_f_caller')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_exist')
+  EXPORT SYMBOL('BASICS1R5_f_rtvMbrD')
+  EXPORT SYMBOL('BASICS1R5_f_rtvObjD')
+  EXPORT SYMBOL('BASICS1R5_f_getTmpName')
+  EXPORT SYMBOL('BASICS1R5_f_getUniqueName')
+
+  /*   Module: BASICS1R6   */
+  EXPORT SYMBOL('BASICS1R6_f_execute')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_setEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_delEnvVar')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_isBitOn')
+
+  /* --------------------- */
+  /*   Added with V1.1     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_editCode')
+  EXPORT SYMBOL('BASICS1R3_f_editWord')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditCode')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditWord')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_log10')
+  EXPORT SYMBOL('BASICS1R7_f_clcLengthOfRPGIntFieldFromBufSize')
+
+  /* --------------------- */
+  /*   Added with V1.2     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_rmvKeyword')
+  EXPORT SYMBOL('BASICS1R3_f_rmvQuotes')
+  EXPORT SYMBOL('BASICS1R3_f_addQuotes')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_crtUsrSpc')
+  EXPORT SYMBOL('BASICS1R5_f_rtvUsrSpcPtr')
+  EXPORT SYMBOL('BASICS1R5_f_dltUsrSpc')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_HANDLE_new')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_null')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isNull')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isTypeOf')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_getPointer')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_delete')
+
+  /* --------------------- */
+  /*   Added with V1.3     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgTextRaw')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpTextRaw')
+  EXPORT SYMBOL('BASICS1R3_f_center')
+  EXPORT SYMBOL('BASICS1R3_f_alignR')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmp')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmpIgnCase')
+  EXPORT SYMBOL('BASICS1R3_f_scanR')
+
+  /* --------------------- */
+  /*   Added with V1.4     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_cvtBufferToHexString')
+  EXPORT SYMBOL('BASICS1R3_f_cvtHexStringToBuffer')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_genUUID')
+  EXPORT SYMBOL('BASICS1R7_f_genMD5')
+  EXPORT SYMBOL('BASICS1R7_f_genSHA1')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_cvtErrnoToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.5     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R9   */
+  EXPORT SYMBOL('BASICS1R9_f_getDisplayMode')
+  EXPORT SYMBOL('BASICS1R6_f_getNumEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVarByIndex')
+  EXPORT SYMBOL('BASICS1R7_f_genCRC32')
+
+  /* --------------------- */
+  /*   Added with V1.6     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_allocate')
+  EXPORT SYMBOL('BASICS1R8_MEMORY_freeAll')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_activateSrvPgm')
+  EXPORT SYMBOL('BASICS1R5_f_getProcPtrByName')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_MEMORY_free')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_add')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_addString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_delete')
+  EXPORT SYMBOL('BASICS1RA_BasicList_find')
+  EXPORT SYMBOL('BASICS1RA_BasicList_findString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_get')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getListType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getNumE')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getSize')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_getType')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isNull')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isListTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_isTypeOf')
+  EXPORT SYMBOL('BASICS1RA_BasicList_new')
+  EXPORT SYMBOL('BASICS1RA_BasicList_null')
+  EXPORT SYMBOL('BASICS1RA_BasicList_remove')
+  EXPORT SYMBOL('BASICS1RA_BasicList_set')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setAutoSort')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setString')
+  EXPORT SYMBOL('BASICS1RA_BasicList_setPointer')
+  EXPORT SYMBOL('BASICS1RA_BasicList_sort')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_delete')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getNumE')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_getSize')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_isNull')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_new')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_null')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_pop')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_push')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_containsKey')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_delete')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_get')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getKeyByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getValueByIndex')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getNumE')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_getSize')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_isNull')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_new')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_null')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_put')
+  EXPORT SYMBOL('BASICS1RC_BasicMap_remove')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_startsWith')
+
+  /*   Module: BASICS1RB   */
+  EXPORT SYMBOL('BASICS1RB_BasicStack_peek')
+  EXPORT SYMBOL('BASICS1RB_BasicStack_clear')
+
+  /*   Module: BASICS1RA   */
+  EXPORT SYMBOL('BASICS1RA_BasicList_clear')
+
+  /*   Module: BASICS1RC   */
+  EXPORT SYMBOL('BASICS1RC_BasicMap_clear')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_cvtRcvMsgToMsg')
+
+ENDPGMEXP
+
+STRPGMEXP PGMLVL(*PRV    ) SIGNATURE('Version 1.5')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_newMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpText')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgText')
+  EXPORT SYMBOL('BASICS1R1_f_sndPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_rmvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_setAppMsgFile')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_clrErrno')
+  EXPORT SYMBOL('BASICS1R2_f_cvtApiErrCodeToMsg')
+  EXPORT SYMBOL('BASICS1R2_f_errno')
+  EXPORT SYMBOL('BASICS1R2_f_isApiError')
+  EXPORT SYMBOL('BASICS1R2_f_newApiErrCode')
+  EXPORT SYMBOL('BASICS1R2_f_strerror')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_ebcdic')
+  EXPORT SYMBOL('BASICS1R3_f_left')
+  EXPORT SYMBOL('BASICS1R3_f_replace')
+  EXPORT SYMBOL('BASICS1R3_f_right')
+  EXPORT SYMBOL('BASICS1R3_f_space')
+  EXPORT SYMBOL('BASICS1R3_f_lcase')
+  EXPORT SYMBOL('BASICS1R3_f_ucase')
+  EXPORT SYMBOL('BASICS1R3_f_val')
+  EXPORT SYMBOL('BASICS1R3_f_wordWrap')
+
+  /*   Module: BASICS1R4   */
+  EXPORT SYMBOL('BASICS1R4_p_assert')
+  EXPORT SYMBOL('BASICS1R4_f_this')
+  EXPORT SYMBOL('BASICS1R4_f_caller')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_exist')
+  EXPORT SYMBOL('BASICS1R5_f_rtvMbrD')
+  EXPORT SYMBOL('BASICS1R5_f_rtvObjD')
+  EXPORT SYMBOL('BASICS1R5_f_getTmpName')
+  EXPORT SYMBOL('BASICS1R5_f_getUniqueName')
+
+  /*   Module: BASICS1R6   */
+  EXPORT SYMBOL('BASICS1R6_f_execute')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_setEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_delEnvVar')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_isBitOn')
+
+  /* --------------------- */
+  /*   Added with V1.1     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_editCode')
+  EXPORT SYMBOL('BASICS1R3_f_editWord')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditCode')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditWord')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_log10')
+  EXPORT SYMBOL('BASICS1R7_f_clcLengthOfRPGIntFieldFromBufSize')
+
+  /* --------------------- */
+  /*   Added with V1.2     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_rmvKeyword')
+  EXPORT SYMBOL('BASICS1R3_f_rmvQuotes')
+  EXPORT SYMBOL('BASICS1R3_f_addQuotes')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_crtUsrSpc')
+  EXPORT SYMBOL('BASICS1R5_f_rtvUsrSpcPtr')
+  EXPORT SYMBOL('BASICS1R5_f_dltUsrSpc')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_HANDLE_new')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_null')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isNull')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isTypeOf')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_getPointer')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_delete')
+
+  /* --------------------- */
+  /*   Added with V1.3     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgTextRaw')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpTextRaw')
+  EXPORT SYMBOL('BASICS1R3_f_center')
+  EXPORT SYMBOL('BASICS1R3_f_alignR')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmp')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmpIgnCase')
+  EXPORT SYMBOL('BASICS1R3_f_scanR')
+
+  /* --------------------- */
+  /*   Added with V1.4     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_cvtBufferToHexString')
+  EXPORT SYMBOL('BASICS1R3_f_cvtHexStringToBuffer')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_genUUID')
+  EXPORT SYMBOL('BASICS1R7_f_genMD5')
+  EXPORT SYMBOL('BASICS1R7_f_genSHA1')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_cvtErrnoToMsg')
+
+  /* --------------------- */
+  /*   Added with V1.5     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R9   */
+  EXPORT SYMBOL('BASICS1R9_f_getDisplayMode')
+  EXPORT SYMBOL('BASICS1R6_f_getNumEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVarByIndex')
+  EXPORT SYMBOL('BASICS1R7_f_genCRC32')
+
+ENDPGMEXP
+
+STRPGMEXP PGMLVL(*PRV    ) SIGNATURE('Version 1.4')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_newMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpText')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgText')
+  EXPORT SYMBOL('BASICS1R1_f_sndPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_rmvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_setAppMsgFile')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_clrErrno')
+  EXPORT SYMBOL('BASICS1R2_f_cvtApiErrCodeToMsg')
+  EXPORT SYMBOL('BASICS1R2_f_errno')
+  EXPORT SYMBOL('BASICS1R2_f_isApiError')
+  EXPORT SYMBOL('BASICS1R2_f_newApiErrCode')
+  EXPORT SYMBOL('BASICS1R2_f_strerror')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_ebcdic')
+  EXPORT SYMBOL('BASICS1R3_f_left')
+  EXPORT SYMBOL('BASICS1R3_f_replace')
+  EXPORT SYMBOL('BASICS1R3_f_right')
+  EXPORT SYMBOL('BASICS1R3_f_space')
+  EXPORT SYMBOL('BASICS1R3_f_lcase')
+  EXPORT SYMBOL('BASICS1R3_f_ucase')
+  EXPORT SYMBOL('BASICS1R3_f_val')
+  EXPORT SYMBOL('BASICS1R3_f_wordWrap')
+
+  /*   Module: BASICS1R4   */
+  EXPORT SYMBOL('BASICS1R4_p_assert')
+  EXPORT SYMBOL('BASICS1R4_f_this')
+  EXPORT SYMBOL('BASICS1R4_f_caller')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_exist')
+  EXPORT SYMBOL('BASICS1R5_f_rtvMbrD')
+  EXPORT SYMBOL('BASICS1R5_f_rtvObjD')
+  EXPORT SYMBOL('BASICS1R5_f_getTmpName')
+  EXPORT SYMBOL('BASICS1R5_f_getUniqueName')
+
+  /*   Module: BASICS1R6   */
+  EXPORT SYMBOL('BASICS1R6_f_execute')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_setEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_delEnvVar')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_isBitOn')
+
+  /* --------------------- */
+  /*   Added with V1.1     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_editCode')
+  EXPORT SYMBOL('BASICS1R3_f_editWord')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditCode')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditWord')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_log10')
+  EXPORT SYMBOL('BASICS1R7_f_clcLengthOfRPGIntFieldFromBufSize')
+
+  /* --------------------- */
+  /*   Added with V1.2     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_rmvKeyword')
+  EXPORT SYMBOL('BASICS1R3_f_rmvQuotes')
+  EXPORT SYMBOL('BASICS1R3_f_addQuotes')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_crtUsrSpc')
+  EXPORT SYMBOL('BASICS1R5_f_rtvUsrSpcPtr')
+  EXPORT SYMBOL('BASICS1R5_f_dltUsrSpc')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_HANDLE_new')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_null')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isNull')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isTypeOf')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_getPointer')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_delete')
+
+  /* --------------------- */
+  /*   Added with V1.3     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgTextRaw')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpTextRaw')
+  EXPORT SYMBOL('BASICS1R3_f_center')
+  EXPORT SYMBOL('BASICS1R3_f_alignR')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmp')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmpIgnCase')
+  EXPORT SYMBOL('BASICS1R3_f_scanR')
+
+  /* --------------------- */
+  /*   Added with V1.4     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_cvtBufferToHexString')
+  EXPORT SYMBOL('BASICS1R3_f_cvtHexStringToBuffer')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_genUUID')
+  EXPORT SYMBOL('BASICS1R7_f_genMD5')
+  EXPORT SYMBOL('BASICS1R7_f_genSHA1')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_cvtErrnoToMsg')
+
+ENDPGMEXP
+
+STRPGMEXP PGMLVL(*PRV    ) SIGNATURE('Version 1.3')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_newMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpText')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgText')
+  EXPORT SYMBOL('BASICS1R1_f_sndPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_rmvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_setAppMsgFile')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_clrErrno')
+  EXPORT SYMBOL('BASICS1R2_f_cvtApiErrCodeToMsg')
+  EXPORT SYMBOL('BASICS1R2_f_errno')
+  EXPORT SYMBOL('BASICS1R2_f_isApiError')
+  EXPORT SYMBOL('BASICS1R2_f_newApiErrCode')
+  EXPORT SYMBOL('BASICS1R2_f_strerror')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_ebcdic')
+  EXPORT SYMBOL('BASICS1R3_f_left')
+  EXPORT SYMBOL('BASICS1R3_f_replace')
+  EXPORT SYMBOL('BASICS1R3_f_right')
+  EXPORT SYMBOL('BASICS1R3_f_space')
+  EXPORT SYMBOL('BASICS1R3_f_lcase')
+  EXPORT SYMBOL('BASICS1R3_f_ucase')
+  EXPORT SYMBOL('BASICS1R3_f_val')
+  EXPORT SYMBOL('BASICS1R3_f_wordWrap')
+
+  /*   Module: BASICS1R4   */
+  EXPORT SYMBOL('BASICS1R4_p_assert')
+  EXPORT SYMBOL('BASICS1R4_f_this')
+  EXPORT SYMBOL('BASICS1R4_f_caller')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_exist')
+  EXPORT SYMBOL('BASICS1R5_f_rtvMbrD')
+  EXPORT SYMBOL('BASICS1R5_f_rtvObjD')
+  EXPORT SYMBOL('BASICS1R5_f_getTmpName')
+  EXPORT SYMBOL('BASICS1R5_f_getUniqueName')
+
+  /*   Module: BASICS1R6   */
+  EXPORT SYMBOL('BASICS1R6_f_execute')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_setEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_delEnvVar')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_isBitOn')
+
+  /* --------------------- */
+  /*   Added with V1.1     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_editCode')
+  EXPORT SYMBOL('BASICS1R3_f_editWord')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditCode')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditWord')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_log10')
+  EXPORT SYMBOL('BASICS1R7_f_clcLengthOfRPGIntFieldFromBufSize')
+
+  /* --------------------- */
+  /*   Added with V1.2     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_rmvKeyword')
+  EXPORT SYMBOL('BASICS1R3_f_rmvQuotes')
+  EXPORT SYMBOL('BASICS1R3_f_addQuotes')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_crtUsrSpc')
+  EXPORT SYMBOL('BASICS1R5_f_rtvUsrSpcPtr')
+  EXPORT SYMBOL('BASICS1R5_f_dltUsrSpc')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_HANDLE_new')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_null')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isNull')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isTypeOf')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_getPointer')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_delete')
+
+  /* --------------------- */
+  /*   Added with V1.3     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgTextRaw')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpTextRaw')
+  EXPORT SYMBOL('BASICS1R3_f_center')
+  EXPORT SYMBOL('BASICS1R3_f_alignR')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmp')
+  EXPORT SYMBOL('BASICS1R3_f_genStrCmpIgnCase')
+  EXPORT SYMBOL('BASICS1R3_f_scanR')
+
+ENDPGMEXP
+
+STRPGMEXP PGMLVL(*PRV    ) SIGNATURE('Version 1.2')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_newMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpText')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgText')
+  EXPORT SYMBOL('BASICS1R1_f_sndPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_rmvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_setAppMsgFile')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_clrErrno')
+  EXPORT SYMBOL('BASICS1R2_f_cvtApiErrCodeToMsg')
+  EXPORT SYMBOL('BASICS1R2_f_errno')
+  EXPORT SYMBOL('BASICS1R2_f_isApiError')
+  EXPORT SYMBOL('BASICS1R2_f_newApiErrCode')
+  EXPORT SYMBOL('BASICS1R2_f_strerror')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_ebcdic')
+  EXPORT SYMBOL('BASICS1R3_f_left')
+  EXPORT SYMBOL('BASICS1R3_f_replace')
+  EXPORT SYMBOL('BASICS1R3_f_right')
+  EXPORT SYMBOL('BASICS1R3_f_space')
+  EXPORT SYMBOL('BASICS1R3_f_lcase')
+  EXPORT SYMBOL('BASICS1R3_f_ucase')
+  EXPORT SYMBOL('BASICS1R3_f_val')
+  EXPORT SYMBOL('BASICS1R3_f_wordWrap')
+
+  /*   Module: BASICS1R4   */
+  EXPORT SYMBOL('BASICS1R4_p_assert')
+  EXPORT SYMBOL('BASICS1R4_f_this')
+  EXPORT SYMBOL('BASICS1R4_f_caller')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_exist')
+  EXPORT SYMBOL('BASICS1R5_f_rtvMbrD')
+  EXPORT SYMBOL('BASICS1R5_f_rtvObjD')
+  EXPORT SYMBOL('BASICS1R5_f_getTmpName')
+  EXPORT SYMBOL('BASICS1R5_f_getUniqueName')
+
+  /*   Module: BASICS1R6   */
+  EXPORT SYMBOL('BASICS1R6_f_execute')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_setEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_delEnvVar')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_isBitOn')
+
+  /* --------------------- */
+  /*   Added with V1.1     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_editCode')
+  EXPORT SYMBOL('BASICS1R3_f_editWord')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditCode')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditWord')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_log10')
+  EXPORT SYMBOL('BASICS1R7_f_clcLengthOfRPGIntFieldFromBufSize')
+
+  /* --------------------- */
+  /*   Added with V1.2     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_rmvKeyword')
+  EXPORT SYMBOL('BASICS1R3_f_rmvQuotes')
+  EXPORT SYMBOL('BASICS1R3_f_addQuotes')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_crtUsrSpc')
+  EXPORT SYMBOL('BASICS1R5_f_rtvUsrSpcPtr')
+  EXPORT SYMBOL('BASICS1R5_f_dltUsrSpc')
+
+  /*   Module: BASICS1R8   */
+  EXPORT SYMBOL('BASICS1R8_HANDLE_new')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_null')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isNull')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_isTypeOf')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_getPointer')
+  EXPORT SYMBOL('BASICS1R8_HANDLE_delete')
+
+ENDPGMEXP
+
+STRPGMEXP PGMLVL(*PRV) SIGNATURE('Version 1.1')
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_newMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpText')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgText')
+  EXPORT SYMBOL('BASICS1R1_f_sndPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_rmvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_setAppMsgFile')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_clrErrno')
+  EXPORT SYMBOL('BASICS1R2_f_cvtApiErrCodeToMsg')
+  EXPORT SYMBOL('BASICS1R2_f_errno')
+  EXPORT SYMBOL('BASICS1R2_f_isApiError')
+  EXPORT SYMBOL('BASICS1R2_f_newApiErrCode')
+  EXPORT SYMBOL('BASICS1R2_f_strerror')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_ebcdic')
+  EXPORT SYMBOL('BASICS1R3_f_left')
+  EXPORT SYMBOL('BASICS1R3_f_replace')
+  EXPORT SYMBOL('BASICS1R3_f_right')
+  EXPORT SYMBOL('BASICS1R3_f_space')
+  EXPORT SYMBOL('BASICS1R3_f_lcase')
+  EXPORT SYMBOL('BASICS1R3_f_ucase')
+  EXPORT SYMBOL('BASICS1R3_f_val')
+  EXPORT SYMBOL('BASICS1R3_f_wordWrap')
+
+  /*   Module: BASICS1R4   */
+  EXPORT SYMBOL('BASICS1R4_p_assert')
+  EXPORT SYMBOL('BASICS1R4_f_this')
+  EXPORT SYMBOL('BASICS1R4_f_caller')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_exist')
+  EXPORT SYMBOL('BASICS1R5_f_rtvMbrD')
+  EXPORT SYMBOL('BASICS1R5_f_rtvObjD')
+  EXPORT SYMBOL('BASICS1R5_f_getTmpName')
+  EXPORT SYMBOL('BASICS1R5_f_getUniqueName')
+
+  /*   Module: BASICS1R6   */
+  EXPORT SYMBOL('BASICS1R6_f_execute')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_setEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_delEnvVar')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_isBitOn')
+
+  /* --------------------- */
+  /*   Added with V1.1     */
+  /* --------------------- */
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_editCode')
+  EXPORT SYMBOL('BASICS1R3_f_editWord')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditCode')
+  EXPORT SYMBOL('BASICS1R3_f_getLengthEditWord')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_log10')
+  EXPORT SYMBOL('BASICS1R7_f_clcLengthOfRPGIntFieldFromBufSize')
+
+ENDPGMEXP
+
+STRPGMEXP PGMLVL(*PRV)    /* Version 1.0 Signature */
+
+  /*   Module: BASICS1R1   */
+  EXPORT SYMBOL('BASICS1R1_f_newMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rcvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgHelpText')
+  EXPORT SYMBOL('BASICS1R1_f_rtvMsgText')
+  EXPORT SYMBOL('BASICS1R1_f_sndPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_rmvPgmMsg')
+  EXPORT SYMBOL('BASICS1R1_p_setAppMsgFile')
+
+  /*   Module: BASICS1R2   */
+  EXPORT SYMBOL('BASICS1R2_f_clrErrno')
+  EXPORT SYMBOL('BASICS1R2_f_cvtApiErrCodeToMsg')
+  EXPORT SYMBOL('BASICS1R2_f_errno')
+  EXPORT SYMBOL('BASICS1R2_f_isApiError')
+  EXPORT SYMBOL('BASICS1R2_f_newApiErrCode')
+  EXPORT SYMBOL('BASICS1R2_f_strerror')
+
+  /*   Module: BASICS1R3   */
+  EXPORT SYMBOL('BASICS1R3_f_ebcdic')
+  EXPORT SYMBOL('BASICS1R3_f_left')
+  EXPORT SYMBOL('BASICS1R3_f_replace')
+  EXPORT SYMBOL('BASICS1R3_f_right')
+  EXPORT SYMBOL('BASICS1R3_f_space')
+  EXPORT SYMBOL('BASICS1R3_f_lcase')
+  EXPORT SYMBOL('BASICS1R3_f_ucase')
+  EXPORT SYMBOL('BASICS1R3_f_val')
+  EXPORT SYMBOL('BASICS1R3_f_wordWrap')
+
+  /*   Module: BASICS1R4   */
+  EXPORT SYMBOL('BASICS1R4_p_assert')
+  EXPORT SYMBOL('BASICS1R4_f_this')
+  EXPORT SYMBOL('BASICS1R4_f_caller')
+
+  /*   Module: BASICS1R5   */
+  EXPORT SYMBOL('BASICS1R5_f_exist')
+  EXPORT SYMBOL('BASICS1R5_f_rtvMbrD')
+  EXPORT SYMBOL('BASICS1R5_f_rtvObjD')
+  EXPORT SYMBOL('BASICS1R5_f_getTmpName')
+  EXPORT SYMBOL('BASICS1R5_f_getUniqueName')
+
+  /*   Module: BASICS1R6   */
+  EXPORT SYMBOL('BASICS1R6_f_execute')
+  EXPORT SYMBOL('BASICS1R6_f_getEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_setEnvVar')
+  EXPORT SYMBOL('BASICS1R6_f_delEnvVar')
+
+  /*   Module: BASICS1R7   */
+  EXPORT SYMBOL('BASICS1R7_f_isBitOn')
+
+ENDPGMEXP
