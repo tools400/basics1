@@ -51,7 +51,7 @@
       appblddate CDATA #REQUIRED
      >
      ]>
-<upload  appname="BASICS1"  appauthor="Thomas Raddatz"  appblddate=" 4/18/2017">
+<upload  appname="BASICS1"  appauthor="Thomas Raddatz"  appblddate=" 4/19/2018">
 <install_instructions><![CDATA[
      *----------------------------------------------------------------      ------
      *  1. Upload entire XML to your AS/400 to a source file 112 long, into any mbr
@@ -444,6 +444,15 @@
       *
       * Set variable &TGTRLS
      C                   callp     setVariable('tgtrls': TgtRls)
+      *
+      * Set variable &XMLFILE
+     C                   callp     setVariable('xmlfile': ParseSrcFile)
+      *
+      * Set variable &XMLLIB
+     C                   callp     setVariable('xmllib': ParseSrcFile)
+      *
+      * Set variable &XMLMBR
+     C                   callp     setVariable('xmlmbr': ParseSrcFile)
       *
       * Override Input file to uploaded text file
      C                   eval      bldexc = 'OVRDBF FILE(XMLINPUT) TOFILE(' +
@@ -1152,7 +1161,7 @@
          string = %replace(tmpKeyword + '(' + %trimR(i_value) + ')'
                            : i_string: x: l);
          Return string;
-      *
+
       /END-FREE
      P                 E
       *---------------------------------------------------------------------------------------------
@@ -1172,9 +1181,9 @@
          endif;
 
          for i = 1 to fld_x;
-            if (uCase('&' + %trim(i_fldName)) = uCase(fld_name(fld_x)));
-               fld_value(fld_x) = i_value;
-               leave;
+            if (uCase('&' + %trim(i_fldName)) = uCase(fld_name(i)));
+               fld_value(i) = i_value;
+               return;
             endif;
          endfor;
 
@@ -1312,7 +1321,7 @@ srccssid=  "00273">
      /* =================================================================== */
      /*  History:                                                           */
      /*                                                                     */
-     /*  Datum       Name          Ã„nderung                                 */
+     /*  Datum       Name          Änderung                                 */
      /*  ----------  ------------  ---------------------------------------  */
      /*                                                                     */
      /* =================================================================== */
@@ -2988,6 +2997,23 @@ srclib  =  "selected  "
 srclen  =  "00112"
 srccssid=  "00273">
 <copysrc><![CDATA[
+BASICS1 - A Tools/400 Service Program
+-------------------------------------
+
+BASICS1 is a core service program that offers services that are used
+by almost all Tools/400 utilities.
+
+Compile members with the following PDM option:
+
+   STRPREPRC USESRCFILE(&L/&F) USESRCMBR(&N) OPTION(*EVENTF) CHGOBJD(*NO)
+     LIB(&O) OBJ(&N) SRCLIB(&L) SRCFILE(&F) SRCMBR(&N) USER0(&X)
+     USER1(*LIST) USER2(*FULL)
+
+Members of type MAKPGM or BND are used for linking programs (MAKPGM)
+and service programs (BND).
+
+2018, Thomas Raddatz
+
 -----------------------
       History
 -----------------------
@@ -6746,7 +6772,7 @@ srccssid=  "00273">
      /*=====================================================================*/
      /*  History:                                                           */
      /*                                                                     */
-     /*  Datum       Name          Ã„nderung                                 */
+     /*  Datum       Name          Änderung                                 */
      /*  ----------  ------------  ---------------------------------------  */
      /*                                                                     */
      /*=====================================================================*/
@@ -6965,7 +6991,7 @@ srccssid=  "00273">
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Ã„nderung                                 *
+      *  Datum       Name          Änderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  24.08.2006  Th.Raddatz    Changed BasicList_get() to initialize    *
       *                            only that bytes of the return buffer     *
@@ -9944,7 +9970,7 @@ srccssid=  "00273">
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Ã„nderung                                 *
+      *  Datum       Name          Änderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  28.04.2008  Th.Raddatz    Introduced a real stack handle (hStack_t)*
       *                                                                     *
@@ -10679,7 +10705,7 @@ srccssid=  "00273">
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Ã„nderung                                 *
+      *  Datum       Name          Änderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  08.11.2007  Th.Raddatz    Added procedures:                        *
       *                            BasicMap_getSizeByIndex()                *
@@ -12989,7 +13015,7 @@ srccssid=  "00273">
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Ã„nderung                                 *
+      *  Datum       Name          Änderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *                                                                     *
       *=====================================================================*
@@ -14115,7 +14141,7 @@ srccssid=  "00273">
      D p_mbr           C                   const(4)
      D p_rc            C                   const(5)
       *
-      *  Felder fÃ¼r optionale Parameter
+      *  Felder für optionale Parameter
      D file            S                   like(o_file   ) inz
      D lib             S                   like(o_lib    ) inz
      D mbr             S                   like(o_mbr    ) inz
@@ -14682,7 +14708,7 @@ srccssid=  "00273">
       // -------------------------------------------------------------------
       //  History:
       //
-      //  Datum       Name          Ã„nderung
+      //  Datum       Name          Änderung
       //  ----------  ------------  ---------------------------------------
       //
       // -------------------------------------------------------------------
@@ -15042,7 +15068,7 @@ srccssid=  "00273">
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Ã„nderung                                 *
+      *  Datum       Name          Änderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *                                                                     *
       *=====================================================================*
@@ -15440,7 +15466,7 @@ srccssid=  "00273">
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Ã„nderung                                 *
+      *  Datum       Name          Änderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *                                                                     *
       *=====================================================================*
@@ -17081,7 +17107,7 @@ srccssid=  "00273">
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Ã„nderung                                 *
+      *  Datum       Name          Änderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *                                                                     *
       *=====================================================================*
@@ -17745,7 +17771,7 @@ srccssid=  "00273">
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Ã„nderung                                 *
+      *  Datum       Name          Änderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  26.01.2005  Th.Raddatz    Removed Parameter i_rtnCtrlChr from      *
       *                            f_rtvMsgText().                          *
@@ -19784,7 +19810,7 @@ srccssid=  "00273">
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Ã„nderung                                 *
+      *  Datum       Name          Änderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  08.02.2006  Th.Raddatz    Changed BASICS1R2 to be compatible to    *
       *                            V5R1M0.                                  *
@@ -20209,7 +20235,7 @@ srccssid=  "00273">
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Ã„nderung                                 *
+      *  Datum       Name          Änderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  26.01.2005  Th.Raddatz    Changed f_val to use self-written code   *
       *                            instead of MI function cvtefnd().        *
@@ -20855,7 +20881,7 @@ srccssid=  "00273">
       *  Parameter positions
      D p_startPos      C                   const(4)
       *
-      *  Standardwerte fÃ¼r nicht Ã¼bergebene Parameter
+      *  Standardwerte für nicht übergebene Parameter
      D startPos        S                   like(i_startPos) inz
       *
       *  Local fields
@@ -22882,7 +22908,7 @@ srccssid=  "00273">
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Ã„nderung                                 *
+      *  Datum       Name          Änderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  12.07.2006  Th.Raddatz    Changed f_caller() and f_this() to       *
       *                            return the statement ID as the next      *
@@ -23398,7 +23424,7 @@ srccssid=  "00273">
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Ã„nderung                                 *
+      *  Datum       Name          Änderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  17.12.2008  Th.Raddatz    Added f_getObjLib().                     *
       *                            Changed parameter i_text of procedure    *
@@ -25591,7 +25617,7 @@ srccssid=  "00273">
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Ã„nderung                                 *
+      *  Datum       Name          Änderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  10.10.2006  Th.Raddatz    Changed f_getEnvVarByIndex to respect    *
       *                            the length of the environment variable.  *
@@ -26130,7 +26156,7 @@ srccssid=  "00273">
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Ã„nderung                                 *
+      *  Datum       Name          Änderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *   4.02.2005  Th.Raddatz    Added f_genUUID() to generate a          *
       *                            Universal Unique Identifier (UUID).      *
@@ -27231,7 +27257,7 @@ srccssid=  "00273">
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Ã„nderung                                 *
+      *  Datum       Name          Änderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  27.04.2005  Th.Raddatz    Replaced handle_t.value with             *
       *                            handle_t.pUserHandle to dynamically      *
@@ -28081,7 +28107,7 @@ srccssid=  "00273">
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Ã„nderung                                 *
+      *  Datum       Name          Änderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  23.01.2009  Th.Raddatz    Renamed f_getDisplayMode() to            *
       *                            Display_getMode().                       *
@@ -34783,7 +34809,7 @@ Installing TEST_F000  type RPGLE - in progress.
 <mbr
 mbrname =  "TEST_F000 "
 mbrtype =  "RPGLE     "
-mbrtext =  "Test: Template fÃ¼r Testprogramme                  "
+mbrtext =  "Test: Template für Testprogramme                  "
 srcfile =  "QBASICS1  "
 srclib  =  "selected  "
 srclen  =  "00112"
@@ -35030,7 +35056,7 @@ srccssid=  "00273">
          anArray( 5).data = 'Track';
          anArray( 6).data = 'Daisy';
          anArray( 7).data = 'Klaas Klever';
-         anArray( 8).data = 'Daniel DÃ¼sentrieb';
+         anArray( 8).data = 'Daniel Düsentrieb';
          anArray( 9).data = 'Micky Maus';
          anArray(10).data = 'Goofy';
 
@@ -35402,7 +35428,7 @@ srccssid=  "00273">
          anArray( 5).data = 'Track';
          anArray( 6).data = 'Daisy';
          anArray( 7).data = 'Klaas Klever';
-         anArray( 8).data = 'Daniel DÃ¼sentrieb';
+         anArray( 8).data = 'Daniel Düsentrieb';
          anArray( 9).data = 'Micky Maus';
          anArray(10).data = 'Goofy';
 
@@ -35633,7 +35659,7 @@ srccssid=  "00273">
          anArray( 5).data = 'Track';
          anArray( 6).data = 'Daisy';
          anArray( 7).data = 'Klaas Klever';
-         anArray( 8).data = 'Daniel DÃ¼sentrieb';
+         anArray( 8).data = 'Daniel Düsentrieb';
          anArray( 9).data = 'Micky Maus';
          anArray(10).data = 'Goofy';
 
@@ -35841,7 +35867,7 @@ srccssid=  "00273">
          anArray( 5).data = 'Track';
          anArray( 6).data = 'Daisy';
          anArray( 7).data = 'Klaas Klever';
-         anArray( 8).data = 'Daniel DÃ¼sentrieb';
+         anArray( 8).data = 'Daniel Düsentrieb';
          anArray( 9).data = 'Micky Maus';
          anArray(10).data = 'Goofy';
 
@@ -36063,7 +36089,7 @@ srccssid=  "00273">
          anArray( 5).data = 'Track';
          anArray( 6).data = 'Daisy';
          anArray( 7).data = 'Klaas Klever';
-         anArray( 8).data = 'Daniel DÃ¼sentrieb';
+         anArray( 8).data = 'Daniel Düsentrieb';
          anArray( 9).data = 'Micky Maus';
          anArray(10).data = 'Goofy';
 
@@ -38609,18 +38635,18 @@ srccssid=  "00273">
          msgRcv = f_rcvPgmMsgObj(cMsg_Last: *omit: cMsg_Act_Same: 0
                                  : cMsg_Same: cMsg_ToMyself);
          p_assert(msg.ID = msgRcv.ID
-                  : 'msgRcv.ID und msg.ID dÃ¼rfen nicht voneinander abweichen');
+                  : 'msgRcv.ID und msg.ID dürfen nicht voneinander abweichen');
          p_assert(msg.data = msgRcv.data
-                  : 'msgRcv.data und msg.data dÃ¼rfen +
+                  : 'msgRcv.data und msg.data dürfen +
                      nicht voneinander abweichen');
          p_assert(msg.type = msgRcv.type
-                  : 'msgRcv.type und msg.type dÃ¼rfen +
+                  : 'msgRcv.type und msg.type dürfen +
                      nicht voneinander abweichen');
          p_assert(msg.file = msgRcv.file
-                  : 'msgRcv.file und msg.file dÃ¼rfen +
+                  : 'msgRcv.file und msg.file dürfen +
                      nicht voneinander abweichen');
          p_assert(msg.lib = msgRcv.lib
-                  : 'msgRcv.lib und msg.lib dÃ¼rfen +
+                  : 'msgRcv.lib und msg.lib dürfen +
                      nicht voneinander abweichen');
 
          // Create a message, send it to 'previous' and then receive it
@@ -38630,18 +38656,18 @@ srccssid=  "00273">
          msgRcv = f_rcvPgmMsgObj(cMsg_Last: *omit: cMsg_Act_Same: 0
                                  : cMsg_Prv: cMsg_ToMyself);
          p_assert(msg.ID = msgRcv.ID
-                  : 'msgRcv.ID und msg.ID dÃ¼rfen nicht voneinander abweichen');
+                  : 'msgRcv.ID und msg.ID dürfen nicht voneinander abweichen');
          p_assert(msg.data = msgRcv.data
-                  : 'msgRcv.data und msg.data dÃ¼rfen +
+                  : 'msgRcv.data und msg.data dürfen +
                      nicht voneinander abweichen');
          p_assert(msg.type = msgRcv.type
-                  : 'msgRcv.type und msg.type dÃ¼rfen +
+                  : 'msgRcv.type und msg.type dürfen +
                      nicht voneinander abweichen');
          p_assert(msg.file = msgRcv.file
-                  : 'msgRcv.file und msg.file dÃ¼rfen +
+                  : 'msgRcv.file und msg.file dürfen +
                      nicht voneinander abweichen');
          p_assert(msg.lib = msgRcv.lib
-                  : 'msgRcv.lib und msg.lib dÃ¼rfen +
+                  : 'msgRcv.lib und msg.lib dürfen +
                      nicht voneinander abweichen');
 
          // Create a message, send it to 'extern' and then receive it
@@ -38651,18 +38677,18 @@ srccssid=  "00273">
          msgRcv = f_rcvPgmMsgObj(cMsg_Last: *omit: cMsg_Act_Same: 0
                                  : cMsg_Ext);
          p_assert(msg.ID = msgRcv.ID
-                  : 'msgRcv.ID und msg.ID dÃ¼rfen nicht voneinander abweichen');
+                  : 'msgRcv.ID und msg.ID dürfen nicht voneinander abweichen');
          p_assert(msg.data = msgRcv.data
-                  : 'msgRcv.data und msg.data dÃ¼rfen +
+                  : 'msgRcv.data und msg.data dürfen +
                      nicht voneinander abweichen');
          p_assert(msg.type = msgRcv.type
-                  : 'msgRcv.type und msg.type dÃ¼rfen +
+                  : 'msgRcv.type und msg.type dürfen +
                      nicht voneinander abweichen');
          p_assert(msg.file = msgRcv.file
-                  : 'msgRcv.file und msg.file dÃ¼rfen +
+                  : 'msgRcv.file und msg.file dürfen +
                      nicht voneinander abweichen');
          p_assert(msg.lib = msgRcv.lib
-                  : 'msgRcv.lib und msg.lib dÃ¼rfen +
+                  : 'msgRcv.lib und msg.lib dürfen +
                      nicht voneinander abweichen');
 
          return;
@@ -39405,7 +39431,7 @@ srclen  =  "00112"
 srccssid=  "00273">
 <copysrc><![CDATA[
       *===============================================================*
-      *    CALL PGM(TEST_R3_05) PARM('Hello World! Ã¶Ã¤Ã¼Ã–Ã„Ãœ')           *
+      *    CALL PGM(TEST_R3_05) PARM('Hello World! öäüÖÄÜ')           *
       *===============================================================*
       *   >>PRE-COMPILER<<                                            *
       *                                                               *
