@@ -8,6 +8,8 @@
 /* --------------------------------------------------------------- */
              XMLGENINC  XINCLUDE(*YES)
 
+             XMLGENVRS XSRCFILE(QBASICS1) XSRCLIB(TOOLS400) XSRCMBR(COPYRIGHT)
+
              XMLGENCND  XMSG('Create sample programs? (YES, NO)') +
                           XVALUES(YES NO) XVAR(&CRTTSTPGM)
 

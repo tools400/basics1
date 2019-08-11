@@ -51,7 +51,7 @@
       appblddate CDATA #REQUIRED
      >
      ]>
-<upload  appname="BASICS1"  appauthor="Thomas Raddatz"  appblddate=" 4/19/2018">
+<upload  appname="BASICS1"  appauthor="Thomas Raddatz"  appblddate=" 8/11/2019">
 <install_instructions><![CDATA[
      *----------------------------------------------------------------      ------
      *  1. Upload entire XML to your AS/400 to a source file 112 long, into any mbr
@@ -1444,6 +1444,9 @@ srccssid=  "00273">
              DLTMOD     MODULE(&TOLIB/TEST_RH_01)
              MONMSG     MSGID(CPF2105)
 
+             DLTMOD     MODULE(&TOLIB/TEST_RG_01)
+             MONMSG     MSGID(CPF2105)
+
              DLTMOD     MODULE(&TOLIB/TEST_R1_01)
              MONMSG     MSGID(CPF2105)
 
@@ -1592,6 +1595,9 @@ srccssid=  "00273">
              MONMSG     MSGID(CPF2105)
 
              DLTPGM     PGM(&TOLIB/TEST_RH_01)
+             MONMSG     MSGID(CPF2105)
+
+             DLTPGM     PGM(&TOLIB/TEST_RG_01)
              MONMSG     MSGID(CPF2105)
 
              DLTPGM     PGM(&TOLIB/TEST_R1_01)
@@ -2160,6 +2166,26 @@ srccssid=  "00273">
                              TGTRLS(&TGTRLS) +
                              DETAIL(*BASIC)
                 DLTSPLF    FILE(TEST_RH_01) JOB(*) SPLNBR(*LAST)
+                MONMSG     MSGID(CPF0000)
+
+        /* TEST_RG_01 */
+                CRTRPGMOD  MODULE(&TOLIB/TEST_RG_01) +
+                             SRCFILE(&SRCLIB/&SRCFILE) +
+                             SRCMBR(*MODULE) +
+                             DBGVIEW(*LIST) +
+                             TRUNCNBR(*NO) +
+                             TGTRLS(&TGTRLS)
+                DLTSPLF    FILE(TEST_RG_01) JOB(*) SPLNBR(*LAST)
+                MONMSG     MSGID(CPF0000)
+
+                CRTPGM     PGM(&TOLIB/TEST_RG_01) +
+                             MODULE(*PGM) +
+                             BNDSRVPGM(&TOLIB/BASICS1) +
+                             BNDDIR(QC2LE) +
+                             ACTGRP(*NEW) +
+                             TGTRLS(&TGTRLS) +
+                             DETAIL(*BASIC)
+                DLTSPLF    FILE(TEST_RG_01) JOB(*) SPLNBR(*LAST)
                 MONMSG     MSGID(CPF0000)
 
         /* TEST_R1_01 */
@@ -2942,6 +2968,7 @@ srccssid=  "00273">
                 DLTMOD     MODULE(&TOLIB/TEST_RD_01)
                 DLTMOD     MODULE(&TOLIB/TEST_RE_01)
                 DLTMOD     MODULE(&TOLIB/TEST_RH_01)
+                DLTMOD     MODULE(&TOLIB/TEST_RG_01)
                 DLTMOD     MODULE(&TOLIB/TEST_R1_01)
                 DLTMOD     MODULE(&TOLIB/TEST_R1_02)
                 DLTMOD     MODULE(&TOLIB/TEST_R1_03)
@@ -3618,7 +3645,7 @@ srccssid=  "00273">
      /*     >>PARM<< ALWLIBUPD(*YES);                                          */
      /*     >>PARM<< BNDDIR(QC2LE);                                            */
      /*     >>PARM<< TEXT('Tools/400 - Runtime Library');                      */
-     /*     >>PARM<< TGTRLS(V6R1M0);                                           */
+     /*     >>PARM<< TGTRLS(V7R1M0);                                           */
      /*     >>PARM<< DETAIL(*BASIC);                                           */
      /*   >>END-COMPILE<<                                                      */
      /*                                                                        */
@@ -10751,6 +10778,13 @@ srccssid=  "00273">
       *                               BasicKeySet_delete()                  *
       *                               BasicKeySet_handle_t                  *
       *                                                                     *
+      *  11.08.2019  Th.Raddatz    Fixed 'index out of range' check in      *
+      *                              BasicMap_getSizeByIndex()              *
+      *                              BasicMap_getKeyByIndex()               *
+      *                              BasicMap_getValueByIndex()             *
+      *                            Special thanks to Ch. Bach for           *
+      *                            reporting these errors.                  *
+      *                                                                     *
       *=====================================================================*
       *   >>PRE-COMPILER<<                                                  *
       *                                                                     *
@@ -11393,7 +11427,7 @@ srccssid=  "00273">
 
          // Locate element by index
          x = i_index;
-         if (x < 1) and (x > BasicList_getNumE(hMap.pList));
+         if (x < 1 or x > BasicList_getNumE(hMap.pList));
             return key;
          endif;
 
@@ -11478,7 +11512,7 @@ srccssid=  "00273">
 
          // Locate element by index
          x = i_index;
-         if (x < 1) and (x > BasicList_getNumE(hMap.pList));
+         if (x < 1 or x > BasicList_getNumE(hMap.pList));
             return pElemData;
          endif;
 
@@ -11805,7 +11839,7 @@ srccssid=  "00273">
 
          // Locate element by index
          x = i_index;
-         if (x < 1) and (x > BasicList_getNumE(hMap.pList));
+         if (x < 1 or x > BasicList_getNumE(hMap.pList));
             return size;
          endif;
 
@@ -15479,7 +15513,8 @@ srccssid=  "00273">
       *     >>COMPILE<<                                                     *
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V6R1M0);                                      *
+      *       >>PARM<< OPTION(*EVENTF);                                     *
+      *       >>PARM<< TGTRLS(V7R1M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -15996,7 +16031,7 @@ srccssid=  "00273">
       *
      D BasicProperties_remove...
      D                 PI            10I 0
-     D  i_pMap                             const  like(BasicMap_handle_t )
+     D  i_pProperties                      const  like(BasicMap_handle_t )
      D  i_key                              const  like(BasicMap_key_t    )
      D                                            options(*varsize)
       *
@@ -16004,7 +16039,7 @@ srccssid=  "00273">
      D rc              S             10I 0 inz(-1)
       *
       *  Local fields
-     D x               S             10I 0 inz
+     D  key            S                   like(i_key ) inz
       *
       *  Properties handle
      D hProperties     DS                  likeds(hProperties_t)
@@ -16014,7 +16049,8 @@ srccssid=  "00273">
 
          checkPropertiesHandle(i_pProperties);
 
-         rc = BasicMap_remove(hProperties.pMap: i_key);
+         key = f_lcase(i_key);
+         rc = BasicMap_remove(hProperties.pMap: key);
 
          return rc;
 
@@ -29661,13 +29697,13 @@ srclen  =  "00112"
 srccssid=  "00273">
 <copysrc><![CDATA[
       /if not defined(COPYRIGHT_DSPEC)
-     H COPYRIGHT('V1.15.2 - 18.04.2017 - mailto:thomas.raddatz@tools400.de')
+     H COPYRIGHT('V1.15.3 - 11.08.2019 - mailto:thomas.raddatz@tools400.de')
       /eof
       /endif
      D BASICS1_VERSION...
-     D                 C                   '1.15.2'
+     D                 C                   '1.15.3'
      D BASICS1_DATE...
-     D                 C                   '18.04.2017'
+     D                 C                   '11.08.2019'
 ]]>  </copysrc>
 </mbr>
 <sendmsg  sendmsgid="CPF9897" sendmsgtype = "*STATUS   "><![CDATA[

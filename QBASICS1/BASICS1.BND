@@ -31,7 +31,7 @@
      /*     >>PARM<< ALWLIBUPD(*YES);                                          */
      /*     >>PARM<< BNDDIR(QC2LE);                                            */
      /*     >>PARM<< TEXT('Tools/400 - Runtime Library');                      */
-     /*     >>PARM<< TGTRLS(V6R1M0);                                           */
+     /*     >>PARM<< TGTRLS(V7R1M0);                                           */
      /*     >>PARM<< DETAIL(*BASIC);                                           */
      /*   >>END-COMPILE<<                                                      */
      /*                                                                        */
