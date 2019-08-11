@@ -64,6 +64,13 @@
       *                               BasicKeySet_delete()                  *
       *                               BasicKeySet_handle_t                  *
       *                                                                     *
+      *  11.08.2019  Th.Raddatz    Fixed 'index out of range' check in      *
+      *                              BasicMap_getSizeByIndex()              *
+      *                              BasicMap_getKeyByIndex()               *
+      *                              BasicMap_getValueByIndex()             *
+      *                            Special thanks to Ch. Bach for           *
+      *                            reporting these errors.                  *
+      *                                                                     *
       *=====================================================================*
       *   >>PRE-COMPILER<<                                                  *
       *                                                                     *
@@ -706,7 +713,7 @@
 
          // Locate element by index
          x = i_index;
-         if (x < 1) and (x > BasicList_getNumE(hMap.pList));
+         if (x < 1 or x > BasicList_getNumE(hMap.pList));
             return key;
          endif;
 
@@ -791,7 +798,7 @@
 
          // Locate element by index
          x = i_index;
-         if (x < 1) and (x > BasicList_getNumE(hMap.pList));
+         if (x < 1 or x > BasicList_getNumE(hMap.pList));
             return pElemData;
          endif;
 
@@ -1118,7 +1125,7 @@
 
          // Locate element by index
          x = i_index;
-         if (x < 1) and (x > BasicList_getNumE(hMap.pList));
+         if (x < 1 or x > BasicList_getNumE(hMap.pList));
             return size;
          endif;
 
