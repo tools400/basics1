@@ -31,7 +31,8 @@
       *     >>COMPILE<<                                                     *
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V6R1M0);                                      *
+      *       >>PARM<< OPTION(*EVENTF);                                     *
+      *       >>PARM<< TGTRLS(V7R1M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -548,7 +549,7 @@
       *
      D BasicProperties_remove...
      D                 PI            10I 0
-     D  i_pMap                             const  like(BasicMap_handle_t )
+     D  i_pProperties                      const  like(BasicMap_handle_t )
      D  i_key                              const  like(BasicMap_key_t    )
      D                                            options(*varsize)
       *
@@ -556,7 +557,7 @@
      D rc              S             10I 0 inz(-1)
       *
       *  Local fields
-     D x               S             10I 0 inz
+     D  key            S                   like(i_key ) inz
       *
       *  Properties handle
      D hProperties     DS                  likeds(hProperties_t)
@@ -566,7 +567,8 @@
 
          checkPropertiesHandle(i_pProperties);
 
-         rc = BasicMap_remove(hProperties.pMap: i_key);
+         key = f_lcase(i_key);
+         rc = BasicMap_remove(hProperties.pMap: key);
 
          return rc;
 
