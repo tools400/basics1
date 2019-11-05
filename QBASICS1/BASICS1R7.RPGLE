@@ -42,7 +42,7 @@
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
       *       >>PARM<< OPTIMIZE(*FULL );                                    *
-      *       >>PARM<< TGTRLS(V6R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R1M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
