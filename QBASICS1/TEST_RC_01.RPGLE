@@ -10,6 +10,7 @@
       *     >>COMPILE<<                                               *
       *       >>PARM<< TRUNCNBR(*NO);                                 *
       *       >>PARM<< DBGVIEW(*LIST);                                *
+      *       >>PARM<< OPTION(*EVENTF);                               *
       *       >>PARM<< TGTRLS(*CURRENT);                              *
       *     >>END-COMPILE<<                                           *
       *                                                               *
@@ -89,6 +90,9 @@
       *  Helper fields
      D x               S             10I 0                           inz
      D y               S             10I 0                           inz
+     D size            S             10I 0                           inz
+     D key             S                   like(BasicMap_key_t     ) inz
+     D pValue          S               *                             inz
      D hMap            S                   like(BasicMap_handle_t  ) inz
      D nbrOfElm        S             10I 0                      inz
      D aSize           S             10I 0                      inz
@@ -101,6 +105,8 @@
      D  data                               like(aField       )       inz
       *
      D msg             DS                  likeds(msg_t      )  inz
+      *
+     D MAX_INT_VALUE   C                   2147483647
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
@@ -174,7 +180,37 @@
                      : 'Entry not found: ' + 'index=4');
             p_assert(%str(aPointer) = anArray(y).data
                      : 'Element contains invalid data');
+
+            size = BasicMap_getSizeByIndex(hMap: x);
+
+            p_assert(size = anArray(y).trimSize
+                     : 'Element contains invalid data');
          endfor;
+
+         // Test index out of bounds
+         size = BasicMap_getSizeByIndex(hMap: 0);
+         p_assert(size = -1
+                  : 'Expected -1 for out of bounds condition');
+
+         size = BasicMap_getSizeByIndex(hMap: MAX_INT_VALUE);
+         p_assert(size = -1
+                  : 'Expected -1 for out of bounds condition');
+
+         pValue = BasicMap_getValueByIndex(hMap: 0);
+         p_assert(pValue = *NULL
+                  : 'Expected -1 for out of bounds condition');
+
+         pValue = BasicMap_getValueByIndex(hMap: MAX_INT_VALUE);
+         p_assert(pValue = *NULL
+                  : 'Expected -1 for out of bounds condition');
+
+         key = BasicMap_getKeyByIndex(hMap: 0);
+         p_assert(key = ''
+                  : 'Expected empty string for out of bounds condition');
+
+         key = BasicMap_getKeyByIndex(hMap: MAX_INT_VALUE);
+         p_assert(key = ''
+                  : 'Expected empty string for out of bounds condition');
 
          // Change size of data
          BasicMap_put(hMap: 'ChangeSize': 'HelloWorld');
