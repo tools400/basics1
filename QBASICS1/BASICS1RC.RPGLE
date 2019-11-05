@@ -698,7 +698,6 @@
      D key             S                   like(BasicMap_key_t    ) inz
       *
       *  Local fields
-     D x               S             10I 0                       inz
      D mapE_key        S                   like(BasicMap_key_t )
      D                                     based(mapE.pKey)
      D mapE            DS                  likeds(mapE_t       )
@@ -711,20 +710,14 @@
 
          checkMapHandle(i_pMap);
 
-         // Locate element by index
-         x = i_index;
-         if (x < 1 or x > BasicList_getNumE(hMap.pList));
-            return key;
-         endif;
-
          // Sort list, to keep order stable in case the user performs
          // a BasicMap_get() once that he got the key.
          sortMap(i_pMap);
 
          // Get element from underlaying list
-         pMapE = BasicList_get(hMap.pList: x);
+         pMapE = BasicList_get(hMap.pList: i_index);
          if pMapE = *NULL;
-            return key;
+            return '';
          endif;
 
          key = %subst(mapE_key: 1: %len(mapE_key));
@@ -770,7 +763,6 @@
      D length          S                   like(i_length     ) inz
       *
       *  Local fields
-     D x               S             10I 0                       inz
      D maxSize         S             10I 0                       inz
      D mapE            DS                  likeds(mapE_t       )
      D                                     based(pMapE         )
@@ -796,20 +788,14 @@
             length = 0;
          endif;
 
-         // Locate element by index
-         x = i_index;
-         if (x < 1 or x > BasicList_getNumE(hMap.pList));
-            return pElemData;
-         endif;
-
          // Sort list, to keep order stable in case the user performs
          // a BasicMap_get() once that he got the key.
          sortMap(i_pMap);
 
          // Get element from underlaying list
-         pMapE = BasicList_get(hMap.pList: x);
+         pMapE = BasicList_get(hMap.pList: i_index);
          if pMapE = *NULL;
-            return pElemData;
+            return *NULL;
          endif;
 
          // Determine number of bytes to copy
@@ -1113,7 +1099,6 @@
      D size            S             10I 0 inz(-1)
       *
       *  Local fields
-     D x               S             10I 0 inz
      D mapE            DS                  likeds(mapE_t       ) inz
       *
       *  Map handle
@@ -1123,15 +1108,9 @@
 
          checkMapHandle(i_pMap);
 
-         // Locate element by index
-         x = i_index;
-         if (x < 1 or x > BasicList_getNumE(hMap.pList));
-            return size;
-         endif;
-
          // Get element from underlaying list
-         if BasicList_get(hMap.pList: x: %addr(mapE): %size(mapE)) = *NULL;
-            return size;
+         if BasicList_get(hMap.pList: i_index: %addr(mapE): %size(mapE))= *NULL;
+            return -1;
          endif;
 
          size = mapE.size;
