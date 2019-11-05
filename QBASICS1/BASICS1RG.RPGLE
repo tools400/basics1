@@ -549,8 +549,8 @@
       *
      D BasicProperties_remove...
      D                 PI            10I 0
-     D  i_pProperties                      const  like(BasicMap_handle_t )
-     D  i_key                              const  like(BasicMap_key_t    )
+     D  i_pProperties                      const  like(BasicProperties_handle_t)
+     D  i_key                              const  like(BasicMap_key_t          )
      D                                            options(*varsize)
       *
       *  Return value
@@ -1023,6 +1023,9 @@
      P BasicProperties_putDecimal...
      P                 B                   export
       *
+      * TODO: think about how to change the return value to int(10)
+      *       for know I think that is impossible without breaking
+      *       backward compatibility
      D BasicProperties_putDecimal...
      D                 PI                         like(BasicProperties_decVal_t)
      D  i_pProperties                      const  like(BasicProperties_handle_t)
