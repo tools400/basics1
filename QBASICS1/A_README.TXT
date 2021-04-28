@@ -1,3 +1,4 @@
+
 BASICS1 - A Tools/400 Service Program
 -------------------------------------
 
@@ -20,14 +21,75 @@ and service programs (BND).
 -----------------------
 
 
-Version 1.14.5
+Version 1.16.0
 --------------
 
+Added:   Test program TEST_R8_02.
+Fixed:   Fixed exports of:
+            BASICS1RF_f_rtvSysVal_char()
+            BASICS1RF_f_rtvSysVal_num()
+Fixed:   Fixed 'index out of range' check in:
+            BasicMap_getSizeByIndex()              
+            BasicMap_getKeyByIndex()               
+            BasicMap_getValueByIndex()
+Fixed:   Reference fields in BasicProperties_remove().
+Fixed:   Upper case key in BasicProperties_remove().
+         Now the key is lower case. 
+Added:   Test cases to program TEST_RC_01.
+             
+
+Changed: Target release to 7.1.
+
+
+Version 1.15.3
+--------------
+
+Fixed:   Broken member BASICS1R7. (broken with v1.15.1)
+
+
+Version 1.15.2
+--------------
+
+Changed: Added installation program A_INSTALL.
+
+
+Version 1.15.1
+--------------
+
+Changed: Added installation program A_INSTALL.
+Bug:     Broke member BASICS1R7 because of a bug in the source code
+         formatter.
+
+
+Version 1.15
+------------
+
 Added:   Procedures:
+            f_mid()
             f_cvtEpochTS()
             f_cvtTSEpoch()
             f_cvtMiTimeTS()
             f_cvtTSMiTime()
+            f_cvtQSYSObjNameToPath()
+            f_cvtPathToQSYSObjName()
+Fixed:   Replaced f_genStrCmp() with a more reliable approach.
+Changed: Removed if/endif markers.
+
+
+Version 1.14.4
+--------------
+
+Fixed:   Fixed compile errors because of usage of '*' instead of
+         '*omit'.
+
+
+Version 1.14.3
+--------------
+
+Changed: Changed Signature_new() to use ftime() instead of time().
+Changed: Removed if/endif markers.
+Changed: Changed compiler directives to keep the custom lf_bit*
+         functions for V5R3 instead of V5R2.
 
 
 Version 1.14.2
