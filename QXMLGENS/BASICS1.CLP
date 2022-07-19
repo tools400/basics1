@@ -432,6 +432,11 @@
                           XTOSRCF(QBASICS1  ) XOBJTYPE(*PGM   ) +
                           XGENCRT(*NO ) XPARAM(*BLANK)
 
+             XMLGENMBR  XMBR(TEST_RG_01) XMBRATR(RPGLE) +
+                          XFROMSRCF(QBASICS1  ) XFROMSRCL(TOOLS400) +
+                          XTOSRCF(QBASICS1  ) XOBJTYPE(*PGM   ) +
+                          XGENCRT(*NO ) XPARAM(*BLANK)
+
              XMLGENMBR  XMBR(TEST_RH_01) XMBRATR(RPGLE) +
                           XFROMSRCF(QBASICS1  ) XFROMSRCL(TOOLS400) +
                           XTOSRCF(QBASICS1  ) XOBJTYPE(*PGM   ) +
