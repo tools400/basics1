@@ -115,8 +115,6 @@
       *=========================================================================
      P HANDLE_new...
      P                 B                   export
-      *
-     D HANDLE_new...
      D                 PI                         like(HANDLE_handle_t)
      D  i_type                             value  like(HANDLE_type_t  )
      D  i_size                       10U 0 value
@@ -162,8 +160,6 @@
          return   aHandle;
 
       /END-FREE
-      *
-     P HANDLE_new...
      P                 E
       *
       *=========================================================================
@@ -177,8 +173,6 @@
       *=========================================================================
      P HANDLE_null...
      P                 B                   export
-      *
-     D HANDLE_null...
      D                 PI                         like(HANDLE_handle_t)
       *
       *  Return value
@@ -192,8 +186,6 @@
          return   aHandle;
 
       /END-FREE
-      *
-     P HANDLE_null...
      P                 E
       *
       *=========================================================================
@@ -207,8 +199,6 @@
       *=========================================================================
      P HANDLE_isNull...
      P                 B                   export
-      *
-     D HANDLE_isNull...
      D                 PI              N
      D  i_handle                           value  like(HANDLE_handle_t)
       *
@@ -241,8 +231,6 @@
          return   isNull;
 
       /END-FREE
-      *
-     P HANDLE_isNull...
      P                 E
       *
       *=========================================================================
@@ -257,8 +245,6 @@
       *=========================================================================
      P HANDLE_isTypeOf...
      P                 B                   export
-      *
-     D HANDLE_isTypeOf...
      D                 PI              N
      D  i_handle                           value  like(HANDLE_handle_t)
      D  i_type                             value  like(HANDLE_type_t  )
@@ -306,8 +292,6 @@
          return   isValid;
 
       /END-FREE
-      *
-     P HANDLE_isTypeOf...
      P                 E
       *
       *=========================================================================
@@ -321,8 +305,6 @@
       *=========================================================================
      P HANDLE_getPointer...
      P                 B                   export
-      *
-     D HANDLE_getPointer...
      D                 PI              *
      D  i_handle                           value  like(HANDLE_handle_t)
       *
@@ -346,8 +328,6 @@
          return   pUserHandle;
 
       /END-FREE
-      *
-     P HANDLE_getPointer...
      P                 E
       *
       *=========================================================================
@@ -361,8 +341,6 @@
       *=========================================================================
      P HANDLE_delete...
      P                 B                   export
-      *
-     D HANDLE_delete...
      D                 PI
      D  io_handle                                 like(HANDLE_handle_t)
       *
@@ -408,8 +386,6 @@
          return;
 
       /END-FREE
-      *
-     P HANDLE_delete...
      P                 E
       *
       *=========================================================================
@@ -424,8 +400,6 @@
       *=========================================================================
      P MEMORY_allocate...
      P                 B                   export
-      *
-     D MEMORY_allocate...
      D                 PI              *
      D  io_aMemList                    *
      D  i_size                       10I 0 value
@@ -457,8 +431,6 @@
          return pMemory;
 
       /END-FREE
-      *
-     P MEMORY_allocate...
      P                 E
       *
       *=========================================================================
@@ -473,8 +445,6 @@
       *=========================================================================
      P MEMORY_freeAll...
      P                 B                   export
-      *
-     D MEMORY_freeAll...
      D                 PI
      D  io_aMemList                    *
       *
@@ -499,8 +469,6 @@
          return;
 
       /END-FREE
-      *
-     P MEMORY_freeAll...
      P                 E
       *
       *=========================================================================
@@ -514,8 +482,6 @@
       *=========================================================================
      P MEMORY_free...
      P                 B                   export
-      *
-     D MEMORY_free...
      D                 PI
      D  io_aMemList                    *
      D  io_pMem                        *
@@ -587,8 +553,6 @@
          return;
 
       /END-FREE
-      *
-     P MEMORY_free...
      P                 E
       *
       *=========================================================================
@@ -601,8 +565,6 @@
       *=========================================================================
      P MemoryManager_getDefaultManager...
      P                 B                   export
-      *
-     D MemoryManager_getDefaultManager...
      D                 PI                        likeds(MemoryManager_manager_t)
       *
       *  Return value
@@ -617,8 +579,6 @@
          return memMgr;
 
       /END-FREE
-      *
-     P MemoryManager_getDefaultManager...
      P                 E
       *
       *=========================================================================
@@ -632,8 +592,6 @@
       *=========================================================================
      P MemoryManager_allocate...
      P                 B                   export
-      *
-     D MemoryManager_allocate...
      D                 PI              *
      D  i_size                       10U 0 value
      D  i_heapID                     10I 0 value  options(*nopass)
@@ -671,8 +629,6 @@
          return pMemory;
 
       /END-FREE
-      *
-     P MemoryManager_allocate...
      P                 E
       *
       *=========================================================================
@@ -688,8 +644,6 @@
       *=========================================================================
      P MemoryManager_reallocate...
      P                 B                   export
-      *
-     D MemoryManager_reallocate...
      D                 PI              *
      D  i_pMem                         *   value
      D  i_size                       10U 0 value
@@ -704,8 +658,6 @@
          return pMemory;
 
       /END-FREE
-      *
-     P MemoryManager_reallocate...
      P                 E
       *
       *=========================================================================
@@ -719,8 +671,6 @@
       *=========================================================================
      P MemoryManager_free...
      P                 B                   export
-      *
-     D MemoryManager_free...
      D                 PI
      D  io_pMem                        *
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -736,8 +686,6 @@
          return;
 
       /END-FREE
-      *
-     P MemoryManager_free...
      P                 E
       *
       *=========================================================================
@@ -756,8 +704,6 @@
       *=========================================================================
      P MemoryManager_createHeap...
      P                 B                   export
-      *
-     D MemoryManager_createHeap...
      D                 PI            10I 0
      D  i_initialSize                10I 0 const  options(*nopass: *omit)
      D  i_increment                  10I 0 const  options(*nopass: *omit)
@@ -801,8 +747,6 @@
          return heapID;
 
       /END-FREE
-      *
-     P MemoryManager_createHeap...
      P                 E
       *
       *=========================================================================
@@ -816,8 +760,6 @@
       *=========================================================================
      P MemoryManager_deleteHeap...
      P                 B                   export
-      *
-     D MemoryManager_deleteHeap...
      D                 PI
      D  io_heapID                    10I 0
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -829,7 +771,5 @@
          return;
 
       /END-FREE
-      *
-     P MemoryManager_deleteHeap...
      P                 E
       *
