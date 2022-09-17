@@ -51,7 +51,7 @@
       appblddate CDATA #REQUIRED
      >
      ]>
-<upload  appname="BASICS1"  appauthor="Thomas Raddatz"  appblddate=" 7/19/2022">
+<upload  appname="BASICS1"  appauthor="Thomas Raddatz"  appblddate=" 9/17/2022">
 <install_instructions><![CDATA[
      *----------------------------------------------------------------      ------
      *  1. Upload entire XML to your AS/400 to a source file 112 long, into any mbr
@@ -3045,6 +3045,14 @@ and service programs (BND).
 -----------------------
       History
 -----------------------
+
+
+Version 1.16.1
+--------------
+
+Fixed:   Fixed handling optional parameter i_wildcard in f_genStrCmp().
+Changed: Replaced RPG memory functions with xalloc(), xrealloc() and
+         xdealloc() to get a single point of control.
 
 
 Version 1.16.0
@@ -17872,6 +17880,10 @@ srccssid=  "01141">
       *                            message type from the rcvm0200 format    *
       *                            if the message type has not been passed. *
       *                                                                     *
+      *  17.09.2022  Th.Raddatz    Changed module to use:  xalloc()         *
+      *                                                    xrealloc()       *
+      *                                                    xdealloc()       *
+      *                                                                     *
       *=====================================================================*
       *   >>PRE-COMPILER<<                                                  *
       *                                                                     *
@@ -17904,6 +17916,13 @@ srccssid=  "01141">
       *  Reference fields
       * -----------------------------------------
       /COPY QBASICS1,BASICS1R0
+      *
+      * -----------------------------------------
+      *  Imported prototypes
+      * -----------------------------------------
+      /DEFINE INCLUDE_INTERNAL_PROCDURES
+      /COPY QBASICS1,PBASICS1R8
+      /UNDEFINE INCLUDE_INTERNAL_PROCDURES
       *
       * -----------------------------------------
       *  Private prototypes
@@ -19138,7 +19157,7 @@ srccssid=  "01141">
          if   pRtvm0100 <> *NULL;
             if   rtvm0100.lenMsgRet > 0;
                msgText = %subst(rtvm0100: 25: rtvm0100.lenMsgRet);
-               dealloc(N) pRtvm0100;
+               xdealloc(pRtvm0100);
             else;
                msgText = '';
             endif;
@@ -19238,7 +19257,7 @@ srccssid=  "01141">
             if   rtvm0100.lenHlpRet > 0;
                msgHelpText = %subst(rtvm0100: 25 + rtvm0100.lenMsgRet:
                                     rtvm0100.lenHlpRet);
-               dealloc(N) pRtvm0100;
+               xdealloc(pRtvm0100);
             else;
                msgHelpText = '';
             endif;
@@ -19316,7 +19335,7 @@ srccssid=  "01141">
          if   pRtvm0100 <> *NULL;
             if   rtvm0100.lenMsgRet > 0;
                msgText = %subst(rtvm0100: 25: rtvm0100.lenMsgRet);
-               dealloc(N) pRtvm0100;
+               xdealloc(pRtvm0100);
             else;
                msgText = '';
             endif;
@@ -19416,7 +19435,7 @@ srccssid=  "01141">
             if   rtvm0100.lenHlpRet > 0;
                msgHelpText = %subst(rtvm0100: 25 + rtvm0100.lenMsgRet:
                                     rtvm0100.lenHlpRet);
-               dealloc(N) pRtvm0100;
+               xdealloc(pRtvm0100);
             else;
                msgHelpText = '';
             endif;
@@ -19601,7 +19620,7 @@ srccssid=  "01141">
       /FREE
 
          memSize   = %size(rcvm0300) + 1024;
-         pRcvm0300 = %alloc(memSize);
+         pRcvm0300 = xalloc(memSize);
          errCode   = f_newApiErrCode(cFalse);
 
          dou (rcvm0300.bytRet >= rcvm0300.bytAvl or f_isApiError(errCode));
@@ -19609,7 +19628,7 @@ srccssid=  "01141">
                      cMsg_Any: i_rcvm0200.msgKey: 0: cMsg_Act_Same: errCode);
             if (rcvm0300.bytRet < rcvm0300.bytAvl);
                memSize   = rcvm0300.bytAvl;
-               pRcvm0300 = %realloc(pRcvm0300: memSize);
+               pRcvm0300 = xrealloc(pRcvm0300: memSize);
             endif;
          enddo;
 
@@ -19633,7 +19652,7 @@ srccssid=  "01141">
             longSndPrc = %subst(tmpLongSndPrc: 1: tmpSndInf.lenSndPrcLName);
          endif;
 
-         dealloc(N) pRcvm0300;
+         xdealloc(pRcvm0300);
 
          // Set optional output parameters
          if (%parms() >= p_longSndPgm and %addr(o_longSndPgm) <> *NULL);
@@ -19822,7 +19841,7 @@ srccssid=  "01141">
 
          // Allocate memory and set initial parameter values
          memSize = 8;
-         pMsgInf = %alloc(memSize);
+         pMsgInf = xalloc(memSize);
          errCode = f_newApiErrCode(cTrue);
 
          // Loop until complete message information is received ...
@@ -19833,14 +19852,14 @@ srccssid=  "01141">
 
             // ... check for errors
             if  f_isApiError(errCode);
-               dealloc(N) pMsgInf;
+               xdealloc(pMsgInf);
                o_msg = f_cvtApiErrCodeToMsg(errCode);
                leave;
             else;
                // ... get more memory
                if   memSize < msgInf.bytAvl;
                   memSize = msgInf.bytAvl;
-                  pMsgInf = %realloc(pMsgInf: memSize);
+                  pMsgInf = xrealloc(pMsgInf: memSize);
                else;
                   o_msg = f_newMsg(cMsg_ID_OK);
                endif;
@@ -20393,6 +20412,9 @@ srccssid=  "01141">
       *                                                                     *
       *  07.04.2015  Th.Raddatz    Replaced f_genStrCmp() with a more       *
       *                            reliable approach.                       *
+      *                                                                     *
+      *  17.09.2022  Th.Raddatz    Fixed handling optional parameter        *
+      *                            i_wildcard in f_genStrCmp().             *
       *                                                                     *
       *=====================================================================*
       *   >>PRE-COMPILER<<                                                  *
@@ -22168,7 +22190,12 @@ srccssid=  "01141">
             return cEQUAL_TRUE;
          endif;
 
-         return lf_genStrCmpInternal(i_string: i_pattern: i_wildcard);
+         // Call generic string compare procedure
+         if (%parms() >= %parmNum(i_wildcard));
+            return lf_genStrCmpInternal(i_string: i_pattern: i_wildcard);
+         else;
+            return lf_genStrCmpInternal(i_string: i_pattern);
+         endif;
 
       /END-FREE
       *
@@ -22214,7 +22241,7 @@ srccssid=  "01141">
          string = f_lcase(i_string);
 
          // Call generic string compare procedure
-         if   %parms >= p_wildcard;
+         if (%parms() >= %parmNum(i_wildcard));
             isEqual = f_genStrCmp(string: mask: i_wildcard);
          else;
             isEqual = f_genStrCmp(string: mask);
@@ -22254,7 +22281,7 @@ srccssid=  "01141">
       /FREE
 
          // Process optional parameter values ...
-         // ... decimal point
+         // ... wildcard
          if (%parms() >= p_wildcard and %addr(i_wildcard) <> *NULL);
             wildcard = i_wildcard;
          else;
@@ -23001,6 +23028,10 @@ srccssid=  "01141">
       *                                                                     *
       *  13.06.2008  Th.Raddatz    Added parameter 'offset' to f_caller().  *
       *                                                                     *
+      *  17.09.2022  Th.Raddatz    Changed module to use:  xalloc()         *
+      *                                                    xrealloc()       *
+      *                                                    xdealloc()       *
+      *                                                                     *
       *=====================================================================*
       *   >>PRE-COMPILER<<                                                  *
       *                                                                     *
@@ -23028,6 +23059,13 @@ srccssid=  "01141">
       *  Exported functions
       * -----------------------------------------
       /COPY QBASICS1,PBASICS1R4
+      *
+      * -----------------------------------------
+      *  Imported prototypes
+      * -----------------------------------------
+      /DEFINE INCLUDE_INTERNAL_PROCDURES
+      /COPY QBASICS1,PBASICS1R8
+      /UNDEFINE INCLUDE_INTERNAL_PROCDURES
       *
       * -----------------------------------------
       *  Reference fields
@@ -23060,8 +23098,6 @@ srccssid=  "01141">
       *=========================================================================
      P p_assert...
      P                 B                   export
-      *
-     D p_assert...
      D                 PI
      D  i_condition                    N   const
      D  i_msgText                   128A   const  options(*nopass)
@@ -23079,6 +23115,12 @@ srccssid=  "01141">
       *
       *  Local constants
      D cTEXT_MSG       C                   const('Who is before me?')
+      *
+      *  Fields for sender information
+     D procedure       S            256A   inz varying
+     D module          S             10A   inz
+     D program         S             10A   inz
+     D stmtID          S             10A   inz
       *
       *  Helper fields QMHSNDPM/QMHRCVPM
      D qMsgF           DS                  likeds(qObj_t     )  inz
@@ -23116,7 +23158,7 @@ srccssid=  "01141">
 
             if   not f_isApiError(errCode);
                memSize   = 2048;
-               pRcvm0300 = %alloc(memSize);
+               pRcvm0300 = xalloc(memSize);
                errCode   = f_newApiErrCode(cTrue);
                callStkEQ.module  = '*NONE';
                callStkEQ.program = '*NONE';
@@ -23133,31 +23175,29 @@ srccssid=  "01141">
                                    + rcvm0300.lenRplDataR
                                    + rcvm0300.lenMsgR
                                    + rcvm0300.lenMsgHlpR;
+               procedure = %trimR(sndInf.rcvProc);
+               module    = sndInf.rcvModule;
+               program   = sndInf.rcvPgm;
+               stmtID    = sndInf.rcvPgmStmtNbr(1);
             else;
                // ... else set sender information to "not available"
-               pSndInf = %alloc(%size(sndInf));
-               clear   sndInf;
-               sndInf.rcvPgm     = '*N';
-               sndInf.rcvModule  = '*N';
-               sndInf.rcvProc    = '*N';
-               sndInf.rcvPgmStmtNbr(1) = '*N';
+               procedure = '*N';
+               module    = '*N';
+               program   = '*N';
+               stmtID    = '*N';
             endif;
 
             // Create "assert" message
-            msgText = %trimr(sndInf.rcvPgm    ) + '/'  +
-                      %trimr(sndInf.rcvModule ) + '.'  +
-                      %trimr(sndInf.rcvProc   ) + ' (' +
+            msgText = %trimr(program)   + '/'  +
+                      %trimr(module )   + '.'  +
+                      %trimr(procedure) + ' (' +
                       'Stmt: '                         +
-                      %trimr(sndInf.rcvPgmStmtNbr(1)) + ') ' +
+                      %trimr(stmtID)    + ') ' +
                       ': ' + %trim(msgText);
 
             // Free memory
-            if   pRcvm0300 <> *NULL;
-               dealloc(N)   pRcvm0300;
-            else;
-               if   pSndInf <> *NULL;
-                  dealloc(N) pSndInf;
-               endif;
+            if (pRcvm0300 <> *NULL);
+               xdealloc(pRcvm0300);
             endif;
 
             // Send "assert" *ESCAPE message
@@ -23172,10 +23212,6 @@ srccssid=  "01141">
 
       /END-FREE
       /ENDIF
-      *
-     C                   return
-      *
-     P p_assert...
      P                 E
       *
       *=========================================================================
@@ -23191,8 +23227,6 @@ srccssid=  "01141">
       *=========================================================================
      P f_this...
      P                 B                   export
-      *
-     D f_this...
      D                 PI           256A          varying
      D  o_module                     10A          options(*nopass: *omit)
      D  o_program                    10A          options(*nopass: *omit)
@@ -23244,7 +23278,7 @@ srccssid=  "01141">
 
          if   not f_isApiError(errCode);
             memSize   = 2048;
-            pRcvm0300 = %alloc(memSize);
+            pRcvm0300 = xalloc(memSize);
             errCode   = f_newApiErrCode(cTrue);
             callStkEQ.module  = '*NONE';
             callStkEQ.program = '*NONE';
@@ -23274,7 +23308,7 @@ srccssid=  "01141">
 
          // Free memory
          if   pRcvm0300 <> *NULL;
-            dealloc(N)   pRcvm0300;
+            xdealloc(pRcvm0300);
          endif;
 
          // Process optional output parameters ...
@@ -23314,8 +23348,6 @@ srccssid=  "01141">
          return   procedure;
 
       /END-FREE
-      *
-     P f_this...
      P                 E
       *
       *=========================================================================
@@ -23332,8 +23364,6 @@ srccssid=  "01141">
       *=========================================================================
      P f_caller...
      P                 B                   export
-      *
-     D f_caller...
      D                 PI           256A          varying
      D  o_module                     10A          options(*nopass: *omit)
      D  o_program                    10A          options(*nopass: *omit)
@@ -23395,7 +23425,7 @@ srccssid=  "01141">
          if   not f_isApiError(errCode);
             // Receive and remove test message
             memSize   = 2048;
-            pRcvm0300 = %alloc(memSize);
+            pRcvm0300 = xalloc(memSize);
             errCode   = f_newApiErrCode(cTrue);
             callStkEQ.module  = '*NONE';
             callStkEQ.program = '*NONE';
@@ -23425,7 +23455,7 @@ srccssid=  "01141">
 
          // Free memory
          if   pRcvm0300 <> *NULL;
-            dealloc(N)   pRcvm0300;
+            xdealloc(pRcvm0300);
          endif;
 
          // Process optional output parameters ...
@@ -23465,8 +23495,6 @@ srccssid=  "01141">
          return   procedure;
 
       /END-FREE
-      *
-     P f_caller...
      P                 E
       *
 ]]>  </copysrc>
@@ -27353,6 +27381,10 @@ srccssid=  "01141">
       *                            'invalid handle' in case the handle      *
       *                            is *NULL.                                *
       *                                                                     *
+      *  17.09.2022  Th.Raddatz    Added procedures:  xalloc()              *
+      *                                               xrealloc()            *
+      *                                               xdealloc()            *
+      *                                                                     *
       *=====================================================================*
       *   >>PRE-COMPILER<<                                                  *
       *                                                                     *
@@ -27380,7 +27412,9 @@ srccssid=  "01141">
       * -----------------------------------------
       *  Exported functions
       * -----------------------------------------
+      /DEFINE INCLUDE_INTERNAL_PROCDURES
       /COPY QBASICS1,PBASICS1R8
+      /UNDEFINE INCLUDE_INTERNAL_PROCDURES
       *
       * -----------------------------------------
       *  Reference fields
@@ -27434,8 +27468,6 @@ srccssid=  "01141">
       *=========================================================================
      P HANDLE_new...
      P                 B                   export
-      *
-     D HANDLE_new...
      D                 PI                         like(HANDLE_handle_t)
      D  i_type                             value  like(HANDLE_type_t  )
      D  i_size                       10U 0 value
@@ -27461,28 +27493,26 @@ srccssid=  "01141">
          else;
             // else allocate memory for a base handle
             // and the size of memory requested.
-            pHandle = %alloc(%size(baseHandle_t) + i_size);
+            pHandle = xalloc(%size(baseHandle_t) + i_size);
             g_handleList(aHandle) = pHandle;
 
             // Initialize handle - V5R3
             // handle.baseHandle.type = i_type;
             // handle.baseHandle.size = i_size;
-            // handle.pUserHandle = %alloc(baseHandle.size);
+            // handle.pUserHandle = xalloc(baseHandle.size);
             // memset(handle.pUserHandle: x'00': baseHandle.size);
 
             // Initialize handle - V5R1
             baseHandle.type = i_type;
             baseHandle.size = i_size;
             handle.baseHandle = baseHandle;
-            handle.pUserHandle = %alloc(baseHandle.size);
+            handle.pUserHandle = xalloc(baseHandle.size);
             memset(handle.pUserHandle: x'00': baseHandle.size);
          endif;
 
          return   aHandle;
 
       /END-FREE
-      *
-     P HANDLE_new...
      P                 E
       *
       *=========================================================================
@@ -27496,8 +27526,6 @@ srccssid=  "01141">
       *=========================================================================
      P HANDLE_null...
      P                 B                   export
-      *
-     D HANDLE_null...
      D                 PI                         like(HANDLE_handle_t)
       *
       *  Return value
@@ -27511,8 +27539,6 @@ srccssid=  "01141">
          return   aHandle;
 
       /END-FREE
-      *
-     P HANDLE_null...
      P                 E
       *
       *=========================================================================
@@ -27526,8 +27552,6 @@ srccssid=  "01141">
       *=========================================================================
      P HANDLE_isNull...
      P                 B                   export
-      *
-     D HANDLE_isNull...
      D                 PI              N
      D  i_handle                           value  like(HANDLE_handle_t)
       *
@@ -27560,8 +27584,6 @@ srccssid=  "01141">
          return   isNull;
 
       /END-FREE
-      *
-     P HANDLE_isNull...
      P                 E
       *
       *=========================================================================
@@ -27576,8 +27598,6 @@ srccssid=  "01141">
       *=========================================================================
      P HANDLE_isTypeOf...
      P                 B                   export
-      *
-     D HANDLE_isTypeOf...
      D                 PI              N
      D  i_handle                           value  like(HANDLE_handle_t)
      D  i_type                             value  like(HANDLE_type_t  )
@@ -27625,8 +27645,6 @@ srccssid=  "01141">
          return   isValid;
 
       /END-FREE
-      *
-     P HANDLE_isTypeOf...
      P                 E
       *
       *=========================================================================
@@ -27640,8 +27658,6 @@ srccssid=  "01141">
       *=========================================================================
      P HANDLE_getPointer...
      P                 B                   export
-      *
-     D HANDLE_getPointer...
      D                 PI              *
      D  i_handle                           value  like(HANDLE_handle_t)
       *
@@ -27665,8 +27681,6 @@ srccssid=  "01141">
          return   pUserHandle;
 
       /END-FREE
-      *
-     P HANDLE_getPointer...
      P                 E
       *
       *=========================================================================
@@ -27680,8 +27694,6 @@ srccssid=  "01141">
       *=========================================================================
      P HANDLE_delete...
      P                 B                   export
-      *
-     D HANDLE_delete...
      D                 PI
      D  io_handle                                 like(HANDLE_handle_t)
       *
@@ -27710,13 +27722,13 @@ srccssid=  "01141">
          // Initialize handle memory - V5R1
          baseHandle = handle.baseHandle;
          memset(handle.pUserHandle: x'00': baseHandle.size);
-         dealloc(N) handle.pUserHandle;
+         xdealloc(handle.pUserHandle);
          baseHandle.size = 0;
          baseHandle.type = *ALLx'00';
          handle.baseHandle = baseHandle;
 
          // Free handle memory
-         dealloc(N) pHandle;
+         xdealloc(pHandle);
 
          // Free index in handle list
          g_handleList(io_handle) = *NULL;
@@ -27727,8 +27739,6 @@ srccssid=  "01141">
          return;
 
       /END-FREE
-      *
-     P HANDLE_delete...
      P                 E
       *
       *=========================================================================
@@ -27743,8 +27753,6 @@ srccssid=  "01141">
       *=========================================================================
      P MEMORY_allocate...
      P                 B                   export
-      *
-     D MEMORY_allocate...
      D                 PI              *
      D  io_aMemList                    *
      D  i_size                       10I 0 value
@@ -27766,7 +27774,7 @@ srccssid=  "01141">
          if (i_size = 0);
             pMemory = *NULL;
          else;
-            pMemory = %alloc(i_size + %size(cell));
+            pMemory = xalloc(i_size + %size(cell));
             pCell   = pMemory + i_size;            // Position cell right after payload
             cell.pPrvCell    = io_aMemList;        // Remember the address of the prv. cell
             cell.size        = i_size;             // Remember the size of the current cell
@@ -27776,8 +27784,6 @@ srccssid=  "01141">
          return pMemory;
 
       /END-FREE
-      *
-     P MEMORY_allocate...
      P                 E
       *
       *=========================================================================
@@ -27792,8 +27798,6 @@ srccssid=  "01141">
       *=========================================================================
      P MEMORY_freeAll...
      P                 B                   export
-      *
-     D MEMORY_freeAll...
      D                 PI
      D  io_aMemList                    *
       *
@@ -27818,8 +27822,6 @@ srccssid=  "01141">
          return;
 
       /END-FREE
-      *
-     P MEMORY_freeAll...
      P                 E
       *
       *=========================================================================
@@ -27833,8 +27835,6 @@ srccssid=  "01141">
       *=========================================================================
      P MEMORY_free...
      P                 B                   export
-      *
-     D MEMORY_free...
      D                 PI
      D  io_aMemList                    *
      D  io_pMem                        *
@@ -27906,8 +27906,6 @@ srccssid=  "01141">
          return;
 
       /END-FREE
-      *
-     P MEMORY_free...
      P                 E
       *
       *=========================================================================
@@ -27920,8 +27918,6 @@ srccssid=  "01141">
       *=========================================================================
      P MemoryManager_getDefaultManager...
      P                 B                   export
-      *
-     D MemoryManager_getDefaultManager...
      D                 PI                        likeds(MemoryManager_manager_t)
       *
       *  Return value
@@ -27936,8 +27932,6 @@ srccssid=  "01141">
          return memMgr;
 
       /END-FREE
-      *
-     P MemoryManager_getDefaultManager...
      P                 E
       *
       *=========================================================================
@@ -27951,8 +27945,6 @@ srccssid=  "01141">
       *=========================================================================
      P MemoryManager_allocate...
      P                 B                   export
-      *
-     D MemoryManager_allocate...
      D                 PI              *
      D  i_size                       10U 0 value
      D  i_heapID                     10I 0 value  options(*nopass)
@@ -27990,8 +27982,6 @@ srccssid=  "01141">
          return pMemory;
 
       /END-FREE
-      *
-     P MemoryManager_allocate...
      P                 E
       *
       *=========================================================================
@@ -28007,8 +27997,6 @@ srccssid=  "01141">
       *=========================================================================
      P MemoryManager_reallocate...
      P                 B                   export
-      *
-     D MemoryManager_reallocate...
      D                 PI              *
      D  i_pMem                         *   value
      D  i_size                       10U 0 value
@@ -28023,8 +28011,6 @@ srccssid=  "01141">
          return pMemory;
 
       /END-FREE
-      *
-     P MemoryManager_reallocate...
      P                 E
       *
       *=========================================================================
@@ -28038,8 +28024,6 @@ srccssid=  "01141">
       *=========================================================================
      P MemoryManager_free...
      P                 B                   export
-      *
-     D MemoryManager_free...
      D                 PI
      D  io_pMem                        *
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -28055,8 +28039,6 @@ srccssid=  "01141">
          return;
 
       /END-FREE
-      *
-     P MemoryManager_free...
      P                 E
       *
       *=========================================================================
@@ -28075,8 +28057,6 @@ srccssid=  "01141">
       *=========================================================================
      P MemoryManager_createHeap...
      P                 B                   export
-      *
-     D MemoryManager_createHeap...
      D                 PI            10I 0
      D  i_initialSize                10I 0 const  options(*nopass: *omit)
      D  i_increment                  10I 0 const  options(*nopass: *omit)
@@ -28120,8 +28100,6 @@ srccssid=  "01141">
          return heapID;
 
       /END-FREE
-      *
-     P MemoryManager_createHeap...
      P                 E
       *
       *=========================================================================
@@ -28135,8 +28113,6 @@ srccssid=  "01141">
       *=========================================================================
      P MemoryManager_deleteHeap...
      P                 B                   export
-      *
-     D MemoryManager_deleteHeap...
      D                 PI
      D  io_heapID                    10I 0
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -28148,8 +28124,88 @@ srccssid=  "01141">
          return;
 
       /END-FREE
+     P                 E
       *
-     P MemoryManager_deleteHeap...
+      *=========================================================================
+      *  *** Internal use only. ***
+      *  Returns a pointer to newly allocated heap storage of the length
+      *  specified. Replacement for RPG %alloc().
+      *=========================================================================
+      *  Parameters:
+      *   i_size        - Size of the newly allocated storage.
+      *
+      *  Returns:
+      *   pMem          - Pointer to the newly allocated storage.
+      *=========================================================================
+     P xalloc...
+     P                 B                   export
+     D                 PI              *
+     D  i_size                       10I 0 const
+      *
+      *  Return value
+     D pMem            S               *   inz
+      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      /FREE
+
+         pMem = %alloc(i_size);
+
+         return pMem;
+
+      /END-FREE
+     P                 E
+      *
+      *=========================================================================
+      *  *** Internal use only. ***
+      *  Changes the heap storage pointed to by the first parameter to be the
+      *  length specified in the second parameter. Replacement for RPG
+      *  %realloc().
+      *=========================================================================
+      *  Parameters:
+      *   i_pMem        - Pointer to the heap storage that is reallocated.
+      *   i_size        - New size of the heap storage.
+      *
+      *  Returns:
+      *   pMem          - Pointer to the resized heap storage.
+      *=========================================================================
+     P xrealloc...
+     P                 B                   export
+     D                 PI              *
+     D  i_pMem                         *   const
+     D  i_size                       10I 0 const
+      *
+      *  Return value
+     D pMem            S               *   inz
+      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      /FREE
+
+         pMem = %realloc(i_pMem: i_size);
+
+         return pMem;
+
+      /END-FREE
+     P                 E
+      *
+      *=========================================================================
+      *  *** Internal use only. ***
+      *  Frees one previous allocation of heap storage.
+      *  Replacement for RPG dealloc.
+      *=========================================================================
+      *  Parameters:
+      *   i_pMem        - Pointer to the heap storage that is reallocated.
+      *
+      *  Returns:
+      *   void
+      *=========================================================================
+     P xdealloc...
+     P                 B                   export
+     D                 PI
+     D  io_pMem                        *
+      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      /FREE
+
+         dealloc(N) io_pMem;
+
+      /END-FREE
      P                 E
       *
 ]]>  </copysrc>
@@ -29741,13 +29797,13 @@ srclen  =  "00112"
 srccssid=  "01141">
 <copysrc><![CDATA[
       /if not defined(COPYRIGHT_DSPEC)
-     H COPYRIGHT('V1.16.0 - 06.11.2019 - mailto:thomas.raddatz@tools400.de')
+     H COPYRIGHT('V1.16.1 - 17.09.2022 - mailto:thomas.raddatz@tools400.de')
       /eof
       /endif
      D BASICS1_VERSION...
-     D                 C                   '1.16.0'
+     D                 C                   '1.16.1'
      D BASICS1_DATE...
-     D                 C                   '06.11.2019'
+     D                 C                   '17.09.2022'
 ]]>  </copysrc>
 </mbr>
 <sendmsg  sendmsgid="CPF9897" sendmsgtype = "*STATUS   "><![CDATA[
@@ -34298,6 +34354,35 @@ srccssid=  "01141">
      D                                     ')
      D  io_heapID                    10I 0
       *
+      /IF DEFINED(INCLUDE_INTERNAL_PROCDURES)
+      *
+      *  Returns a pointer to newly allocated heap storage of the length
+      *  specified.
+     D xalloc...
+     D                 PR              *
+     D                                     extproc('BASICS1R8+
+     D                                     _xalloc+
+     D                                     ')
+     D  i_size                       10I 0 const
+      *
+      *  Changes the heap storage pointed to by the first parameter to be the
+      *  length specified in the second parameter.
+     D xrealloc...
+     D                 PR              *
+     D                                     extproc('BASICS1R8+
+     D                                     _xrealloc+
+     D                                     ')
+     D  i_pMem                         *   const
+     D  i_size                       10I 0 const
+      *
+      *  Frees one previous allocation of heap storage.
+     D xdealloc...
+     D                 PR
+     D                                     extproc('BASICS1R8+
+     D                                     _xdealloc+
+     D                                     ')
+     D  io_pMem                        *
+      /ENDIF
       * -----------------------------------------
       *  Imported prototypes
       * -----------------------------------------
@@ -38171,7 +38256,7 @@ srccssid=  "01141">
          BasicKeySet_delete(hKeySet);
 
          for i = 1 to %elem(keys);
-           if (key(i) <> '');
+           if (keys(i) <> '');
              rc = BasicProperties_remove(hProperties : keys(i));
              p_assert(rc = 0: 'Key must exist and ''rc'' must equal 0');
              count += 1;
@@ -39191,7 +39276,7 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R3_01')
-     D  gi_strVal                    32A   const
+     D  gi_strVal                    32A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -39203,11 +39288,15 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_strVal                    32A   const
+     D  gi_strVal                    32A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(gi_strVal);
+         if (%parms() >= %parmNum(gi_strVal));
+            main(gi_strVal);
+         else;
+            main('');
+         endif;
 
          *inlr = *on;
 
@@ -39243,9 +39332,11 @@ srccssid=  "01141">
          msg = f_newMsg('': %editc(%dec(numVal: 20: 5): 'N'));
          f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-         numVal = f_val(i_strVal);
-         msg = f_newMsg('': %editc(%dec(numVal: 30: 9): 'N'));
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+         if (i_strVal <> '');
+            numVal = f_val(i_strVal);
+            msg = f_newMsg('': %editc(%dec(numVal: 30: 9): 'N'));
+            f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+         endif;
 
          return;
 
@@ -39326,7 +39417,7 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R3_02')
-     D  gi_width                     15P 5 const
+     D  gi_width                     15P 5 const  options(*nopass)
       *
      D main...
      D                 PR
@@ -39338,11 +39429,15 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_width                     15P 5 const
+     D  gi_width                     15P 5 const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(gi_width);
+         if (%parms() >= %parmNum(gi_width));
+            main(gi_width);
+         else;
+            main(60);
+         endif;
 
          *inlr = *on;
 
@@ -39509,7 +39604,7 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R3_03')
-     D  gi_text                      32A   const
+     D  gi_text                      32A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -39521,11 +39616,15 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_text                      32A   const
+     D  gi_text                      32A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(gi_text);
+         if (%parms() >= %parmNum(gi_text));
+            main(gi_text);
+         else;
+            main('Hello World!');
+         endif;
 
          *inlr = *on;
 
@@ -39652,7 +39751,7 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R3_04')
-     D  gi_rplStr                    32A   const
+     D  gi_rplStr                    32A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -39664,11 +39763,15 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_rplStr                    32A   const
+     D  gi_rplStr                    32A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(gi_rplStr);
+         if (%parms() >= %parmNum(gi_rplStr));
+            main(gi_rplStr);
+         else;
+            main('Hello World!');
+         endif;
 
          *inlr = *on;
 
@@ -39781,7 +39884,7 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R3_05')
-     D  gi_string                    32A   const
+     D  gi_string                    32A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -39793,11 +39896,15 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_string                    32A   const
+     D  gi_string                    32A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(gi_string);
+         if (%parms() >= %parmNum(gi_string));
+            main(gi_string);
+         else;
+            main('Hello World!');
+         endif;
 
          *inlr = *on;
 
@@ -40879,7 +40986,7 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R3_11')
-     D  gi_buffer                    32A   const
+     D  gi_buffer                    32A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -40891,11 +40998,15 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_buffer                    32A   const
+     D  gi_buffer                    32A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(gi_buffer);
+         if (%parms() >= %parmNum(gi_buffer));
+            main(gi_buffer);
+         else;
+            main('Hello World!');
+         endif;
 
          *inlr = *on;
 
@@ -41492,7 +41603,7 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R4_01')
-     D  gi_boolean                    1A   const
+     D  gi_boolean                    1A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -41504,7 +41615,7 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_boolean                    1A   const
+     D  gi_boolean                    1A   const  options(*nopass)
       *
       *  Local helper fields
      D msg             DS                  likeds(msg_t     ) inz
@@ -41518,7 +41629,11 @@ srccssid=  "01141">
                                             + %trimR(procedure));
          f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-         main(gi_boolean);
+         if (%parms() >= %parmNum(gi_boolean));
+            main(gi_boolean);
+         else;
+            main(*on);
+         endif;
 
          *inlr = *on;
 
@@ -41650,9 +41765,9 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R5_01')
-     D  gi_obj                       10A   const
-     D  gi_lib                       10A   const
-     D  gi_type                      10A   const
+     D  gi_obj                       10A   const  options(*nopass)
+     D  gi_lib                       10A   const  options(*nopass)
+     D  gi_type                      10A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -41666,13 +41781,17 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_obj                       10A   const
-     D  gi_lib                       10A   const
-     D  gi_type                      10A   const
+     D  gi_obj                       10A   const  options(*nopass)
+     D  gi_lib                       10A   const  options(*nopass)
+     D  gi_type                      10A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(gi_obj: gi_lib: gi_type);
+         if (%parms() >= %parmNum(gi_type));
+            main(gi_obj: gi_lib: gi_type);
+         else;
+            main('QCPFMSG': 'QSYS': '*MSGF');
+         endif;
 
          *inlr = *on;
 
@@ -41792,9 +41911,9 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R5_02')
-     D  gi_file                      10A   const
-     D  gi_lib                       10A   const
-     D  gi_mbr                       10A   const
+     D  gi_file                      10A   const  options(*nopass)
+     D  gi_lib                       10A   const  options(*nopass)
+     D  gi_mbr                       10A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -41808,13 +41927,17 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_file                      10A   const
-     D  gi_lib                       10A   const
-     D  gi_mbr                       10A   const
+     D  gi_file                      10A   const  options(*nopass)
+     D  gi_lib                       10A   const  options(*nopass)
+     D  gi_mbr                       10A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(gi_file: gi_lib: gi_mbr);
+         if (%parms() >= %parmNum(gi_mbr));
+            main(gi_file: gi_lib: gi_mbr);
+         else;
+            main('QBASICS1': '*LIBL': 'TEST_R5_02');
+         endif;
 
          *inlr = *on;
 
@@ -41839,7 +41962,8 @@ srccssid=  "01141">
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         if   not f_exist(i_lib: *omit: '*LIB');
+         if (not f_startsWith('*': i_lib) and
+             not f_exist(i_lib: *omit: '*LIB'));
             msg = f_newMsg('CPF9898': 'Library ' + %trim(i_lib)
                                       + ' does not exist');
             f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
@@ -42112,7 +42236,8 @@ srccssid=  "01141">
             size = size + cPAGE_SIZE;
          endif;
 
-         size = size - 512;   // User space administration attributes
+         // Not valid on 7.3
+         // size = size - 512;   // User space administration attributes
 
          return size;
 
@@ -42672,7 +42797,7 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R6_01')
-     D  gi_cmd                       32A   const
+     D  gi_cmd                       32A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -42684,11 +42809,15 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_cmd                       32A   const
+     D  gi_cmd                       32A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(gi_cmd);
+         if (%parms() >= %parmNum(gi_cmd));
+            main(gi_cmd);
+         else;
+            main('DLYJOB DLY(1)');
+         endif;
 
          *inlr = *on;
 
@@ -42812,7 +42941,7 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R6_02')
-     D  gi_prefix                    32A   const
+     D  gi_prefix                    32A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -42824,11 +42953,15 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_prefix                    32A   const
+     D  gi_prefix                    32A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(%trim(gi_prefix));
+         if (%parms() >= %parmNum(gi_prefix));
+            main(%trim(gi_prefix));
+         else;
+            main('TEST_R6_02_');
+         endif;
 
          *inlr = *on;
 
@@ -43465,7 +43598,7 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R7_04')
-     D  gi_string                    32A   const
+     D  gi_string                    32A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -43477,11 +43610,15 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_string                    32A   const
+     D  gi_string                    32A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(%trimR(gi_string));
+         if (%parms() >= %parmNum(gi_string));
+            main(%trimR(gi_string));
+         else;
+            main('Hello World!');
+         endif;
 
          *inlr = *on;
 
@@ -43613,7 +43750,7 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R7_05')
-     D  gi_string                    32A   const
+     D  gi_string                    32A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -43625,11 +43762,15 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_string                    32A   const
+     D  gi_string                    32A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(%trimR(gi_string));
+         if (%parms() >= %parmNum(gi_string));
+            main(%trimR(gi_string));
+         else;
+            main('Hello World!');
+         endif;
 
          *inlr = *on;
 
@@ -44138,7 +44279,7 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R7_08')
-     D  gi_string                    32A   const
+     D  gi_string                    32A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -44150,11 +44291,15 @@ srccssid=  "01141">
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_string                    32A   const
+     D  gi_string                    32A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(%trimR(gi_string));
+         if (%parms() >= %parmNum(gi_string));
+            main(%trimR(gi_string));
+         else;
+            main('Hello World!');
+         endif;
 
          *inlr = *on;
 
