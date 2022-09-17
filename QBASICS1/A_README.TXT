@@ -5,7 +5,7 @@ BASICS1 - A Tools/400 Service Program
 BASICS1 is a core service program that offers services that are used
 by almost all Tools/400 utilities.
 
-Compile members with the following PDM option:                                                     
+Compile members with the following PDM option:
                                                                           
    STRPREPRC USESRCFILE(&L/&F) USESRCMBR(&N) OPTION(*EVENTF) CHGOBJD(*NO) 
      LIB(&O) OBJ(&N) SRCLIB(&L) SRCFILE(&F) SRCMBR(&N) USER0(&X)          
@@ -19,6 +19,14 @@ and service programs (BND).
 -----------------------
       History
 -----------------------
+
+
+Version 1.16.1
+--------------
+
+Fixed:   Fixed handling optional parameter i_wildcard in f_genStrCmp().
+Changed: Replaced RPG memory functions with xalloc(), xrealloc() and
+         xdealloc() to get a single point of control.
 
 
 Version 1.16.0
