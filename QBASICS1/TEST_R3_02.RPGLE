@@ -55,7 +55,7 @@
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R3_02')
-     D  gi_width                     15P 5 const
+     D  gi_width                     15P 5 const  options(*nopass)
       *
      D main...
      D                 PR
@@ -67,11 +67,15 @@
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_width                     15P 5 const
+     D  gi_width                     15P 5 const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(gi_width);
+         if (%parms() >= %parmNum(gi_width));
+            main(gi_width);
+         else;
+            main(60);
+         endif;
 
          *inlr = *on;
 

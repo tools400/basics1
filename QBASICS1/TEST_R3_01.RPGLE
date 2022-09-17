@@ -55,7 +55,7 @@
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R3_01')
-     D  gi_strVal                    32A   const
+     D  gi_strVal                    32A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -67,11 +67,15 @@
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_strVal                    32A   const
+     D  gi_strVal                    32A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(gi_strVal);
+         if (%parms() >= %parmNum(gi_strVal));
+            main(gi_strVal);
+         else;
+            main('');
+         endif;
 
          *inlr = *on;
 
@@ -107,9 +111,11 @@
          msg = f_newMsg('': %editc(%dec(numVal: 20: 5): 'N'));
          f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-         numVal = f_val(i_strVal);
-         msg = f_newMsg('': %editc(%dec(numVal: 30: 9): 'N'));
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+         if (i_strVal <> '');
+            numVal = f_val(i_strVal);
+            msg = f_newMsg('': %editc(%dec(numVal: 30: 9): 'N'));
+            f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+         endif;
 
          return;
 

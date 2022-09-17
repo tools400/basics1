@@ -55,7 +55,7 @@
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R3_03')
-     D  gi_text                      32A   const
+     D  gi_text                      32A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -67,11 +67,15 @@
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_text                      32A   const
+     D  gi_text                      32A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(gi_text);
+         if (%parms() >= %parmNum(gi_text));
+            main(gi_text);
+         else;
+            main('Hello World!');
+         endif;
 
          *inlr = *on;
 
