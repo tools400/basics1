@@ -107,7 +107,8 @@
             size = size + cPAGE_SIZE;
          endif;
 
-         size = size - 512;   // User space administration attributes
+         // Not valid on 7.3
+         // size = size - 512;   // User space administration attributes
 
          return size;
 
