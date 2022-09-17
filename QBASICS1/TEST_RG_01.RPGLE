@@ -138,7 +138,7 @@
          BasicKeySet_delete(hKeySet);
 
          for i = 1 to %elem(keys);
-           if (key(i) <> '');
+           if (keys(i) <> '');
              rc = BasicProperties_remove(hProperties : keys(i));
              p_assert(rc = 0: 'Key must exist and ''rc'' must equal 0');
              count += 1;
