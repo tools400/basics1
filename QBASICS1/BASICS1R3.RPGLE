@@ -97,6 +97,9 @@
       *  07.04.2015  Th.Raddatz    Replaced f_genStrCmp() with a more       *
       *                            reliable approach.                       *
       *                                                                     *
+      *  17.09.2022  Th.Raddatz    Fixed handling optional parameter        *
+      *                            i_wildcard in f_genStrCmp().             *
+      *                                                                     *
       *=====================================================================*
       *   >>PRE-COMPILER<<                                                  *
       *                                                                     *
@@ -1871,7 +1874,12 @@
             return cEQUAL_TRUE;
          endif;
 
-         return lf_genStrCmpInternal(i_string: i_pattern: i_wildcard);
+         // Call generic string compare procedure
+         if (%parms() >= %parmNum(i_wildcard));
+            return lf_genStrCmpInternal(i_string: i_pattern: i_wildcard);
+         else;
+            return lf_genStrCmpInternal(i_string: i_pattern);
+         endif;
 
       /END-FREE
       *
@@ -1917,7 +1925,7 @@
          string = f_lcase(i_string);
 
          // Call generic string compare procedure
-         if   %parms >= p_wildcard;
+         if (%parms() >= %parmNum(i_wildcard));
             isEqual = f_genStrCmp(string: mask: i_wildcard);
          else;
             isEqual = f_genStrCmp(string: mask);
@@ -1957,7 +1965,7 @@
       /FREE
 
          // Process optional parameter values ...
-         // ... decimal point
+         // ... wildcard
          if (%parms() >= p_wildcard and %addr(i_wildcard) <> *NULL);
             wildcard = i_wildcard;
          else;
