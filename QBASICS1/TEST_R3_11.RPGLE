@@ -55,7 +55,7 @@
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R3_11')
-     D  gi_buffer                    32A   const
+     D  gi_buffer                    32A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -67,11 +67,15 @@
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_buffer                    32A   const
+     D  gi_buffer                    32A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(gi_buffer);
+         if (%parms() >= %parmNum(gi_buffer));
+            main(gi_buffer);
+         else;
+            main('Hello World!');
+         endif;
 
          *inlr = *on;
 

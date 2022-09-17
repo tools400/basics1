@@ -55,7 +55,7 @@
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R6_01')
-     D  gi_cmd                       32A   const
+     D  gi_cmd                       32A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -67,11 +67,15 @@
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_cmd                       32A   const
+     D  gi_cmd                       32A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(gi_cmd);
+         if (%parms() >= %parmNum(gi_cmd));
+            main(gi_cmd);
+         else;
+            main('DLYJOB DLY(1)');
+         endif;
 
          *inlr = *on;
 

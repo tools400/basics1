@@ -55,7 +55,7 @@
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R4_01')
-     D  gi_boolean                    1A   const
+     D  gi_boolean                    1A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -67,7 +67,7 @@
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_boolean                    1A   const
+     D  gi_boolean                    1A   const  options(*nopass)
       *
       *  Local helper fields
      D msg             DS                  likeds(msg_t     ) inz
@@ -81,7 +81,11 @@
                                             + %trimR(procedure));
          f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-         main(gi_boolean);
+         if (%parms() >= %parmNum(gi_boolean));
+            main(gi_boolean);
+         else;
+            main(*on);
+         endif;
 
          *inlr = *on;
 

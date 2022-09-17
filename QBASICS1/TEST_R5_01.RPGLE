@@ -55,9 +55,9 @@
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R5_01')
-     D  gi_obj                       10A   const
-     D  gi_lib                       10A   const
-     D  gi_type                      10A   const
+     D  gi_obj                       10A   const  options(*nopass)
+     D  gi_lib                       10A   const  options(*nopass)
+     D  gi_type                      10A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -71,13 +71,17 @@
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_obj                       10A   const
-     D  gi_lib                       10A   const
-     D  gi_type                      10A   const
+     D  gi_obj                       10A   const  options(*nopass)
+     D  gi_lib                       10A   const  options(*nopass)
+     D  gi_type                      10A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(gi_obj: gi_lib: gi_type);
+         if (%parms() >= %parmNum(gi_type));
+            main(gi_obj: gi_lib: gi_type);
+         else;
+            main('QCPFMSG': 'QSYS': '*MSGF');
+         endif;
 
          *inlr = *on;
 

@@ -55,7 +55,7 @@
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R6_02')
-     D  gi_prefix                    32A   const
+     D  gi_prefix                    32A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -67,11 +67,15 @@
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_prefix                    32A   const
+     D  gi_prefix                    32A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(%trim(gi_prefix));
+         if (%parms() >= %parmNum(gi_prefix));
+            main(%trim(gi_prefix));
+         else;
+            main('TEST_R6_02_');
+         endif;
 
          *inlr = *on;
 

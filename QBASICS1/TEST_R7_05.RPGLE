@@ -55,7 +55,7 @@
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R7_05')
-     D  gi_string                    32A   const
+     D  gi_string                    32A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -67,11 +67,15 @@
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_string                    32A   const
+     D  gi_string                    32A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(%trimR(gi_string));
+         if (%parms() >= %parmNum(gi_string));
+            main(%trimR(gi_string));
+         else;
+            main('Hello World!');
+         endif;
 
          *inlr = *on;
 

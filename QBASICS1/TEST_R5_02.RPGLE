@@ -55,9 +55,9 @@
       *
      D PGM_ENTRY_POINT...
      D                 PR                         extpgm('TEST_R5_02')
-     D  gi_file                      10A   const
-     D  gi_lib                       10A   const
-     D  gi_mbr                       10A   const
+     D  gi_file                      10A   const  options(*nopass)
+     D  gi_lib                       10A   const  options(*nopass)
+     D  gi_mbr                       10A   const  options(*nopass)
       *
      D main...
      D                 PR
@@ -71,13 +71,17 @@
       *
      D PGM_ENTRY_POINT...
      D                 PI
-     D  gi_file                      10A   const
-     D  gi_lib                       10A   const
-     D  gi_mbr                       10A   const
+     D  gi_file                      10A   const  options(*nopass)
+     D  gi_lib                       10A   const  options(*nopass)
+     D  gi_mbr                       10A   const  options(*nopass)
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         main(gi_file: gi_lib: gi_mbr);
+         if (%parms() >= %parmNum(gi_mbr));
+            main(gi_file: gi_lib: gi_mbr);
+         else;
+            main('QBASICS1': '*LIBL': 'TEST_R5_02');
+         endif;
 
          *inlr = *on;
 
@@ -102,7 +106,8 @@
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
-         if   not f_exist(i_lib: *omit: '*LIB');
+         if (not f_startsWith('*': i_lib) and
+             not f_exist(i_lib: *omit: '*LIB'));
             msg = f_newMsg('CPF9898': 'Library ' + %trim(i_lib)
                                       + ' does not exist');
             f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
