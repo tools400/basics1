@@ -39,6 +39,10 @@
       *                            message type from the rcvm0200 format    *
       *                            if the message type has not been passed. *
       *                                                                     *
+      *  17.09.2022  Th.Raddatz    Changed module to use:  xalloc()         *
+      *                                                    xrealloc()       *
+      *                                                    xdealloc()       *
+      *                                                                     *
       *=====================================================================*
       *   >>PRE-COMPILER<<                                                  *
       *                                                                     *
@@ -71,6 +75,13 @@
       *  Reference fields
       * -----------------------------------------
       /COPY QBASICS1,BASICS1R0
+      *
+      * -----------------------------------------
+      *  Imported prototypes
+      * -----------------------------------------
+      /DEFINE INCLUDE_INTERNAL_PROCDURES
+      /COPY QBASICS1,PBASICS1R8
+      /UNDEFINE INCLUDE_INTERNAL_PROCDURES
       *
       * -----------------------------------------
       *  Private prototypes
@@ -1305,7 +1316,7 @@
          if   pRtvm0100 <> *NULL;
             if   rtvm0100.lenMsgRet > 0;
                msgText = %subst(rtvm0100: 25: rtvm0100.lenMsgRet);
-               dealloc(N) pRtvm0100;
+               xdealloc(pRtvm0100);
             else;
                msgText = '';
             endif;
@@ -1405,7 +1416,7 @@
             if   rtvm0100.lenHlpRet > 0;
                msgHelpText = %subst(rtvm0100: 25 + rtvm0100.lenMsgRet:
                                     rtvm0100.lenHlpRet);
-               dealloc(N) pRtvm0100;
+               xdealloc(pRtvm0100);
             else;
                msgHelpText = '';
             endif;
@@ -1483,7 +1494,7 @@
          if   pRtvm0100 <> *NULL;
             if   rtvm0100.lenMsgRet > 0;
                msgText = %subst(rtvm0100: 25: rtvm0100.lenMsgRet);
-               dealloc(N) pRtvm0100;
+               xdealloc(pRtvm0100);
             else;
                msgText = '';
             endif;
@@ -1583,7 +1594,7 @@
             if   rtvm0100.lenHlpRet > 0;
                msgHelpText = %subst(rtvm0100: 25 + rtvm0100.lenMsgRet:
                                     rtvm0100.lenHlpRet);
-               dealloc(N) pRtvm0100;
+               xdealloc(pRtvm0100);
             else;
                msgHelpText = '';
             endif;
@@ -1768,7 +1779,7 @@
       /FREE
 
          memSize   = %size(rcvm0300) + 1024;
-         pRcvm0300 = %alloc(memSize);
+         pRcvm0300 = xalloc(memSize);
          errCode   = f_newApiErrCode(cFalse);
 
          dou (rcvm0300.bytRet >= rcvm0300.bytAvl or f_isApiError(errCode));
@@ -1776,7 +1787,7 @@
                      cMsg_Any: i_rcvm0200.msgKey: 0: cMsg_Act_Same: errCode);
             if (rcvm0300.bytRet < rcvm0300.bytAvl);
                memSize   = rcvm0300.bytAvl;
-               pRcvm0300 = %realloc(pRcvm0300: memSize);
+               pRcvm0300 = xrealloc(pRcvm0300: memSize);
             endif;
          enddo;
 
@@ -1800,7 +1811,7 @@
             longSndPrc = %subst(tmpLongSndPrc: 1: tmpSndInf.lenSndPrcLName);
          endif;
 
-         dealloc(N) pRcvm0300;
+         xdealloc(pRcvm0300);
 
          // Set optional output parameters
          if (%parms() >= p_longSndPgm and %addr(o_longSndPgm) <> *NULL);
@@ -1989,7 +2000,7 @@
 
          // Allocate memory and set initial parameter values
          memSize = 8;
-         pMsgInf = %alloc(memSize);
+         pMsgInf = xalloc(memSize);
          errCode = f_newApiErrCode(cTrue);
 
          // Loop until complete message information is received ...
@@ -2000,14 +2011,14 @@
 
             // ... check for errors
             if  f_isApiError(errCode);
-               dealloc(N) pMsgInf;
+               xdealloc(pMsgInf);
                o_msg = f_cvtApiErrCodeToMsg(errCode);
                leave;
             else;
                // ... get more memory
                if   memSize < msgInf.bytAvl;
                   memSize = msgInf.bytAvl;
-                  pMsgInf = %realloc(pMsgInf: memSize);
+                  pMsgInf = xrealloc(pMsgInf: memSize);
                else;
                   o_msg = f_newMsg(cMsg_ID_OK);
                endif;

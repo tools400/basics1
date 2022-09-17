@@ -34,6 +34,10 @@
       *                            'invalid handle' in case the handle      *
       *                            is *NULL.                                *
       *                                                                     *
+      *  17.09.2022  Th.Raddatz    Added procedures:  xalloc()              *
+      *                                               xrealloc()            *
+      *                                               xdealloc()            *
+      *                                                                     *
       *=====================================================================*
       *   >>PRE-COMPILER<<                                                  *
       *                                                                     *
@@ -61,7 +65,9 @@
       * -----------------------------------------
       *  Exported functions
       * -----------------------------------------
+      /DEFINE INCLUDE_INTERNAL_PROCDURES
       /COPY QBASICS1,PBASICS1R8
+      /UNDEFINE INCLUDE_INTERNAL_PROCDURES
       *
       * -----------------------------------------
       *  Reference fields
@@ -140,20 +146,20 @@
          else;
             // else allocate memory for a base handle
             // and the size of memory requested.
-            pHandle = %alloc(%size(baseHandle_t) + i_size);
+            pHandle = xalloc(%size(baseHandle_t) + i_size);
             g_handleList(aHandle) = pHandle;
 
             // Initialize handle - V5R3
             // handle.baseHandle.type = i_type;
             // handle.baseHandle.size = i_size;
-            // handle.pUserHandle = %alloc(baseHandle.size);
+            // handle.pUserHandle = xalloc(baseHandle.size);
             // memset(handle.pUserHandle: x'00': baseHandle.size);
 
             // Initialize handle - V5R1
             baseHandle.type = i_type;
             baseHandle.size = i_size;
             handle.baseHandle = baseHandle;
-            handle.pUserHandle = %alloc(baseHandle.size);
+            handle.pUserHandle = xalloc(baseHandle.size);
             memset(handle.pUserHandle: x'00': baseHandle.size);
          endif;
 
@@ -369,13 +375,13 @@
          // Initialize handle memory - V5R1
          baseHandle = handle.baseHandle;
          memset(handle.pUserHandle: x'00': baseHandle.size);
-         dealloc(N) handle.pUserHandle;
+         xdealloc(handle.pUserHandle);
          baseHandle.size = 0;
          baseHandle.type = *ALLx'00';
          handle.baseHandle = baseHandle;
 
          // Free handle memory
-         dealloc(N) pHandle;
+         xdealloc(pHandle);
 
          // Free index in handle list
          g_handleList(io_handle) = *NULL;
@@ -421,7 +427,7 @@
          if (i_size = 0);
             pMemory = *NULL;
          else;
-            pMemory = %alloc(i_size + %size(cell));
+            pMemory = xalloc(i_size + %size(cell));
             pCell   = pMemory + i_size;            // Position cell right after payload
             cell.pPrvCell    = io_aMemList;        // Remember the address of the prv. cell
             cell.size        = i_size;             // Remember the size of the current cell
@@ -769,6 +775,88 @@
          io_heapID = 0;
 
          return;
+
+      /END-FREE
+     P                 E
+      *
+      *=========================================================================
+      *  *** Internal use only. ***
+      *  Returns a pointer to newly allocated heap storage of the length
+      *  specified. Replacement for RPG %alloc().
+      *=========================================================================
+      *  Parameters:
+      *   i_size        - Size of the newly allocated storage.
+      *
+      *  Returns:
+      *   pMem          - Pointer to the newly allocated storage.
+      *=========================================================================
+     P xalloc...
+     P                 B                   export
+     D                 PI              *
+     D  i_size                       10I 0 const
+      *
+      *  Return value
+     D pMem            S               *   inz
+      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      /FREE
+
+         pMem = %alloc(i_size);
+
+         return pMem;
+
+      /END-FREE
+     P                 E
+      *
+      *=========================================================================
+      *  *** Internal use only. ***
+      *  Changes the heap storage pointed to by the first parameter to be the
+      *  length specified in the second parameter. Replacement for RPG
+      *  %realloc().
+      *=========================================================================
+      *  Parameters:
+      *   i_pMem        - Pointer to the heap storage that is reallocated.
+      *   i_size        - New size of the heap storage.
+      *
+      *  Returns:
+      *   pMem          - Pointer to the resized heap storage.
+      *=========================================================================
+     P xrealloc...
+     P                 B                   export
+     D                 PI              *
+     D  i_pMem                         *   const
+     D  i_size                       10I 0 const
+      *
+      *  Return value
+     D pMem            S               *   inz
+      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      /FREE
+
+         pMem = %realloc(i_pMem: i_size);
+
+         return pMem;
+
+      /END-FREE
+     P                 E
+      *
+      *=========================================================================
+      *  *** Internal use only. ***
+      *  Frees one previous allocation of heap storage.
+      *  Replacement for RPG dealloc.
+      *=========================================================================
+      *  Parameters:
+      *   i_pMem        - Pointer to the heap storage that is reallocated.
+      *
+      *  Returns:
+      *   void
+      *=========================================================================
+     P xdealloc...
+     P                 B                   export
+     D                 PI
+     D  io_pMem                        *
+      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      /FREE
+
+         dealloc(N) io_pMem;
 
       /END-FREE
      P                 E

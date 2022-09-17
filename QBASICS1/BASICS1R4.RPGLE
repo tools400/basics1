@@ -31,6 +31,10 @@
       *                                                                     *
       *  13.06.2008  Th.Raddatz    Added parameter 'offset' to f_caller().  *
       *                                                                     *
+      *  17.09.2022  Th.Raddatz    Changed module to use:  xalloc()         *
+      *                                                    xrealloc()       *
+      *                                                    xdealloc()       *
+      *                                                                     *
       *=====================================================================*
       *   >>PRE-COMPILER<<                                                  *
       *                                                                     *
@@ -58,6 +62,13 @@
       *  Exported functions
       * -----------------------------------------
       /COPY QBASICS1,PBASICS1R4
+      *
+      * -----------------------------------------
+      *  Imported prototypes
+      * -----------------------------------------
+      /DEFINE INCLUDE_INTERNAL_PROCDURES
+      /COPY QBASICS1,PBASICS1R8
+      /UNDEFINE INCLUDE_INTERNAL_PROCDURES
       *
       * -----------------------------------------
       *  Reference fields
@@ -90,8 +101,6 @@
       *=========================================================================
      P p_assert...
      P                 B                   export
-      *
-     D p_assert...
      D                 PI
      D  i_condition                    N   const
      D  i_msgText                   128A   const  options(*nopass)
@@ -109,6 +118,12 @@
       *
       *  Local constants
      D cTEXT_MSG       C                   const('Who is before me?')
+      *
+      *  Fields for sender information
+     D procedure       S            256A   inz varying
+     D module          S             10A   inz
+     D program         S             10A   inz
+     D stmtID          S             10A   inz
       *
       *  Helper fields QMHSNDPM/QMHRCVPM
      D qMsgF           DS                  likeds(qObj_t     )  inz
@@ -146,7 +161,7 @@
 
             if   not f_isApiError(errCode);
                memSize   = 2048;
-               pRcvm0300 = %alloc(memSize);
+               pRcvm0300 = xalloc(memSize);
                errCode   = f_newApiErrCode(cTrue);
                callStkEQ.module  = '*NONE';
                callStkEQ.program = '*NONE';
@@ -163,31 +178,29 @@
                                    + rcvm0300.lenRplDataR
                                    + rcvm0300.lenMsgR
                                    + rcvm0300.lenMsgHlpR;
+               procedure = %trimR(sndInf.rcvProc);
+               module    = sndInf.rcvModule;
+               program   = sndInf.rcvPgm;
+               stmtID    = sndInf.rcvPgmStmtNbr(1);
             else;
                // ... else set sender information to "not available"
-               pSndInf = %alloc(%size(sndInf));
-               clear   sndInf;
-               sndInf.rcvPgm     = '*N';
-               sndInf.rcvModule  = '*N';
-               sndInf.rcvProc    = '*N';
-               sndInf.rcvPgmStmtNbr(1) = '*N';
+               procedure = '*N';
+               module    = '*N';
+               program   = '*N';
+               stmtID    = '*N';
             endif;
 
             // Create "assert" message
-            msgText = %trimr(sndInf.rcvPgm    ) + '/'  +
-                      %trimr(sndInf.rcvModule ) + '.'  +
-                      %trimr(sndInf.rcvProc   ) + ' (' +
+            msgText = %trimr(program)   + '/'  +
+                      %trimr(module )   + '.'  +
+                      %trimr(procedure) + ' (' +
                       'Stmt: '                         +
-                      %trimr(sndInf.rcvPgmStmtNbr(1)) + ') ' +
+                      %trimr(stmtID)    + ') ' +
                       ': ' + %trim(msgText);
 
             // Free memory
-            if   pRcvm0300 <> *NULL;
-               dealloc(N)   pRcvm0300;
-            else;
-               if   pSndInf <> *NULL;
-                  dealloc(N) pSndInf;
-               endif;
+            if (pRcvm0300 <> *NULL);
+               xdealloc(pRcvm0300);
             endif;
 
             // Send "assert" *ESCAPE message
@@ -202,10 +215,6 @@
 
       /END-FREE
       /ENDIF
-      *
-     C                   return
-      *
-     P p_assert...
      P                 E
       *
       *=========================================================================
@@ -221,8 +230,6 @@
       *=========================================================================
      P f_this...
      P                 B                   export
-      *
-     D f_this...
      D                 PI           256A          varying
      D  o_module                     10A          options(*nopass: *omit)
      D  o_program                    10A          options(*nopass: *omit)
@@ -274,7 +281,7 @@
 
          if   not f_isApiError(errCode);
             memSize   = 2048;
-            pRcvm0300 = %alloc(memSize);
+            pRcvm0300 = xalloc(memSize);
             errCode   = f_newApiErrCode(cTrue);
             callStkEQ.module  = '*NONE';
             callStkEQ.program = '*NONE';
@@ -304,7 +311,7 @@
 
          // Free memory
          if   pRcvm0300 <> *NULL;
-            dealloc(N)   pRcvm0300;
+            xdealloc(pRcvm0300);
          endif;
 
          // Process optional output parameters ...
@@ -344,8 +351,6 @@
          return   procedure;
 
       /END-FREE
-      *
-     P f_this...
      P                 E
       *
       *=========================================================================
@@ -362,8 +367,6 @@
       *=========================================================================
      P f_caller...
      P                 B                   export
-      *
-     D f_caller...
      D                 PI           256A          varying
      D  o_module                     10A          options(*nopass: *omit)
      D  o_program                    10A          options(*nopass: *omit)
@@ -425,7 +428,7 @@
          if   not f_isApiError(errCode);
             // Receive and remove test message
             memSize   = 2048;
-            pRcvm0300 = %alloc(memSize);
+            pRcvm0300 = xalloc(memSize);
             errCode   = f_newApiErrCode(cTrue);
             callStkEQ.module  = '*NONE';
             callStkEQ.program = '*NONE';
@@ -455,7 +458,7 @@
 
          // Free memory
          if   pRcvm0300 <> *NULL;
-            dealloc(N)   pRcvm0300;
+            xdealloc(pRcvm0300);
          endif;
 
          // Process optional output parameters ...
@@ -495,7 +498,5 @@
          return   procedure;
 
       /END-FREE
-      *
-     P f_caller...
      P                 E
       *

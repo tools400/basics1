@@ -135,6 +135,35 @@
      D                                     ')
      D  io_heapID                    10I 0
       *
+      /IF DEFINED(INCLUDE_INTERNAL_PROCDURES)
+      *
+      *  Returns a pointer to newly allocated heap storage of the length
+      *  specified.
+     D xalloc...
+     D                 PR              *
+     D                                     extproc('BASICS1R8+
+     D                                     _xalloc+
+     D                                     ')
+     D  i_size                       10I 0 const
+      *
+      *  Changes the heap storage pointed to by the first parameter to be the
+      *  length specified in the second parameter.
+     D xrealloc...
+     D                 PR              *
+     D                                     extproc('BASICS1R8+
+     D                                     _xrealloc+
+     D                                     ')
+     D  i_pMem                         *   const
+     D  i_size                       10I 0 const
+      *
+      *  Frees one previous allocation of heap storage.
+     D xdealloc...
+     D                 PR
+     D                                     extproc('BASICS1R8+
+     D                                     _xdealloc+
+     D                                     ')
+     D  io_pMem                        *
+      /ENDIF
       * -----------------------------------------
       *  Imported prototypes
       * -----------------------------------------
