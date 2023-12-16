@@ -21,6 +21,12 @@ and service programs (BND).
 -----------------------
 
 
+Version 1.16.2
+--------------
+
+Added:   Test iRPGUnit test suite TEST_R3_15.
+
+
 Version 1.16.1
 --------------
 

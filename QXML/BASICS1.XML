@@ -51,7 +51,7 @@
       appblddate CDATA #REQUIRED
      >
      ]>
-<upload  appname="BASICS1"  appauthor="Thomas Raddatz"  appblddate=" 9/17/2022">
+<upload  appname="BASICS1"  appauthor="Thomas Raddatz"  appblddate="12/16/2023">
 <install_instructions><![CDATA[
      *----------------------------------------------------------------      ------
      *  1. Upload entire XML to your AS/400 to a source file 112 long, into any mbr
@@ -1501,6 +1501,9 @@ srccssid=  "01141">
              DLTMOD     MODULE(&TOLIB/TEST_R3_14)
              MONMSG     MSGID(CPF2105)
 
+             DLTMOD     MODULE(&TOLIB/TEST_R3_15)
+             MONMSG     MSGID(CPF2105)
+
              DLTMOD     MODULE(&TOLIB/TEST_R4_01)
              MONMSG     MSGID(CPF2105)
 
@@ -1652,6 +1655,9 @@ srccssid=  "01141">
              MONMSG     MSGID(CPF2105)
 
              DLTPGM     PGM(&TOLIB/TEST_R3_14)
+             MONMSG     MSGID(CPF2105)
+
+             DLTPGM     PGM(&TOLIB/TEST_R3_15)
              MONMSG     MSGID(CPF2105)
 
              DLTPGM     PGM(&TOLIB/TEST_R4_01)
@@ -2548,6 +2554,26 @@ srccssid=  "01141">
                 DLTSPLF    FILE(TEST_R3_14 ) JOB(*) SPLNBR(*LAST)
                 MONMSG     MSGID(CPF0000)
 
+        /* TEST_R3_15 */
+                CRTRPGMOD  MODULE(&TOLIB/TEST_R3_15) +
+                             SRCFILE(&SRCLIB/&SRCFILE) +
+                             SRCMBR(*MODULE) +
+                             DBGVIEW(*LIST) +
+                             TRUNCNBR(*NO) +
+                             TGTRLS(&TGTRLS)
+                DLTSPLF    FILE(TEST_R3_15) JOB(*) SPLNBR(*LAST)
+                MONMSG     MSGID(CPF0000)
+
+                CRTPGM     PGM(&TOLIB/TEST_R3_15) +
+                             MODULE(*PGM) +
+                             BNDSRVPGM(&TOLIB/BASICS1) +
+                             BNDDIR(QC2LE) +
+                             ACTGRP(*NEW) +
+                             TGTRLS(&TGTRLS) +
+                             DETAIL(*BASIC)
+                DLTSPLF    FILE(TEST_R3_15 ) JOB(*) SPLNBR(*LAST)
+                MONMSG     MSGID(CPF0000)
+
         /* TEST_R4_01 */
                 CRTRPGMOD  MODULE(&TOLIB/TEST_R4_01) +
                              SRCFILE(&SRCLIB/&SRCFILE) +
@@ -2987,6 +3013,7 @@ srccssid=  "01141">
                 DLTMOD     MODULE(&TOLIB/TEST_R3_12)
                 DLTMOD     MODULE(&TOLIB/TEST_R3_13)
                 DLTMOD     MODULE(&TOLIB/TEST_R3_14)
+                DLTMOD     MODULE(&TOLIB/TEST_R3_15)
                 DLTMOD     MODULE(&TOLIB/TEST_R4_01)
                 DLTMOD     MODULE(&TOLIB/TEST_R5_01)
                 DLTMOD     MODULE(&TOLIB/TEST_R5_02)
@@ -3045,6 +3072,12 @@ and service programs (BND).
 -----------------------
       History
 -----------------------
+
+
+Version 1.16.2
+--------------
+
+Added:   Test iRPGUnit test suite TEST_R3_15.
 
 
 Version 1.16.1
@@ -3715,7 +3748,7 @@ srccssid=  "01141">
      /*     >>PARM<< ALWLIBUPD(*YES);                                          */
      /*     >>PARM<< BNDDIR(QC2LE);                                            */
      /*     >>PARM<< TEXT('Tools/400 - Runtime Library');                      */
-     /*     >>PARM<< TGTRLS(V7R1M0);                                           */
+     /*     >>PARM<< TGTRLS(V7R3M0);                                           */
      /*     >>PARM<< DETAIL(*BASIC);                                           */
      /*   >>END-COMPILE<<                                                      */
      /*                                                                        */
@@ -6884,7 +6917,7 @@ srccssid=  "01141">
      /*        >>PARM<< DBGVIEW(*ALL );                                     */
      /*        >>PARM<< DEFINE(DYNAMIC_CRC_TABLE);                          */
      /*        >>PARM<< OPTIMIZE(40);                                       */
-     /*        >>PARM<< TGTRLS(V7R1M0);                                     */
+     /*        >>PARM<< TGTRLS(V7R3M0);                                     */
      /*      >>END-COMPILE<<                                                */
      /*                                                                     */
      /*      >>EXECUTE<<                                                    */
@@ -7129,7 +7162,7 @@ srccssid=  "01141">
       *     >>COMPILE<<                                                     *
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V7R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R3M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -10084,7 +10117,7 @@ srccssid=  "01141">
       *     >>COMPILE<<                                                     *
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V7R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R3M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -10865,7 +10898,7 @@ srccssid=  "01141">
       *     >>COMPILE<<                                                     *
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V7R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R3M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -13111,7 +13144,7 @@ srccssid=  "01141">
       *     >>COMPILE<<                                                     *
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V7R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R3M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -14804,7 +14837,7 @@ srccssid=  "01141">
       //     >>COMPILE<<
       //       >>PARM<< TRUNCNBR(*NO);
       //       >>PARM<< DBGVIEW(*LIST);
-      //       >>PARM<< TGTRLS(V7R1M0);
+      //       >>PARM<< TGTRLS(V7R3M0);
       //     >>END-COMPILE<<
       //
       //     >>EXECUTE<<
@@ -15164,7 +15197,7 @@ srccssid=  "01141">
       *     >>COMPILE<<                                                     *
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V7R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R3M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -15563,7 +15596,7 @@ srccssid=  "01141">
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
       *       >>PARM<< OPTION(*EVENTF);                                     *
-      *       >>PARM<< TGTRLS(V7R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R3M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -17208,7 +17241,7 @@ srccssid=  "01141">
       *     >>COMPILE<<                                                     *
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V7R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R3M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -17894,7 +17927,7 @@ srccssid=  "01141">
       *     >>COMPILE<<                                                     *
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V7R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R3M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -19936,7 +19969,7 @@ srccssid=  "01141">
       *     >>COMPILE<<                                                     *
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V7R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R3M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -20426,7 +20459,7 @@ srccssid=  "01141">
       *     >>COMPILE<<                                                     *
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V7R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R3M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -20630,18 +20663,16 @@ srccssid=  "01141">
      D                 PI              N
      D  i_prefix                   4096A   const   varying
      D  i_string                   4096A   const   varying
-      *
-      *  Return value
-     D startsWith      S               N   inz(cFalse)
-      *
-      *  Local fields
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
          if (%len(i_string) = 0  or
-             %len(i_prefix) = 0  or
              %len(i_string) < %len(i_prefix));
             return cFalse;
+         endif;
+
+         if (%len(i_prefix) = 0);
+            return cTrue;
          endif;
 
          if (%subst(i_string: 1: %len(i_prefix)) <> i_prefix);
@@ -20764,26 +20795,23 @@ srccssid=  "01141">
      D                 PI              N
      D  i_suffix                   4096A   const   varying
      D  i_string                   4096A   const   varying
-      *
-      *  Return value
-     D endsWith        S               N   inz(cFalse)
-      *
-      *  Local fields
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
          if %len(i_string) = 0  or
-            %len(i_suffix) = 0  or
             %len(i_string) < %len(i_suffix);
-            return endsWith;
+            return cFalse;
          endif;
 
-         if %subst(i_string
-                   : %len(i_string) - %len(i_suffix) + 1) = i_suffix;
-            endsWith = cTrue;
+         if (%len(i_suffix) = 0);
+           return cTrue;
          endif;
 
-         return   endsWith;
+         if %subst(i_string: %len(i_string) - %len(i_suffix) + 1) <> i_suffix;
+            return cFalse;
+         endif;
+
+         return cTrue;
 
       /END-FREE
       *
@@ -23042,7 +23070,7 @@ srccssid=  "01141">
       *     >>COMPILE<<                                                     *
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V7R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R3M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -23560,7 +23588,7 @@ srccssid=  "01141">
       *     >>COMPILE<<                                                     *
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V7R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R3M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -25749,7 +25777,7 @@ srccssid=  "01141">
       *     >>COMPILE<<                                                     *
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V7R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R3M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -26288,7 +26316,7 @@ srccssid=  "01141">
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
       *       >>PARM<< OPTIMIZE(*FULL );                                    *
-      *       >>PARM<< TGTRLS(V7R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R3M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -27395,7 +27423,7 @@ srccssid=  "01141">
       *     >>COMPILE<<                                                     *
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V7R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R3M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -28262,7 +28290,7 @@ srccssid=  "01141">
       *     >>COMPILE<<                                                     *
       *       >>PARM<< TRUNCNBR(*NO);                                       *
       *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V7R1M0);                                      *
+      *       >>PARM<< TGTRLS(V7R3M0);                                      *
       *     >>END-COMPILE<<                                                 *
       *                                                                     *
       *     >>EXECUTE<<                                                     *
@@ -29797,13 +29825,13 @@ srclen  =  "00112"
 srccssid=  "01141">
 <copysrc><![CDATA[
       /if not defined(COPYRIGHT_DSPEC)
-     H COPYRIGHT('V1.16.1 - 17.09.2022 - mailto:thomas.raddatz@tools400.de')
+     H COPYRIGHT('V1.16.2 - 16.12.2023 - mailto:thomas.raddatz@tools400.de')
       /eof
       /endif
      D BASICS1_VERSION...
-     D                 C                   '1.16.1'
+     D                 C                   '1.16.2'
      D BASICS1_DATE...
-     D                 C                   '17.09.2022'
+     D                 C                   '16.12.2023'
 ]]>  </copysrc>
 </mbr>
 <sendmsg  sendmsgid="CPF9897" sendmsgtype = "*STATUS   "><![CDATA[
@@ -41534,6 +41562,66 @@ srccssid=  "01141">
 ]]>  </copysrc>
 </mbr>
 <sendmsg  sendmsgid="CPF9897" sendmsgtype = "*STATUS   "><![CDATA[
+Installing TEST_R3_15  type RPGLE - in progress.
+]]>  </sendmsg>
+<!-- START OF MEMBER  -->
+<mbr
+mbrname =  "TEST_R3_15"
+mbrtype =  "RPGLE     "
+mbrtext =  "Test: f_startsWith / f_endsWith                   "
+srcfile =  "QBASICS1  "
+srclib  =  "selected  "
+srclen  =  "00112"
+srccssid=  "01141">
+<copysrc><![CDATA[
+      // ==========================================================================
+      //  RUCALLTST TSTPGM(TEST_R3_15)
+      // ==========================================================================
+      // >>PRE-COMPILER<<
+      //   >>CRTCMD<<  RUCRTRPG TSTPGM(&LI/&OB) SRCFILE(&SL/&SF) SRCMBR(&SM);
+      //   >>IMPORTANT<<
+      //     >>PARM<<  BNDSRVPGM(*LIBL/BASICS1);
+      //     >>PARM<<  COPTION(*EVENTF);
+      //   >>END-IMPORTANT<<
+      //   >>EXECUTE<<
+      // >>END-PRE-COMPILER<<
+      // ==========================================================================
+     h nomain option(*SrcStmt: *NoDebugIo)
+
+      /include qbasics1,pbasics1
+      /include qinclude,testcase
+
+     p testStartsWith  b                   export
+     d                 pi
+      /free
+        assert(f_startsWith('': 'DEMO01')
+               : '''DEMO01'' starts with an empty prefix.');
+        assert(not f_startsWith('Prefix': '')
+               : 'An empty string does not start with ''Prefix''');
+        assert(not f_startsWith('DEMO01A': 'DEMO01')
+               : '''DEMO01'' does not start with ''DEMO01A''');
+        assert(f_startsWith('DEMO01': 'DEMO01A')
+               : '''DEMO01A'' does start with ''DEMO01''');
+      /end-free
+     p                 e
+
+     p testEndsWith    b                   export
+     d                 pi
+      /free
+        assert(f_endsWith('': 'DEMO01')
+               : '''DEMO01'' ends with an empty suffix.');
+        assert(not f_endsWith('Suffix': '')
+               : 'An empty string does not end with ''Suffix''');
+        assert(not f_endsWith('DEMO01A': 'DEMO01')
+               : '''DEMO01'' does not end with ''DEMO01A''');
+        assert(f_endsWith('01': 'DEMO01')
+               : '''DEMO01'' does end with ''01''');
+      /end-free
+     p                 e
+
+]]>  </copysrc>
+</mbr>
+<sendmsg  sendmsgid="CPF9897" sendmsgtype = "*STATUS   "><![CDATA[
 Installing TEST_R4_01  type RPGLE - in progress.
 ]]>  </sendmsg>
 <!-- START OF MEMBER  -->
@@ -46508,7 +46596,7 @@ CRTBNDCL PGM(&tolib/A_INSTALL) SRCFILE(&tolib/&SRCFILE) SRCMBR(*PGM) DFTACTGRP(*
 VIEW(*LIST)
 ]]>  </qcmdexc>
 <qcmdexc condition="*NONE" release="*CURRENT" dltsplf="*NONE"><![CDATA[
-CALL PGM(&tolib/A_INSTALL) PARM('&TGTRLS' '&SRCFILE' '&tolib' '&CRTTSTPGM' '&C_COMP')
+CALL PGM(&tolib/A_INSTALL) PARM(('&TGTRLS') ('&SRCFILE') ('&tolib') ('&CRTTSTPGM') ('&C_COMP'))
 ]]>  </qcmdexc>
 <qcmdexc condition="*NONE" release="*CURRENT" dltsplf="*NONE"><![CDATA[
 DLTPGM PGM(&tolib/A_INSTALL)

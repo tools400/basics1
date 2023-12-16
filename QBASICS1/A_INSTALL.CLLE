@@ -202,6 +202,9 @@
              DLTMOD     MODULE(&TOLIB/TEST_R3_14)
              MONMSG     MSGID(CPF2105)
 
+             DLTMOD     MODULE(&TOLIB/TEST_R3_15)
+             MONMSG     MSGID(CPF2105)
+
              DLTMOD     MODULE(&TOLIB/TEST_R4_01)
              MONMSG     MSGID(CPF2105)
 
@@ -353,6 +356,9 @@
              MONMSG     MSGID(CPF2105)
 
              DLTPGM     PGM(&TOLIB/TEST_R3_14)
+             MONMSG     MSGID(CPF2105)
+
+             DLTPGM     PGM(&TOLIB/TEST_R3_15)
              MONMSG     MSGID(CPF2105)
 
              DLTPGM     PGM(&TOLIB/TEST_R4_01)
@@ -1249,6 +1255,26 @@
                 DLTSPLF    FILE(TEST_R3_14 ) JOB(*) SPLNBR(*LAST)
                 MONMSG     MSGID(CPF0000)
 
+        /* TEST_R3_15 */
+                CRTRPGMOD  MODULE(&TOLIB/TEST_R3_15) +
+                             SRCFILE(&SRCLIB/&SRCFILE) +
+                             SRCMBR(*MODULE) +
+                             DBGVIEW(*LIST) +
+                             TRUNCNBR(*NO) +
+                             TGTRLS(&TGTRLS)
+                DLTSPLF    FILE(TEST_R3_15) JOB(*) SPLNBR(*LAST)
+                MONMSG     MSGID(CPF0000)
+
+                CRTPGM     PGM(&TOLIB/TEST_R3_15) +
+                             MODULE(*PGM) +
+                             BNDSRVPGM(&TOLIB/BASICS1) +
+                             BNDDIR(QC2LE) +
+                             ACTGRP(*NEW) +
+                             TGTRLS(&TGTRLS) +
+                             DETAIL(*BASIC)
+                DLTSPLF    FILE(TEST_R3_15 ) JOB(*) SPLNBR(*LAST)
+                MONMSG     MSGID(CPF0000)
+
         /* TEST_R4_01 */
                 CRTRPGMOD  MODULE(&TOLIB/TEST_R4_01) +
                              SRCFILE(&SRCLIB/&SRCFILE) +
@@ -1688,6 +1714,7 @@
                 DLTMOD     MODULE(&TOLIB/TEST_R3_12)
                 DLTMOD     MODULE(&TOLIB/TEST_R3_13)
                 DLTMOD     MODULE(&TOLIB/TEST_R3_14)
+                DLTMOD     MODULE(&TOLIB/TEST_R3_15)
                 DLTMOD     MODULE(&TOLIB/TEST_R4_01)
                 DLTMOD     MODULE(&TOLIB/TEST_R5_01)
                 DLTMOD     MODULE(&TOLIB/TEST_R5_02)

@@ -459,7 +459,7 @@
          endif;
 
          if %subst(i_string: %len(i_string) - %len(i_suffix) + 1) <> i_suffix;
-            cFalse;
+            return cFalse;
          endif;
 
          return cTrue;
