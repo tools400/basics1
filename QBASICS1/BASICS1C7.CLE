@@ -40,7 +40,7 @@
      /*        >>PARM<< DBGVIEW(*ALL );                                     */
      /*        >>PARM<< DEFINE(DYNAMIC_CRC_TABLE);                          */
      /*        >>PARM<< OPTIMIZE(40);                                       */
-     /*        >>PARM<< TGTRLS(V7R1M0);                                     */
+     /*        >>PARM<< TGTRLS(V7R3M0);                                     */
      /*      >>END-COMPILE<<                                                */
      /*                                                                     */
      /*      >>EXECUTE<<                                                    */
