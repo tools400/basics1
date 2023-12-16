@@ -314,18 +314,16 @@
      D                 PI              N
      D  i_prefix                   4096A   const   varying
      D  i_string                   4096A   const   varying
-      *
-      *  Return value
-     D startsWith      S               N   inz(cFalse)
-      *
-      *  Local fields
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
          if (%len(i_string) = 0  or
-             %len(i_prefix) = 0  or
              %len(i_string) < %len(i_prefix));
             return cFalse;
+         endif;
+
+         if (%len(i_prefix) = 0);
+            return cTrue;
          endif;
 
          if (%subst(i_string: 1: %len(i_prefix)) <> i_prefix);
@@ -448,26 +446,23 @@
      D                 PI              N
      D  i_suffix                   4096A   const   varying
      D  i_string                   4096A   const   varying
-      *
-      *  Return value
-     D endsWith        S               N   inz(cFalse)
-      *
-      *  Local fields
       * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       /FREE
 
          if %len(i_string) = 0  or
-            %len(i_suffix) = 0  or
             %len(i_string) < %len(i_suffix);
-            return endsWith;
+            return cFalse;
          endif;
 
-         if %subst(i_string
-                   : %len(i_string) - %len(i_suffix) + 1) = i_suffix;
-            endsWith = cTrue;
+         if (%len(i_suffix) = 0);
+           return cTrue;
          endif;
 
-         return   endsWith;
+         if %subst(i_string: %len(i_string) - %len(i_suffix) + 1) <> i_suffix;
+            cFalse;
+         endif;
+
+         return cTrue;
 
       /END-FREE
       *
