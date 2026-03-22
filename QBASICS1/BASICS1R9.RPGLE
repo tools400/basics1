@@ -1,352 +1,342 @@
-      *=====================================================================*
-      *  BASICS1R9  - SrvPgm: Basic Routines - Display Information          *
-      *=====================================================================*
-      *  Author  :  Thomas Raddatz                                          *
-      *  Date    :  22.06.2005                                              *
-      *  E-mail  :  thomas.raddatz@tools400.de                              *
-      *  Homepage:  www.tools400.de                                         *
-      *=====================================================================*
-      *                                                                     *
-      *  This software is free software, you can redistribute it and/or     *
-      *  modify it under the terms of the GNU General Public License (GPL)  *
-      *  as published by the Free Software Foundation.                      *
-      *                                                                     *
-      *  See GNU General Public License for details.                        *
-      *          http://www.opensource.org                                  *
-      *          http://www.opensource.org/licenses/gpl-license.html        *
-      *                                                                     *
-      *=====================================================================*
-      *  History:                                                           *
-      *                                                                     *
-      *  Datum       Name          Änderung                                 *
-      *  ----------  ------------  ---------------------------------------  *
-      *  23.01.2009  Th.Raddatz    Renamed f_getDisplayMode() to            *
-      *                            Display_getMode().                       *
-      *                            Added Display_supportsDS4().             *
-      *                                                                     *
-      *  26.01.2009  Th.Raddatz    Added Display_getRows() and              *
-      *                            Display_getColumns().                    *
-      *                                                                     *
-      *=====================================================================*
-      *   >>PRE-COMPILER<<                                                  *
-      *                                                                     *
-      *     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                      *
-      *                              SRCFILE(&SL/&SF) +                     *
-      *                              SRCMBR(&SM);                           *
-      *                                                                     *
-      *     >>COMPILE<<                                                     *
-      *       >>PARM<< TRUNCNBR(*NO);                                       *
-      *       >>PARM<< DBGVIEW(*LIST);                                      *
-      *       >>PARM<< TGTRLS(V7R3M0);                                      *
-      *     >>END-COMPILE<<                                                 *
-      *                                                                     *
-      *     >>EXECUTE<<                                                     *
-      *                                                                     *
-      *   >>END-PRE-COMPILER<<                                              *
-      *=====================================================================*
-     H NOMAIN BNDDIR('QSNAPI')
-      *  Standard H-Specs
-      /COPY QBASICS1,H_SPEC
-      /COPY QBASICS1,COPYRIGHT
-      *=====================================================================*
-      *
-      * -----------------------------------------
-      *  Exported functions
-      * -----------------------------------------
-      /COPY QBASICS1,PBASICS1R9
-      *
-      * -----------------------------------------
-      *  Reference fields
-      * -----------------------------------------
-      /COPY QBASICS1,BASICS1R0
-      *
-      * -----------------------------------------
-      *  Private prototypes
-      * -----------------------------------------
-      *
-      * -----------------------------------------
-      *  Imported prototypes
-      * -----------------------------------------
-      *
-      *  Retrieve Display Mode       Return value: Display Mode
-     D QsnRtvMod...
-     D                 PR             1A          extproc('QsnRtvMod')
-     D  o_dspMode                     1A          options(*omit)
-     D  i_hLowLvlEnv                 10I 0 const  options(*omit)
-     D  io_errCode                32767A          options(*omit: *varsize)
-      *
-      *  Query 5250 (QsnQry5250) API Return value: return code 0=succes, -1=error
-     D QsnQry5250...
-     D                 PR            10I 0        extproc('QsnQry5250')
-     D  o_rcvVar                  32767A          options(*varsize)
-     D  i_lenRcvVar                  10I 0 const
-     D  io_errCode                32767A          options(*omit: *varsize)
-      *
-      *  Data structure of QsnQry5250 API.
-     D QSN_Q5250_t     DS                  based(pDummy)  qualified
-     D  bytRet                 1      4I 0
-     D  bytAvl                 5      8I 0
-     D  qrySts                 9      9A
-     D  wrksCtlUnit           10     11I 0
-     D  codeLevel             12     14A
-     D  reserved_1            15     30A
-     D  wrksTypCde            31     31A
-     D  mschnTypCde           32     35A
-     D  mdlNbr                36     38A
-     D  kbd_ID                39     39A
-     D  extKbd_ID             40     40A
-     D  PC_kbd_ID             41     41A
-     D  srlNbr                42     45A
-     D  maxInpFlds            46     47I 0
-     D  ctlUnitCust           49     50A
-     D  reserved_2            51     51A
-     D  devCpblts             51     62A
-     D   devCpblts_0                  1A   overlay(devCpblts)
-     D   devCpblts_1                  1A   overlay(devCpblts: *next)
-     D   devCpblts_2                  1A   overlay(devCpblts: *next)
-     D   devCpblts_3                  1A   overlay(devCpblts: *next)
-     D   devCpblts_4                  1A   overlay(devCpblts: *next)
-     D   devCpblts_5                  1A   overlay(devCpblts: *next)
-     D   devCpblts_6                  1A   overlay(devCpblts: *next)
-     D   devCpblts_7                  1A   overlay(devCpblts: *next)
-     D   devCpblts_8                  1A   overlay(devCpblts: *next)
-     D   devCpblts_9                  1A   overlay(devCpblts: *next)
-     D   devCpblts_10                 1A   overlay(devCpblts: *next)
-     D   devCpblts_11                 1A   overlay(devCpblts: *next)
-     D  gridBufs              63     63A
-     D  typGrdLnSup           64     64A
-     D  reserved_3            65     65A
-     D  imgFax                66     66A
-     D  imgFaxScl             67     67A
-     D  imgFaxRtg             68     68A
-     D  imgFaxSpt             69     69A
-     D  invTags               70     70A
-     D  reserved_4            71     72A
-      *
-      * -----------------------------------------
-      *  Global constants
-      * -----------------------------------------
-      *
-      * -----------------------------------------
-      *  Global fields
-      * -----------------------------------------
-      *
-      *=========================================================================
-      *  Returns the current display mode.
-      *=========================================================================
-      *  Parameters:
-      *   void
-      *
-      *  Returns:
-      *   dspMode       - Current display mode:
-      *                   cDISPLAY_MODE_DS3   24x80
-      *                   cDISPLAY_MODE_DS4   27x132
-      *=========================================================================
-     P Display_getMode...
-     P                 B                   export
-      *
-     D Display_getMode...
-     D                 PI                         like(display_mode_t)
-      *
-      *  Return value
-     D dspMode         S                   like(display_mode_t) inz
-      *
-      *  Local fields
-     D dspModeRaw      S              1A                        inz
-     D errCode         DS                  likeds(errCode_t   ) inz
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+**FREE
+//=====================================================================*
+//  BASICS1R9  - SrvPgm: Basic Routines - Display Information          *
+//=====================================================================*
+//  Author  :  Thomas Raddatz                                          *
+//  Date    :  22.06.2005                                              *
+//  E-mail  :  thomas.raddatz@tools400.de                              *
+//  Homepage:  www.tools400.de                                         *
+//=====================================================================*
+//                                                                     *
+//  This software is free software, you can redistribute it and/or     *
+//  modify it under the terms of the GNU General Public License (GPL)  *
+//  as published by the Free Software Foundation.                      *
+//                                                                     *
+//  See GNU General Public License for details.                        *
+//          http://www.opensource.org                                  *
+//          http://www.opensource.org/licenses/gpl-license.html        *
+//                                                                     *
+//=====================================================================*
+//  History:                                                           *
+//                                                                     *
+//  Datum       Name          Änderung                                 *
+//  ----------  ------------  ---------------------------------------  *
+//  23.01.2009  Th.Raddatz    Renamed f_getDisplayMode() to            *
+//                            Display_getMode().                       *
+//                            Added Display_supportsDS4().             *
+//                                                                     *
+//  26.01.2009  Th.Raddatz    Added Display_getRows() and              *
+//                            Display_getColumns().                    *
+//                                                                     *
+//=====================================================================*
+//   >>PRE-COMPILER<<                                                  *
+//                                                                     *
+//     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                      *
+//                              SRCFILE(&SL/&SF) +                     *
+//                              SRCMBR(&SM);                           *
+//                                                                     *
+//     >>COMPILE<<                                                     *
+//       >>PARM<< OPTION(*EVENTF);                                     *
+//       >>PARM<< TRUNCNBR(*NO);                                       *
+//       >>PARM<< DBGVIEW(*LIST);                                      *
+//       >>PARM<< TGTRLS(V7R3M0);                                      *
+//     >>END-COMPILE<<                                                 *
+//                                                                     *
+//     >>EXECUTE<<                                                     *
+//                                                                     *
+//   >>END-PRE-COMPILER<<                                              *
+//=====================================================================*
+ctl-opt NOMAIN BNDDIR('QSNAPI');
+//  Standard H-Specs
+/COPY QBASICS1,H_SPEC
+/COPY QBASICS1,COPYRIGHT
+//=====================================================================*
 
-         clear errCode;
-         QsnRtvMod(dspModeRaw: *omit: errCode);
+// -----------------------------------------
+//  Exported functions
+// -----------------------------------------
+/COPY QBASICS1,PBASICS1R9
 
-         if dspModeRaw = '3';
-            dspMode = cDISPLAY_MODE_DS3;
-         else;
-            dspMode = cDISPLAY_MODE_DS4;
-         endif;
+// -----------------------------------------
+//  Reference fields
+// -----------------------------------------
+/COPY QBASICS1,BASICS1R0
 
-         return dspMode;
+// -----------------------------------------
+//  Private prototypes
+// -----------------------------------------
 
-      /END-FREE
-      *
-     P Display_getMode...
-     P                 E
-      *
-      *=========================================================================
-      *  Returns cTrue if the display device support 27x132 mode.
-      *=========================================================================
-      *  Parameters:
-      *   void
-      *
-      *  Returns:
-      *   isDS4         - cTrue if the device support 27x132 mode, else cFalse.
-      *=========================================================================
-     P Display_supportsDS4...
-     P                 B                   export
-      *
-     D Display_supportsDS4...
-     D                 PI              N
-      *
-      *  Return value
-     D isDS4           S               N   inz(cFalse)
-      *
-      *  Local fields
-     D rc              S             10I 0 inz
-     D QSN_Q5250       DS                  likeds(QSN_Q5250_t ) inz
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+// -----------------------------------------
+//  Imported prototypes
+// -----------------------------------------
 
-         rc = QsnQry5250(QSN_Q5250: %size(QSN_Q5250): *omit);
-         if (%bitand(QSN_Q5250.devCpblts_1: x'20') = x'20');
-            isDS4 = cTrue;
-         else;
-            isDS4 = cFalse;
-         endif;
+//  Retrieve Display Mode       Return value: Display Mode
+dcl-pr QsnRtvMod
+       char(1) extproc('QsnRtvMod');
+  o_dspMode       char(1) options(*omit);
+  i_hLowLvlEnv    int(10) const  options(*omit);
+  io_errCode      char(32767) options(*omit: *varsize);
+end-pr;
 
-         return isDS4;
+//  Query 5250 (QsnQry5250) API Return value: return code 0=succes, -1=error
+dcl-pr QsnQry5250
+       int(10) extproc('QsnQry5250');
+  o_rcvVar        char(32767) options(*varsize);
+  i_lenRcvVar     int(10) const;
+  io_errCode      char(32767) options(*omit: *varsize);
+end-pr;
 
-      /END-FREE
-      *
-     P Display_supportsDS4...
-     P                 E
-      *
-      *=========================================================================
-      *  Returns cTrue if the display device supports GUI characters.
-      *=========================================================================
-      *  Parameters:
-      *   void
-      *
-      *  Returns:
-      *   isGUI         - cTrue if the device support GUI characters,
-      *                   else cFalse.
-      *=========================================================================
-     P Display_supportsGUI...
-     P                 B                   export
-      *
-     D Display_supportsGUI...
-     D                 PI              N
-      *
-      *  Return value
-     D isGUI           S               N   inz(cFalse)
-      *
-      *  Local fields
-     D rc              S             10I 0 inz
-     D QSN_Q5250       DS                  likeds(QSN_Q5250_t ) inz
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+//  Data structure of QsnQry5250 API.
+dcl-ds QSN_Q5250_t based(pDummy)  qualified;
+  bytRet          int(10) pos(1);
+  bytAvl          int(10) pos(5);
+  qrySts          char(1) pos(9);
+  wrksCtlUnit     int(5) pos(10);
+  codeLevel       char(3) pos(12);
+  reserved_1      char(16) pos(15);
+  wrksTypCde      char(1) pos(31);
+  mschnTypCde     char(4) pos(32);
+  mdlNbr          char(3) pos(36);
+  kbd_ID          char(1) pos(39);
+  extKbd_ID       char(1) pos(40);
+  PC_kbd_ID       char(1) pos(41);
+  srlNbr          char(4) pos(42);
+  maxInpFlds      int(5) pos(46);
+  ctlUnitCust     char(2) pos(49);
+  reserved_2      char(1) pos(51);
+  devCpblts       char(12) pos(51);
+  devCpblts_0     char(1) overlay(devCpblts);
+  devCpblts_1     char(1) overlay(devCpblts: *next);
+  devCpblts_2     char(1) overlay(devCpblts: *next);
+  devCpblts_3     char(1) overlay(devCpblts: *next);
+  devCpblts_4     char(1) overlay(devCpblts: *next);
+  devCpblts_5     char(1) overlay(devCpblts: *next);
+  devCpblts_6     char(1) overlay(devCpblts: *next);
+  devCpblts_7     char(1) overlay(devCpblts: *next);
+  devCpblts_8     char(1) overlay(devCpblts: *next);
+  devCpblts_9     char(1) overlay(devCpblts: *next);
+  devCpblts_10    char(1) overlay(devCpblts: *next);
+  devCpblts_11    char(1) overlay(devCpblts: *next);
+  gridBufs        char(1) pos(63);
+  typGrdLnSup     char(1) pos(64);
+  reserved_3      char(1) pos(65);
+  imgFax          char(1) pos(66);
+  imgFaxScl       char(1) pos(67);
+  imgFaxRtg       char(1) pos(68);
+  imgFaxSpt       char(1) pos(69);
+  invTags         char(1) pos(70);
+  reserved_4      char(2) pos(71);
+end-ds;
 
-         rc = QsnQry5250(QSN_Q5250: %size(QSN_Q5250): *omit);
-         if (%bitand(QSN_Q5250.devCpblts_4: x'04') = x'04');
-            isGUI = cTrue;
-         else;
-            isGUI = cFalse;
-         endif;
+// -----------------------------------------
+//  Global constants
+// -----------------------------------------
 
-         return isGUI;
+// -----------------------------------------
+//  Global fields
+// -----------------------------------------
 
-      /END-FREE
-      *
-     P Display_supportsGUI...
-     P                 E
-      *
-      *=========================================================================
-      *  Returns the number of rows that can be displayed on the screen.
-      *=========================================================================
-      *  Parameters:
-      *   dspMode       - Display mode.
-      *                   Default: current display mode
-      *                   cDISPLAY_MODE_DS3   24x80
-      *                   cDISPLAY_MODE_DS4   27x132
-      *
-      *  Returns:
-      *   rows          - Number of rows that can be displayed.
-      *=========================================================================
-     P Display_getRows...
-     P                 B                   export
-      *
-     D Display_getRows...
-     D                 PI             5I 0
-     D  i_dspMode                          const  like(display_mode_t)
-     D                                            options(*nopass)
-      *
-      *  Parameter positions
-     D p_dspMode       C                   1
-      *
-      *  Fields for optional parameters
-     D dspMode         S                   like(i_dspMode ) inz
-      *
-      *  Return value
-     D rows            S              5I 0 inz
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+//=========================================================================
+//  Returns the current display mode.
+//=========================================================================
+//  Parameters:
+//   void
+//
+//  Returns:
+//   dspMode       - Current display mode:
+//                   cDISPLAY_MODE_DS3   24x80
+//                   cDISPLAY_MODE_DS4   27x132
+//=========================================================================
+dcl-proc Display_getMode export;
 
-         if (%parms() >= p_dspMode);
-            dspMode = i_dspMode;
-         else;
-            dspMode = Display_getMode();
-         endif;
+dcl-pi Display_getMode
+       like(display_mode_t);
+end-pi;
 
-         if (dspMode = cDISPLAY_MODE_DS3);
-            rows = 24;
-         else;
-            rows = 27;
-         endif;
+//  Return value
+dcl-s dspMode         like(display_mode_t) inz;
 
-         return rows;
+//  Local fields
+dcl-s dspModeRaw      char(1) inz;
+dcl-ds errCode likeds(errCode_t   ) inz;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      /END-FREE
-      *
-     P Display_getRows...
-     P                 E
-      *
-      *=========================================================================
-      *  Returns the number of columns that can be displayed on the screen.
-      *=========================================================================
-      *  Parameters:
-      *   dspMode       - Display mode.
-      *                   Default: current display mode
-      *                   cDISPLAY_MODE_DS3   24x80
-      *                   cDISPLAY_MODE_DS4   27x132
-      *
-      *  Returns:
-      *   columns       - Number of columns that can be displayed.
-      *=========================================================================
-     P Display_getColumns...
-     P                 B                   export
-      *
-     D Display_getColumns...
-     D                 PI             5I 0
-     D  i_dspMode                          const  like(display_mode_t)
-     D                                            options(*nopass)
-      *
-      *  Parameter positions
-     D p_dspMode       C                   1
-      *
-      *  Fields for optional parameters
-     D dspMode         S                   like(i_dspMode ) inz
-      *
-      *  Return value
-     D columns         S              5I 0 inz
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+clear errCode;
+QsnRtvMod(dspModeRaw: *omit: errCode);
 
-         if (%parms() >= p_dspMode);
-            dspMode = i_dspMode;
-         else;
-            dspMode = Display_getMode();
-         endif;
+if dspModeRaw = '3';
+   dspMode = cDISPLAY_MODE_DS3;
+else;
+   dspMode = cDISPLAY_MODE_DS4;
+endif;
 
-         if (dspMode = cDISPLAY_MODE_DS3);
-            columns = 80;
-         else;
-            columns = 132;
-         endif;
+return dspMode;
 
-         return columns;
 
-      /END-FREE
-      *
-     P Display_getColumns...
-     P                 E
-      *
+end-proc Display_getMode;
+
+//=========================================================================
+//  Returns cTrue if the display device support 27x132 mode.
+//=========================================================================
+//  Parameters:
+//   void
+//
+//  Returns:
+//   isDS4         - cTrue if the device support 27x132 mode, else cFalse.
+//=========================================================================
+dcl-proc Display_supportsDS4 export;
+
+dcl-pi Display_supportsDS4
+       ind;
+end-pi;
+
+//  Return value
+dcl-s isDS4           ind inz(cFalse);
+
+//  Local fields
+dcl-s rc              int(10) inz;
+dcl-ds QSN_Q5250 likeds(QSN_Q5250_t ) inz;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+rc = QsnQry5250(QSN_Q5250: %size(QSN_Q5250): *omit);
+if (%bitand(QSN_Q5250.devCpblts_1: x'20') = x'20');
+   isDS4 = cTrue;
+else;
+   isDS4 = cFalse;
+endif;
+
+return isDS4;
+
+
+end-proc Display_supportsDS4;
+
+//=========================================================================
+//  Returns cTrue if the display device supports GUI characters.
+//=========================================================================
+//  Parameters:
+//   void
+//
+//  Returns:
+//   isGUI         - cTrue if the device support GUI characters,
+//                   else cFalse.
+//=========================================================================
+dcl-proc Display_supportsGUI export;
+
+dcl-pi Display_supportsGUI
+       ind;
+end-pi;
+
+//  Return value
+dcl-s isGUI           ind inz(cFalse);
+
+//  Local fields
+dcl-s rc              int(10) inz;
+dcl-ds QSN_Q5250 likeds(QSN_Q5250_t ) inz;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+rc = QsnQry5250(QSN_Q5250: %size(QSN_Q5250): *omit);
+if (%bitand(QSN_Q5250.devCpblts_4: x'04') = x'04');
+   isGUI = cTrue;
+else;
+   isGUI = cFalse;
+endif;
+
+return isGUI;
+
+
+end-proc Display_supportsGUI;
+
+//=========================================================================
+//  Returns the number of rows that can be displayed on the screen.
+//=========================================================================
+//  Parameters:
+//   dspMode       - Display mode.
+//                   Default: current display mode
+//                   cDISPLAY_MODE_DS3   24x80
+//                   cDISPLAY_MODE_DS4   27x132
+//
+//  Returns:
+//   rows          - Number of rows that can be displayed.
+//=========================================================================
+dcl-proc Display_getRows export;
+
+dcl-pi Display_getRows
+       int(5);
+  i_dspMode       const  like(display_mode_t)
+       options(*nopass);
+end-pi;
+
+//  Parameter positions
+dcl-c p_dspMode 1;
+
+//  Fields for optional parameters
+dcl-s dspMode         like(i_dspMode ) inz;
+
+//  Return value
+dcl-s rows            int(5) inz;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+if (%parms() >= p_dspMode);
+   dspMode = i_dspMode;
+else;
+   dspMode = Display_getMode();
+endif;
+
+if (dspMode = cDISPLAY_MODE_DS3);
+   rows = 24;
+else;
+   rows = 27;
+endif;
+
+return rows;
+
+
+end-proc Display_getRows;
+
+//=========================================================================
+//  Returns the number of columns that can be displayed on the screen.
+//=========================================================================
+//  Parameters:
+//   dspMode       - Display mode.
+//                   Default: current display mode
+//                   cDISPLAY_MODE_DS3   24x80
+//                   cDISPLAY_MODE_DS4   27x132
+//
+//  Returns:
+//   columns       - Number of columns that can be displayed.
+//=========================================================================
+dcl-proc Display_getColumns export;
+
+dcl-pi Display_getColumns
+       int(5);
+  i_dspMode       const  like(display_mode_t)
+       options(*nopass);
+end-pi;
+
+//  Parameter positions
+dcl-c p_dspMode 1;
+
+//  Fields for optional parameters
+dcl-s dspMode         like(i_dspMode ) inz;
+
+//  Return value
+dcl-s columns         int(5) inz;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+if (%parms() >= p_dspMode);
+   dspMode = i_dspMode;
+else;
+   dspMode = Display_getMode();
+endif;
+
+if (dspMode = cDISPLAY_MODE_DS3);
+   columns = 80;
+else;
+   columns = 132;
+endif;
+
+return columns;
+
+
+end-proc Display_getColumns;
+

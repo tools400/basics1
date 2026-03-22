@@ -6,12 +6,12 @@ BASICS1 is a core service program that offers services that are used
 by almost all Tools/400 utilities.
 
 Compile members with the following PDM option:
-                                                                          
-   STRPREPRC USESRCFILE(&L/&F) USESRCMBR(&N) OPTION(*EVENTF) CHGOBJD(*NO) 
-     LIB(&O) OBJ(&N) SRCLIB(&L) SRCFILE(&F) SRCMBR(&N) USER0(&X)          
-     USER1(*LIST) USER2(*FULL)                                            
 
-Members of type MAKPGM or BND are used for linking programs (MAKPGM) 
+   STRPREPRC USESRCFILE(&L/&F) USESRCMBR(&N) OPTION(*EVENTF) CHGOBJD(*NO)
+     LIB(&O) OBJ(&N) SRCLIB(&L) SRCFILE(&F) SRCMBR(&N) USER0(&X)
+     USER1(*LIST) USER2(*FULL)
+
+Members of type MAKPGM or BND are used for linking programs (MAKPGM)
 and service programs (BND).
 
 2018, Thomas Raddatz
@@ -43,14 +43,14 @@ Fixed:   Fixed exports of:
             BASICS1RF_f_rtvSysVal_char()
             BASICS1RF_f_rtvSysVal_num()
 Fixed:   Fixed 'index out of range' check in:
-            BasicMap_getSizeByIndex()              
-            BasicMap_getKeyByIndex()               
+            BasicMap_getSizeByIndex()
+            BasicMap_getKeyByIndex()
             BasicMap_getValueByIndex()
 Fixed:   Reference fields in BasicProperties_remove().
 Fixed:   Upper case key in BasicProperties_remove().
-         Now the key is lower case. 
+         Now the key is lower case.
 Added:   Test cases to program TEST_RC_01.
-             
+
 
 Changed: Target release to 7.1.
 

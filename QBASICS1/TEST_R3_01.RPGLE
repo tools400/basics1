@@ -1,126 +1,121 @@
-      *===============================================================*
-      *    CALL PGM(TEST_R3_01) PARM('-123.456,789')                  *
-      *===============================================================*
-      *   >>PRE-COMPILER<<                                            *
-      *                                                               *
-      *     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
-      *                              SRCFILE(&SL/&SF) +               *
-      *                              SRCMBR(&SM);                     *
-      *                                                               *
-      *     >>COMPILE<<                                               *
-      *       >>PARM<< TRUNCNBR(*NO);                                 *
-      *       >>PARM<< DBGVIEW(*LIST);                                *
-      *       >>PARM<< TGTRLS(*CURRENT);                              *
-      *     >>END-COMPILE<<                                           *
-      *                                                               *
-      *     >>EXECUTE<<                                               *
-      *                                                               *
-      *     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
-      *                              MODULE(&LI/&OB) +                *
-      *                              ACTGRP(*NEW) +                   *
-      *                              BNDSRVPGM(&LI/BASICS1) +         *
-      *                              TGTRLS(*CURRENT) +               *
-      *                              DETAIL(*BASIC);                  *
-      *                                                               *
-      *   >>END-PRE-COMPILER<<                                        *
-      *===============================================================*
-     H DEBUG
-     H OPTION(*SRCSTMT : *NODEBUGIO)
-     H DECEDIT('0,') DATEDIT(*DMY.)
-     H DATFMT(*ISO )  TIMFMT(*ISO )
-     H EXPROPTS(*RESDECPOS)
-     H EXTBININT(*YES)
-      *===============================================================*
-      *
-      * ------------------------------------
-      *  Type Definitions
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  External Prototypes
-      * ------------------------------------
-      /COPY QBASICS1,PBASICS1
-      *
-      * ------------------------------------
-      *  Global Fields
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Global Constants
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Prototypes
-      * ------------------------------------
-      *
-     D PGM_ENTRY_POINT...
-     D                 PR                         extpgm('TEST_R3_01')
-     D  gi_strVal                    32A   const  options(*nopass)
-      *
-     D main...
-     D                 PR
-     D  i_strVal                     32A   const
-      *
-      *===============================================================*
-      *  Program Entry Point
-      *===============================================================*
-      *
-     D PGM_ENTRY_POINT...
-     D                 PI
-     D  gi_strVal                    32A   const  options(*nopass)
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+**FREE
+//===============================================================*
+//    CALL PGM(TEST_R3_01) PARM('-123.456,789')                  *
+//===============================================================*
+//   >>PRE-COMPILER<<                                            *
+//                                                               *
+//     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
+//                              SRCFILE(&SL/&SF) +               *
+//                              SRCMBR(&SM);                     *
+//                                                               *
+//     >>COMPILE<<                                               *
+//       >>PARM<< TRUNCNBR(*NO);                                 *
+//       >>PARM<< DBGVIEW(*LIST);                                *
+//       >>PARM<< TGTRLS(*CURRENT);                              *
+//     >>END-COMPILE<<                                           *
+//                                                               *
+//     >>EXECUTE<<                                               *
+//                                                               *
+//     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
+//                              MODULE(&LI/&OB) +                *
+//                              ACTGRP(*NEW) +                   *
+//                              BNDSRVPGM(&LI/BASICS1) +         *
+//                              TGTRLS(*CURRENT) +               *
+//                              DETAIL(*BASIC);                  *
+//                                                               *
+//   >>END-PRE-COMPILER<<                                        *
+//===============================================================*
+ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
+ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
+ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
+ctl-opt EXPROPTS(*RESDECPOS);
+ctl-opt EXTBININT(*YES);
+//===============================================================*
 
-         if (%parms() >= %parmNum(gi_strVal));
-            main(gi_strVal);
-         else;
-            main('');
-         endif;
+// ------------------------------------
+//  Type Definitions
+// ------------------------------------
 
-         *inlr = *on;
+// ------------------------------------
+//  External Prototypes
+// ------------------------------------
+/COPY QBASICS1,PBASICS1
 
-         return;
+// ------------------------------------
+//  Global Fields
+// ------------------------------------
 
-      /END-FREE
-      *
-      *===============================================================*
-      *  Main procedure
-      *===============================================================*
-     P main...
-     P                 B
-      *
-     D main...
-     D                 PI
-     D  i_strVal                     32A   const
-      *
-      *  Helper fields
-     D numVal          S              8F                      inz
-     D msg             DS                  likeds(msg_t      ) inz
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+// ------------------------------------
+//  Global Constants
+// ------------------------------------
 
-         numVal = f_val('  $   1.605,25  ');
-         msg = f_newMsg('': %editc(%dec(numVal: 20: 5): 'N'));
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+// ------------------------------------
+//  Prototypes
+// ------------------------------------
 
-         numVal = f_val('-123,5');
-         msg = f_newMsg('': %editc(%dec(numVal: 20: 5): 'N'));
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+dcl-pr PGM_ENTRY_POINT
+       extpgm('TEST_R3_01');
+  gi_strVal       char(32) const  options(*nopass);
+end-pr;
 
-         numVal = f_val('123,5-');
-         msg = f_newMsg('': %editc(%dec(numVal: 20: 5): 'N'));
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+dcl-pr main;
+  i_strVal        char(32) const;
+end-pr;
 
-         if (i_strVal <> '');
-            numVal = f_val(i_strVal);
-            msg = f_newMsg('': %editc(%dec(numVal: 30: 9): 'N'));
-            f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-         endif;
+//===============================================================*
+//  Program Entry Point
+//===============================================================*
 
-         return;
+dcl-pi PGM_ENTRY_POINT;
+  gi_strVal       char(32) const  options(*nopass);
+end-pi;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      /END-FREE
-      *
-     P main...
-     P                 E
-      *
+if (%parms() >= %parmNum(gi_strVal));
+   main(gi_strVal);
+else;
+   main('');
+endif;
+
+*inlr = *on;
+
+return;
+
+
+//===============================================================*
+//  Main procedure
+//===============================================================*
+dcl-proc main;
+
+dcl-pi main;
+  i_strVal        char(32) const;
+end-pi;
+
+//  Helper fields
+dcl-s numVal          float(8) inz;
+dcl-ds msg likeds(msg_t      ) inz;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+numVal = f_val('  $   1.605,25  ');
+msg = f_newMsg('': %editc(%dec(numVal: 20: 5): 'N'));
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+numVal = f_val('-123,5');
+msg = f_newMsg('': %editc(%dec(numVal: 20: 5): 'N'));
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+numVal = f_val('123,5-');
+msg = f_newMsg('': %editc(%dec(numVal: 20: 5): 'N'));
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+if (i_strVal <> '');
+   numVal = f_val(i_strVal);
+   msg = f_newMsg('': %editc(%dec(numVal: 30: 9): 'N'));
+   f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+endif;
+
+return;
+
+
+end-proc main;
+

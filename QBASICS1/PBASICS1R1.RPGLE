@@ -1,231 +1,242 @@
-      /IF NOT DEFINED(PBASICSR1)
-      /DEFINE PBASICSR1
-      *
-      *  Reference fields
-      /COPY QBASICS1,FDMSG
-      /COPY QBASICS1,FDRCVM0200
-      /COPY QBASICS1,FDRCVM0300
-      /COPY QBASICS1,FDRTVM0100
-      /COPY QBASICS1,FDRTVM0300
-      /COPY QBASICS1,FDRTVM0400
-      *
-      *  Constants
-      *
-      *  Message ID special values:
-     D cMSG_ID_OK      C                   const('*OK')
-     D cMSG_ID_NONE    C                   const('')
-     D cMSG_ID_NULL    C                   const('*NULL')
-      *
-      *  Parameter: Stack Counter
-     D cMsg_AllInact   C                   const(-4)                             - / - /rmv
-     D cMsg_Ext        C                   const(-1)                            snd/rcv/rmv
-     D cMsg_Prv        C                   const(-2)                            snd/rcv/rmv
-     D cMsg_Same       C                   const(-3)                            snd/rcv/rmv
-      *
-      *  Parameter: Procedure
-     D cMsg_ToMyself   C                   const('*')                           snd/rcv/rmv
-     D cMsg_ToPgmBdy   C                   const('*PGMBDY')                     snd/ - / -
-     D cMsg_ToCtlBdy   C                   const('*CTLBDY')                     snd/ - / -
-     D cMsg_ToPgm      C                   const('*PGMNAME')                    snd/ - / -
-      *
-      *  Parameter: Message Type
-     D cMsg_Any        C                   const('*ANY')                         - /rcv/ -
-     D cMsg_Comp       C                   const('*COMP')                       snd/rcv/ -
-     D cMsg_Copy       C                   const('*COPY')                        - /rcv/ -
-     D cMsg_Diag       C                   const('*DIAG')                       snd/rcv/ -
-     D cMsg_Escape     C                   const('*ESCAPE')                     snd/rcv/ -
-     D cMsg_Escp       C                   const('*EXCP')                        - /rcv/ -
-     D cMsg_First      C                   const('*FIRST')                       - /rcv/ -
-     D cMsg_Info       C                   const('*INFO')                       snd/rcv/ -
-     D cMsg_Inq        C                   const('*INQ')                        snd/ - / -
-     D cMsg_Last       C                   const('*LAST')                        --/rcv/ -
-     D cMsg_Next       C                   const('*NEXT')                        --/rcv/ -
-     D cMsg_Notify     C                   const('*NOTIFY')                     snd/rcv/ -
-     D cMsg_Previous   C                   const('*PRV')                         --/rcv/ -
-     D cMsg_Rpy        C                   const('*RPY')                         --/rcv/ -
-     D cMsg_Rqs        C                   const('*RQS')                        snd/rcv/ -
-     D cMsg_Status     C                   const('*STATUS')                     snd/ - / -
-      *
-      *  Parameter: Action
-     D cMsg_Act_Old    C                   const('*OLD')                         - /rcv/ -
-     D cMsg_Act_Rmv    C                   const('*REMOVE')                      - /rcv/ -
-     D cMsg_Act_Same   C                   const('*SAME')                        - /rcv/ -
-      *
-      *  Parameter: Message to remove
-     D cMsg_Rmv_All    C                   const('*ALL')                         - / - /rmv
-     D cMsg_Rmv_ByKey  C                   const('*BYKEY')                       - / - /rmv
-     D cMsg_Rmv_New    C                   const('*NEW')                         - / - /rmv
-     D cMsg_Rmv_Old    C                   const('*OLD')                         - / - /rmv
-     D cMsg_Rmv_Scope  C                   const('*SCOPE')                       - / - /rmv
-      *
-      *  Retrieve message help text
-     D cMsg_RtnCtrlChar_Yes...
-     D                 C                   const('*YES')
-     D cMsg_RtnCtrlChar_No...
-     D                 C                   const('*NO')
-      *
-      *  Sets the application message file.
-     D p_setAppMsgFile...
-     D                 PR
-     D                                     extproc('BASICS1R1+
-     D                                     _p_setAppMsgFile+
-     D                                     ')
-     D  i_file                       10A   const  options(*nopass)
-     D  i_lib                        10A   const  options(*nopass)
-      *
-      *  Creates a new message.
-     D f_newMsg...
-     D                 PR                         likeds(msg_t     )
-     D                                     extproc('BASICS1R1+
-     D                                     _f_newMsg+
-     D                                     ')
-     D  i_ID                               const  like(msg_t.id    )
-     D                                            options(*omit: *nopass)
-     D  i_data                      512A   const  varying
-     D                                            options(*omit: *nopass)
-     D  i_type                             const  like(msg_t.type  )
-     D                                            options(*omit: *nopass)
-     D  i_file                             const  like(msg_t.file  )
-     D                                            options(*omit: *nopass)
-     D  i_lib                              const  like(msg_t.lib   )
-     D                                            options(*omit: *nopass)
-      *
-      *  Sends a program message.
-     D f_sndPgmMsg...
-     D                 PR             4A
-     D                                     extproc('BASICS1R1+
-     D                                     _f_sndPgmMsg+
-     D                                     ')
-     D  i_msg                              const  likeds(msg_t   )
-     D  i_toStkC                     10I 0 const  options(*nopass: *omit)
-     D  i_toProc                    256A   const  options(*nopass: *omit)
-     D  i_toMod                      10A   const  options(*nopass: *omit)
-     D  i_toPgm                      10A   const  options(*nopass: *omit)
-     D  o_msg                                     likeds(msg_t    )
-     D                                            options(*nopass: *omit)
-      *
-      *  Receives a program message.
-     D f_rcvPgmMsg...
-     D                 PR                         likeds(rcvm0200_t)
-     D                                     extproc('BASICS1R1+
-     D                                     _f_rcvPgmMsg+
-     D                                     ')
-     D  i_msgType                    10A   const
-     D  i_msgKey                      4A   const  options(*nopass: *omit)
-     D  i_action                     10A   const  options(*nopass: *omit)
-     D  i_wait                       10I 0 const  options(*nopass: *omit)
-     D  i_fromStkC                   10I 0 const  options(*nopass: *omit)
-     D  i_fromProc                  256A   const  options(*nopass: *omit)
-     D  i_fromMod                    10A   const  options(*nopass: *omit)
-     D  i_fromPgm                    10A   const  options(*nopass: *omit)
-     D  o_msg                                     likeds(msg_t    )
-     D                                            options(*nopass: *omit)
-      *
-      *  Removes a program message.
-     D p_rmvPgmMsg...
-     D                 PR
-     D                                     extproc('BASICS1R1+
-     D                                     _p_rmvPgmMsg+
-     D                                     ')
-     D  i_msgToRemove                10A   const
-     D  i_msgKey                      4A   const  options(*nopass: *omit)
-     D  i_fromStkC                   10I 0 const  options(*nopass: *omit)
-     D  i_fromProc                  256A   const  options(*nopass: *omit)
-     D  i_fromMod                    10A   const  options(*nopass: *omit)
-     D  i_fromPgm                    10A   const  options(*nopass: *omit)
-     D  o_msg                                     likeds(msg_t    )
-     D                                            options(*nopass: *omit)
-      *
-      *  Retrieves the message text of a given message.
-      *  Replaces substitution variables with message data.
-     D f_rtvMsgText...
-     D                 PR          4096A          varying
-     D                                     extproc('BASICS1R1+
-     D                                     _f_rtvMsgText+
-     D                                     ')
-     D  i_msg                              const  likeds(msg_t    )
-     D  o_msg                                     likeds(msg_t    )
-     D                                            options(*nopass: *omit)
-      *
-      *  Retrieves the message help text of a given message.
-      *  Replaces substitution variables with message data.
-     D f_rtvMsgHelpText...
-     D                 PR          4096A          varying
-     D                                     extproc('BASICS1R1+
-     D                                     _f_rtvMsgHelpText+
-     D                                     ')
-     D  i_msg                              const  likeds(msg_t    )
-     D  i_rtnCtrlChr                 10A   const  options(*nopass: *omit)
-     D  o_msg                                     likeds(msg_t    )
-     D                                            options(*nopass: *omit)
-      *
-      *  Retrieves the message text of a given message.
-      *  Does not replace substitution variables with message data.
-     D f_rtvMsgTextRaw...
-     D                 PR          4096A          varying
-     D                                     extproc('BASICS1R1+
-     D                                     _f_rtvMsgTextRaw+
-     D                                     ')
-     D  i_msg                              const  likeds(msg_t    )
-     D  o_msg                                     likeds(msg_t    )
-     D                                            options(*nopass: *omit)
-      *
-      *  Retrieves the message help text of a given message.
-      *  Does not replace substitution variables with message data.
-     D f_rtvMsgHelpTextRaw...
-     D                 PR          4096A          varying
-     D                                     extproc('BASICS1R1+
-     D                                     _f_rtvMsgHelpTextRaw+
-     D                                     ')
-     D  i_msg                              const  likeds(msg_t    )
-     D  i_rtnCtrlChr                 10A   const  options(*nopass: *omit)
-     D  o_msg                                     likeds(msg_t    )
-     D                                            options(*nopass: *omit)
-      *
-      *  Converts a received message of format RCVM0200 to a message.
-     D f_cvtRcvMsgToMsg...
-     D                 PR                         likeds(msg_t     )
-     D                                     extproc('BASICS1R1+
-     D                                     _f_cvtRcvMsgToMsg+
-     D                                     ')
-     D  i_rcvm0200                         const  likeds(rcvm0200_t)
-     D  i_type                             const  like(msg_t.type  )
-     D                                            options(*omit: *nopass)
-      *
-      *  Receives a program message and returns a message structure.
-     D f_rcvPgmMsgObj...
-     D                 PR                         likeds(msg_t )
-     D                                     extproc('BASICS1R1+
-     D                                     _f_rcvPgmMsgObj+
-     D                                     ')
-     D  i_msgType                    10A   const
-     D  i_msgKey                      4A   const  options(*nopass: *omit)
-     D  i_action                     10A   const  options(*nopass: *omit)
-     D  i_wait                       10I 0 const  options(*nopass: *omit)
-     D  i_fromStkC                   10I 0 const  options(*nopass: *omit)
-     D  i_fromProc                  256A   const  options(*nopass: *omit)
-     D  i_fromMod                    10A   const  options(*nopass: *omit)
-     D  i_fromPgm                    10A   const  options(*nopass: *omit)
-     D  o_msg                                     likeds(msg_t    )
-     D                                            options(*nopass: *omit)
-      *
-      *  Returns the sender information of a receives program message.
-     D f_getSndInfOfRcvMsg...
-     D                 PR                         likeds(sndInf_t  )
-     D                                     extproc('BASICS1R1+
-     D                                     _f_getSndInfOfRcvMsg+
-     D                                     ')
-     D  i_rcvm0200                         const  likeds(rcvm0200_t)
-     D  o_longSndPgm                256A          options(*nopass: *omit)
-     D  o_longSndPrc                256A          options(*nopass: *omit)
-     D  o_msg                                     likeds(msg_t    )
-     D                                            options(*nopass: *omit)
-      *
-      * -----------------------------------------
-      *  Imported prototypes
-      * -----------------------------------------
-      /COPY QBASICS1,PBASICS1R2                   API Error Handling
-      /COPY QBASICS1,PBASICS1R4                   Assert/THIS
-      /COPY QBASICS1,PBASICS1R5                   Objects
-      *
-      /ENDIF
+**FREE
+/IF NOT DEFINED(PBASICSR1)
+/DEFINE PBASICSR1
+
+//  Reference fields
+/COPY QBASICS1,FDMSG
+/COPY QBASICS1,FDRCVM0200
+/COPY QBASICS1,FDRCVM0300
+/COPY QBASICS1,FDRTVM0100
+/COPY QBASICS1,FDRTVM0300
+/COPY QBASICS1,FDRTVM0400
+
+//  Constants
+
+//  Message ID special values:
+dcl-c cMSG_ID_OK const('*OK');
+dcl-c cMSG_ID_NONE const('');
+dcl-c cMSG_ID_NULL const('*NULL');
+
+//  Parameter: Stack Counter
+dcl-c cMsg_AllInact const(-4);                                           //  - / - /rmv
+dcl-c cMsg_Ext const(-1);                                                // snd/rcv/rmv
+dcl-c cMsg_Prv const(-2);                                                // snd/rcv/rmv
+dcl-c cMsg_Same const(-3);                                               // snd/rcv/rmv
+
+//  Parameter: Procedure
+dcl-c cMsg_ToMyself const('*');                                          // snd/rcv/rmv
+dcl-c cMsg_ToPgmBdy const('*PGMBDY');                                    // snd/ - / -
+dcl-c cMsg_ToCtlBdy const('*CTLBDY');                                    // snd/ - / -
+dcl-c cMsg_ToPgm const('*PGMNAME');                                      // snd/ - / -
+
+//  Parameter: Message Type
+dcl-c cMsg_Any const('*ANY');                                            //  - /rcv/ -
+dcl-c cMsg_Comp const('*COMP');                                          // snd/rcv/ -
+dcl-c cMsg_Copy const('*COPY');                                          //  - /rcv/ -
+dcl-c cMsg_Diag const('*DIAG');                                          // snd/rcv/ -
+dcl-c cMsg_Escape const('*ESCAPE');                                      // snd/rcv/ -
+dcl-c cMsg_Escp const('*EXCP');                                          //  - /rcv/ -
+dcl-c cMsg_First const('*FIRST');                                        //  - /rcv/ -
+dcl-c cMsg_Info const('*INFO');                                          // snd/rcv/ -
+dcl-c cMsg_Inq const('*INQ');                                            // snd/ - / -
+dcl-c cMsg_Last const('*LAST');                                          //  --/rcv/ -
+dcl-c cMsg_Next const('*NEXT');                                          //  --/rcv/ -
+dcl-c cMsg_Notify const('*NOTIFY');                                      // snd/rcv/ -
+dcl-c cMsg_Previous const('*PRV');                                       //  --/rcv/ -
+dcl-c cMsg_Rpy const('*RPY');                                            //  --/rcv/ -
+dcl-c cMsg_Rqs const('*RQS');                                            // snd/rcv/ -
+dcl-c cMsg_Status const('*STATUS');                                      // snd/ - / -
+
+//  Parameter: Action
+dcl-c cMsg_Act_Old const('*OLD');                                        //  - /rcv/ -
+dcl-c cMsg_Act_Rmv const('*REMOVE');                                     //  - /rcv/ -
+dcl-c cMsg_Act_Same const('*SAME');                                      //  - /rcv/ -
+
+//  Parameter: Message to remove
+dcl-c cMsg_Rmv_All const('*ALL');                                        //  - / - /rmv
+dcl-c cMsg_Rmv_ByKey const('*BYKEY');                                    //  - / - /rmv
+dcl-c cMsg_Rmv_New const('*NEW');                                        //  - / - /rmv
+dcl-c cMsg_Rmv_Old const('*OLD');                                        //  - / - /rmv
+dcl-c cMsg_Rmv_Scope const('*SCOPE');                                    //  - / - /rmv
+
+//  Retrieve message help text
+dcl-c cMsg_RtnCtrlChar_Yes
+      const('*YES');
+dcl-c cMsg_RtnCtrlChar_No
+      const('*NO');
+
+//  Sets the application message file.
+dcl-pr p_setAppMsgFile
+       extproc('BASICS1R1+
+       _p_setAppMsgFile+
+       ');
+  i_file          char(10) const  options(*nopass);
+  i_lib           char(10) const  options(*nopass);
+end-pr;
+
+//  Creates a new message.
+dcl-pr f_newMsg
+       likeds(msg_t     )
+extproc('BASICS1R1+
+_f_newMsg+
+');
+i_ID            const  like(msg_t.id    )
+     options(*omit: *nopass);
+i_data          varchar(512) const
+     options(*omit: *nopass);
+i_type          const  like(msg_t.type  )
+     options(*omit: *nopass);
+i_file          const  like(msg_t.file  )
+     options(*omit: *nopass);
+i_lib           const  like(msg_t.lib   )
+     options(*omit: *nopass);
+end-pr;
+
+//  Sends a program message.
+dcl-pr f_sndPgmMsg
+       char(4)
+       extproc('BASICS1R1+
+       _f_sndPgmMsg+
+       ');
+  i_msg           const  likeds(msg_t   );
+i_toStkC        int(10) const  options(*nopass: *omit);
+i_toProc        char(256) const  options(*nopass: *omit);
+i_toMod         char(10) const  options(*nopass: *omit);
+i_toPgm         char(10) const  options(*nopass: *omit);
+o_msg           likeds(msg_t    )
+     options(*nopass: *omit);
+end-pr;
+
+//  Receives a program message.
+dcl-pr f_rcvPgmMsg
+       likeds(rcvm0200_t)
+extproc('BASICS1R1+
+_f_rcvPgmMsg+
+');
+i_msgType       char(10) const;
+i_msgKey        char(4) const  options(*nopass: *omit);
+i_action        char(10) const  options(*nopass: *omit);
+i_wait          int(10) const  options(*nopass: *omit);
+i_fromStkC      int(10) const  options(*nopass: *omit);
+i_fromProc      char(256) const  options(*nopass: *omit);
+i_fromMod       char(10) const  options(*nopass: *omit);
+i_fromPgm       char(10) const  options(*nopass: *omit);
+o_msg           likeds(msg_t    )
+     options(*nopass: *omit);
+end-pr;
+
+//  Removes a program message.
+dcl-pr p_rmvPgmMsg
+       extproc('BASICS1R1+
+       _p_rmvPgmMsg+
+       ');
+  i_msgToRemove   char(10) const;
+  i_msgKey        char(4) const  options(*nopass: *omit);
+  i_fromStkC      int(10) const  options(*nopass: *omit);
+  i_fromProc      char(256) const  options(*nopass: *omit);
+  i_fromMod       char(10) const  options(*nopass: *omit);
+  i_fromPgm       char(10) const  options(*nopass: *omit);
+  o_msg           likeds(msg_t    )
+options(*nopass: *omit);
+end-pr;
+
+//  Retrieves the message text of a given message.
+//  Replaces substitution variables with message data.
+dcl-pr f_rtvMsgText
+       varchar(4096)
+       extproc('BASICS1R1+
+       _f_rtvMsgText+
+       ');
+  i_msg           const  likeds(msg_t    );
+o_msg           likeds(msg_t    )
+     options(*nopass: *omit);
+end-pr;
+
+//  Retrieves the message help text of a given message.
+//  Replaces substitution variables with message data.
+dcl-pr f_rtvMsgHelpText
+       varchar(4096)
+       extproc('BASICS1R1+
+       _f_rtvMsgHelpText+
+       ');
+  i_msg           const  likeds(msg_t    );
+i_rtnCtrlChr    char(10) const  options(*nopass: *omit);
+o_msg           likeds(msg_t    )
+     options(*nopass: *omit);
+end-pr;
+
+//  Retrieves the message text of a given message.
+//  Does not replace substitution variables with message data.
+dcl-pr f_rtvMsgTextRaw
+       varchar(4096)
+       extproc('BASICS1R1+
+       _f_rtvMsgTextRaw+
+       ');
+  i_msg           const  likeds(msg_t    );
+o_msg           likeds(msg_t    )
+     options(*nopass: *omit);
+end-pr;
+
+//  Retrieves the message help text of a given message.
+//  Does not replace substitution variables with message data.
+dcl-pr f_rtvMsgHelpTextRaw
+       varchar(4096)
+       extproc('BASICS1R1+
+       _f_rtvMsgHelpTextRaw+
+       ');
+  i_msg           const  likeds(msg_t    );
+i_rtnCtrlChr    char(10) const  options(*nopass: *omit);
+o_msg           likeds(msg_t    )
+     options(*nopass: *omit);
+end-pr;
+
+//  Converts a received message of format RCVM0200 to a message.
+dcl-pr f_cvtRcvMsgToMsg
+       likeds(msg_t     )
+extproc('BASICS1R1+
+_f_cvtRcvMsgToMsg+
+');
+i_rcvm0200      const  likeds(rcvm0200_t);
+i_type          const  like(msg_t.type  )
+     options(*omit: *nopass);
+end-pr;
+
+//  Receives a program message and returns a message structure.
+dcl-pr f_rcvPgmMsgObj
+       likeds(msg_t )
+extproc('BASICS1R1+
+_f_rcvPgmMsgObj+
+');
+i_msgType       char(10) const;
+i_msgKey        char(4) const  options(*nopass: *omit);
+i_action        char(10) const  options(*nopass: *omit);
+i_wait          int(10) const  options(*nopass: *omit);
+i_fromStkC      int(10) const  options(*nopass: *omit);
+i_fromProc      char(256) const  options(*nopass: *omit);
+i_fromMod       char(10) const  options(*nopass: *omit);
+i_fromPgm       char(10) const  options(*nopass: *omit);
+o_msg           likeds(msg_t    )
+     options(*nopass: *omit);
+end-pr;
+
+//  Returns the sender information of a receives program message.
+dcl-pr f_getSndInfOfRcvMsg
+       likeds(sndInf_t  )
+extproc('BASICS1R1+
+_f_getSndInfOfRcvMsg+
+');
+i_rcvm0200      const  likeds(rcvm0200_t);
+o_longSndPgm    char(256) options(*nopass: *omit);
+o_longSndPrc    char(256) options(*nopass: *omit);
+o_msg           likeds(msg_t    )
+     options(*nopass: *omit);
+end-pr;
+
+// -----------------------------------------
+//  Imported prototypes
+// -----------------------------------------
+/COPY QBASICS1,PBASICS1R2                   API Error Handling
+/COPY QBASICS1,PBASICS1R4                   Assert/THIS
+/COPY QBASICS1,PBASICS1R5                   Objects
+
+/ENDIF

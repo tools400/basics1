@@ -1,13 +1,15 @@
-      /IF NOT DEFINED(qQSYSObj_t)
-      /DEFINE qQSYSObj_t
-      * ============================================================= *
-      *   Qualified QSYS object name                                  *
-      *===============================================================*
-      *
-     D qQSYSObj_t      DS                  qualified           based(pDummy)
-     D  name                         10A
-     D  lib                          10A
-     D  mbr                          10A
-     D  type                         10A
-      *
-      /ENDIF
+**FREE
+/IF NOT DEFINED(qQSYSObj_t)
+/DEFINE qQSYSObj_t
+// ============================================================= *
+//   Qualified QSYS object name                                  *
+//===============================================================*
+
+dcl-ds qQSYSObj_t qualified           based(pDummy);
+  name            char(10);
+  lib             char(10);
+  mbr             char(10);
+  type            char(10);
+end-ds;
+
+/ENDIF

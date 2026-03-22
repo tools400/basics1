@@ -1,295 +1,289 @@
-      *===============================================================*
-      *    CALL PGM(TEST_RE_01)                                       *
-      *===============================================================*
-      *   >>PRE-COMPILER<<                                            *
-      *                                                               *
-      *     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
-      *                              SRCFILE(&SL/&SF) +               *
-      *                              SRCMBR(&SM);                     *
-      *                                                               *
-      *     >>COMPILE<<                                               *
-      *       >>PARM<< TRUNCNBR(*NO);                                 *
-      *       >>PARM<< DBGVIEW(*LIST);                                *
-      *       >>PARM<< TGTRLS(*CURRENT);                              *
-      *     >>END-COMPILE<<                                           *
-      *                                                               *
-      *     >>EXECUTE<<                                               *
-      *                                                               *
-      *     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
-      *                              MODULE(&LI/&OB) +                *
-      *                              ACTGRP(*NEW) +                   *
-      *                              BNDSRVPGM(&LI/BASICS1) +         *
-      *                              TGTRLS(*CURRENT) +               *
-      *                              DETAIL(*BASIC);                  *
-      *                                                               *
-      *   >>END-PRE-COMPILER<<                                        *
-      *===============================================================*
-     H DEBUG
-     H OPTION(*SRCSTMT : *NODEBUGIO)
-     H DECEDIT('0,') DATEDIT(*DMY.)
-     H DATFMT(*ISO )  TIMFMT(*ISO )
-     H EXPROPTS(*RESDECPOS)
-     H EXTBININT(*YES)
-      *===============================================================*
-      *
-      * ------------------------------------
-      *  Type Definitions
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  External Prototypes
-      * ------------------------------------
-      /COPY QBASICS1,PBASICS1
-      *
-      * ------------------------------------
-      *  Global Fields
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Global Constants
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Prototypes
-      * ------------------------------------
-      *
-     D PGM_ENTRY_POINT...
-     D                 PR                         extpgm('TEST_RE_01')
-     D  gi_year                      15P 5 const  options(*nopass)
-     D  gi_month                     15P 5 const  options(*nopass)
-     D  gi_day                       15P 5 const  options(*nopass)
-      *
-     D main...
-     D                 PR
-     D  i_year                       10I 0 const
-     D  i_month                      10I 0 const
-     D  i_day                        10I 0 const
-      *
-      *  Sends a message to QCMD
-     D sndMsg...
-     D                 PR
-     D  i_text                      128A   value  varying
-     D  i_doSendToExt                  N   VALUE  options(*nopass)
-      *
-      *===============================================================*
-      *  Program Entry Point
-      *===============================================================*
-      *
-     D PGM_ENTRY_POINT...
-     D                 PI
-     D  gi_year                      15P 5 const  options(*nopass)
-     D  gi_month                     15P 5 const  options(*nopass)
-     D  gi_day                       15P 5 const  options(*nopass)
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+**FREE
+//===============================================================*
+//    CALL PGM(TEST_RE_01)                                       *
+//===============================================================*
+//   >>PRE-COMPILER<<                                            *
+//                                                               *
+//     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
+//                              SRCFILE(&SL/&SF) +               *
+//                              SRCMBR(&SM);                     *
+//                                                               *
+//     >>COMPILE<<                                               *
+//       >>PARM<< TRUNCNBR(*NO);                                 *
+//       >>PARM<< DBGVIEW(*LIST);                                *
+//       >>PARM<< TGTRLS(*CURRENT);                              *
+//     >>END-COMPILE<<                                           *
+//                                                               *
+//     >>EXECUTE<<                                               *
+//                                                               *
+//     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
+//                              MODULE(&LI/&OB) +                *
+//                              ACTGRP(*NEW) +                   *
+//                              BNDSRVPGM(&LI/BASICS1) +         *
+//                              TGTRLS(*CURRENT) +               *
+//                              DETAIL(*BASIC);                  *
+//                                                               *
+//   >>END-PRE-COMPILER<<                                        *
+//===============================================================*
+ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
+ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
+ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
+ctl-opt EXPROPTS(*RESDECPOS);
+ctl-opt EXTBININT(*YES);
+//===============================================================*
 
-         if (%parms() >= 3);
-            main(gi_year: gi_month: gi_day);
-         else;
-            main(1900: 1: 1);
-         endif;
+// ------------------------------------
+//  Type Definitions
+// ------------------------------------
 
-         *inlr = *on;
+// ------------------------------------
+//  External Prototypes
+// ------------------------------------
+/COPY QBASICS1,PBASICS1
 
-         return;
+// ------------------------------------
+//  Global Fields
+// ------------------------------------
 
-      /END-FREE
-      *
-      *===============================================================*
-      *  Sends a message to the caller.
-      *===============================================================*
-     P sndMsg...
-     P                 B
-      *
-     D sndMsg...
-     D                 PI
-     D  i_text                      128A   value  varying
-     D  i_doSendToExt                  N   VALUE  options(*nopass)
-      *
-      *  Return value
-     D pBuffer         S               *   inz
-      *
-      *  Local fields
-     D msgKey          S              4A                        inz
-      *
-     D qMsgF           DS                  qualified            inz
-     D  name                         10A
-     D  lib                          10A
-      *
-     D errCode         DS                  qualified            inz
-     D  bytPrv                       10I 0
-     D  bytAvl                       10I 0
-     D  excID                         7A
-     D  reserved                      1A
-     D  excDta                      256A
-      *
-      *  Send Program Message (QMHSNDPM) API
-     D QMHSNDPM        PR                         extpgm('QMHSNDPM')
-     D   i_msgID                      7A   const
-     D   i_qMsgF                     20A   const
-     D   i_msgData                32767A   const  options(*varsize )
-     D   i_length                    10I 0 const
-     D   i_msgType                   10A   const
-     D   i_callStkE               32767A   const  options(*varsize )
-     D   i_callStkC                  10I 0 const
-     D   o_msgKey                     4A
-     D   io_ErrCode               32767A          options(*varsize )
-     D   i_lenStkE                   10I 0 const  options(*nopass  )            | optGrp 1
-     D   i_callStkEQ                 20A   const  options(*nopass  )            |
-     D   i_wait                      10I 0 const  options(*nopass  )            |
-     D   i_callStkEDT                10A   const  options(*nopass  )            | optGrp 2
-     D   i_ccsid                     10I 0 const  options(*nopass  )            |
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      *
-      /FREE
+// ------------------------------------
+//  Global Constants
+// ------------------------------------
 
-         clear qMsgF;
-         qMsgF.name = 'QCPFMSG';
-         qMsgF.lib  = '*LIBL';
+// ------------------------------------
+//  Prototypes
+// ------------------------------------
 
-         clear errCode;
-         errCode.bytPrv = %size(errCode);
+dcl-pr PGM_ENTRY_POINT
+       extpgm('TEST_RE_01');
+  gi_year         packed(15:5) const  options(*nopass);
+  gi_month        packed(15:5) const  options(*nopass);
+  gi_day          packed(15:5) const  options(*nopass);
+end-pr;
 
-         if %parms() >= 2 and i_doSendToExt;
-            QMHSNDPM('CPF9897': qMsgF: i_text: %len(i_text): '*INFO'
-                     : '*CTLBDY': 1
-                     : msgKey: errCode);
-         else;
-            QMHSNDPM('CPF9897': qMsgF: i_text: %len(i_text): '*INFO'
-                     : '*CTLBDY': 0
-                     : msgKey: errCode);
-         endif;
+dcl-pr main;
+  i_year          int(10) const;
+  i_month         int(10) const;
+  i_day           int(10) const;
+end-pr;
 
-         return;
+//  Sends a message to QCMD
+dcl-pr sndMsg;
+  i_text          varchar(128) value;
+  i_doSendToExt   ind VALUE  options(*nopass);
+end-pr;
 
-      /END-FREE
-      *
-     P sndMsg...
-     P                 E
-      *
-      *===============================================================*
-      *  Main procedure
-      *===============================================================*
-     P main...
-     P                 B
-      *
-     D main...
-     D                 PI
-     D  i_year                       10I 0 const
-     D  i_month                      10I 0 const
-     D  i_day                        10I 0 const
-      *
-      *  Helper fields
-     D days            S             10I 0 inz
-     D months          S             10I 0 inz
-     D years           S             10I 0 inz
-     D today           S               D   inz
-     D date            S               D   inz
-     D inpDate         S               D   inz
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+//===============================================================*
+//  Program Entry Point
+//===============================================================*
 
-         today = %date();
+dcl-pi PGM_ENTRY_POINT;
+  gi_year         packed(15:5) const  options(*nopass);
+  gi_month        packed(15:5) const  options(*nopass);
+  gi_day          packed(15:5) const  options(*nopass);
+end-pi;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-         // Produce todays's date
-         date = f_dateSerial(%subdt(today: *YEARS)
-                             : %subdt(today: *MONTHS)
-                             : %subdt(today: *DAYS));
-         p_assert(date = today
-                  : 'Returned value ''' + %char(date) + ''' does not match +
-                     expected value ''' + %char(today) + '''');
+if (%parms() >= 3);
+   main(gi_year: gi_month: gi_day);
+else;
+   main(1900: 1: 1);
+endif;
 
-         // Produce todays's date - 10 days
-         days = -10;
-         months = 0;
-         years  = 0;
-         date = f_dateSerial(%subdt(today: *YEARS)    + years
-                             : %subdt(today: *MONTHS) + months
-                             : %subdt(today: *DAYS)   + days);
-         p_assert(date = today + %years(years) + %months(months) + %days(days)
-                  : 'Returned value ''' + %char(date) + ''' does not match +
-                     expected value ''' + %char(today) + '''');
+*inlr = *on;
 
-         // Produce todays's date - 5 months
-         months = -5;
-         months = 0;
-         years  = 0;
-         date = f_dateSerial(%subdt(today: *YEARS)    + years
-                             : %subdt(today: *MONTHS) + months
-                             : %subdt(today: *DAYS)   + days);
-         p_assert(date = today + %years(years) + %months(months) + %days(days)
-                  : 'Returned value ''' + %char(date) + ''' does not match +
-                     expected value ''' + %char(today) + '''');
+return;
 
-         // Produce todays's date + 10 days
-         days = 10;
-         months = 0;
-         years  = 0;
-         date = f_dateSerial(%subdt(today: *YEARS)    + years
-                             : %subdt(today: *MONTHS) + months
-                             : %subdt(today: *DAYS)   + days);
-         p_assert(date = today + %years(years) + %months(months) + %days(days)
-                  : 'Returned value ''' + %char(date) + ''' does not match +
-                     expected value ''' + %char(today) + '''');
 
-         // Produce todays's date + 5 months
-         months = 5;
-         months = 0;
-         years  = 0;
-         date = f_dateSerial(%subdt(today: *YEARS)    + years
-                             : %subdt(today: *MONTHS) + months
-                             : %subdt(today: *DAYS)   + days);
-         p_assert(date = today + %years(years) + %months(months) + %days(days)
-                  : 'Returned value ''' + %char(date) + ''' does not match +
-                     expected value ''' + %char(today) + '''');
+//===============================================================*
+//  Sends a message to the caller.
+//===============================================================*
+dcl-proc sndMsg;
 
-         // Produce todays's date + 7 days - 4 months
-         days   = 7;
-         months = -4;
-         years  = 0;
-         date = f_dateSerial(%subdt(today: *YEARS)    + years
-                             : %subdt(today: *MONTHS) + months
-                             : %subdt(today: *DAYS)   + days);
-         p_assert(date = today + %years(years) + %months(months) + %days(days)
-                  : 'Returned value ''' + %char(date) + ''' does not match +
-                     expected value ''' + %char(today) + '''');
+dcl-pi sndMsg;
+  i_text          varchar(128) value;
+  i_doSendToExt   ind VALUE  options(*nopass);
+end-pi;
 
-         // Produce todays's date + 7 days - 4 months + 10 years
-         days   = 7;
-         months = -4;
-         years  = 10;
-         date = f_dateSerial(%subdt(today: *YEARS)    + years
-                             : %subdt(today: *MONTHS) + months
-                             : %subdt(today: *DAYS)   + days);
-         p_assert(date = today + %years(years) + %months(months) + %days(days)
-                  : 'Returned value ''' + %char(date) + ''' does not match +
-                     expected value ''' + %char(today) + '''');
+//  Return value
+dcl-s pBuffer         pointer inz;
 
-         // Produce todays's date - 7 days + 4 months - 10 years
-         days   = -7;
-         months = 4;
-         years  = -10;
-         date = f_dateSerial(%subdt(today: *YEARS)    + years
-                             : %subdt(today: *MONTHS) + months
-                             : %subdt(today: *DAYS)   + days);
-         p_assert(date = today + %years(years) + %months(months) + %days(days)
-                  : 'Returned value ''' + %char(date) + ''' does not match +
-                     expected value ''' + %char(today) + '''');
+//  Local fields
+dcl-s msgKey          char(4) inz;
 
-         // Produce date from passed values
-         date = f_dateSerial(i_year: i_month: i_day);
-         inpDate = %date(%editc(%dec(i_year : 4: 0): 'X') + '-' +
-                         %editc(%dec(i_month: 2: 0): 'X') + '-' +
-                         %editc(%dec(i_day  : 2: 0): 'X'));
-         p_assert(date = inpDate
-                  : 'Returned value ''' + %char(date) + ''' does not match +
-                     expected value ''' + %char(inpDate) + '''');
-         sndMsg('The specified date was: ' + %char(date): cTrue);
+dcl-ds qMsgF qualified            inz;
+  name            char(10);
+  lib             char(10);
+end-ds;
 
-         return;
+dcl-ds errCode qualified            inz;
+  bytPrv          int(10);
+  bytAvl          int(10);
+  excID           char(7);
+  reserved        char(1);
+  excDta          char(256);
+end-ds;
 
-      /END-FREE
-      *
-     P main...
-     P                 E
-      *
+//  Send Program Message (QMHSNDPM) API
+dcl-pr QMHSNDPM        extpgm('QMHSNDPM');
+  i_msgID         char(7) const;
+  i_qMsgF         char(20) const;
+  i_msgData       char(32767) const  options(*varsize );
+  i_length        int(10) const;
+  i_msgType       char(10) const;
+  i_callStkE      char(32767) const  options(*varsize );
+  i_callStkC      int(10) const;
+  o_msgKey        char(4);
+  io_ErrCode      char(32767) options(*varsize );
+  i_lenStkE       int(10) const  options(*nopass  );                     // | optGrp 1
+  i_callStkEQ     char(20) const  options(*nopass  );                    // |
+  i_wait          int(10) const  options(*nopass  );                     // |
+  i_callStkEDT    char(10) const  options(*nopass  );                    // | optGrp 2
+  i_ccsid         int(10) const  options(*nopass  );                     // |
+end-pr;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+clear qMsgF;
+qMsgF.name = 'QCPFMSG';
+qMsgF.lib  = '*LIBL';
+
+clear errCode;
+errCode.bytPrv = %size(errCode);
+
+if %parms() >= 2 and i_doSendToExt;
+   QMHSNDPM('CPF9897': qMsgF: i_text: %len(i_text): '*INFO'
+            : '*CTLBDY': 1
+            : msgKey: errCode);
+else;
+   QMHSNDPM('CPF9897': qMsgF: i_text: %len(i_text): '*INFO'
+            : '*CTLBDY': 0
+            : msgKey: errCode);
+endif;
+
+return;
+
+
+end-proc sndMsg;
+
+//===============================================================*
+//  Main procedure
+//===============================================================*
+dcl-proc main;
+
+dcl-pi main;
+  i_year          int(10) const;
+  i_month         int(10) const;
+  i_day           int(10) const;
+end-pi;
+
+//  Helper fields
+dcl-s days            int(10) inz;
+dcl-s months          int(10) inz;
+dcl-s years           int(10) inz;
+dcl-s today           date inz;
+dcl-s date            date inz;
+dcl-s inpDate         date inz;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+today = %date();
+
+// Produce todays's date
+date = f_dateSerial(%subdt(today: *YEARS)
+                    : %subdt(today: *MONTHS)
+                    : %subdt(today: *DAYS));
+p_assert(date = today
+         : 'Returned value ''' + %char(date) + ''' does not match +
+            expected value ''' + %char(today) + '''');
+
+// Produce todays's date - 10 days
+days = -10;
+months = 0;
+years  = 0;
+date = f_dateSerial(%subdt(today: *YEARS)    + years
+                    : %subdt(today: *MONTHS) + months
+                    : %subdt(today: *DAYS)   + days);
+p_assert(date = today + %years(years) + %months(months) + %days(days)
+         : 'Returned value ''' + %char(date) + ''' does not match +
+            expected value ''' + %char(today) + '''');
+
+// Produce todays's date - 5 months
+months = -5;
+months = 0;
+years  = 0;
+date = f_dateSerial(%subdt(today: *YEARS)    + years
+                    : %subdt(today: *MONTHS) + months
+                    : %subdt(today: *DAYS)   + days);
+p_assert(date = today + %years(years) + %months(months) + %days(days)
+         : 'Returned value ''' + %char(date) + ''' does not match +
+            expected value ''' + %char(today) + '''');
+
+// Produce todays's date + 10 days
+days = 10;
+months = 0;
+years  = 0;
+date = f_dateSerial(%subdt(today: *YEARS)    + years
+                    : %subdt(today: *MONTHS) + months
+                    : %subdt(today: *DAYS)   + days);
+p_assert(date = today + %years(years) + %months(months) + %days(days)
+         : 'Returned value ''' + %char(date) + ''' does not match +
+            expected value ''' + %char(today) + '''');
+
+// Produce todays's date + 5 months
+months = 5;
+months = 0;
+years  = 0;
+date = f_dateSerial(%subdt(today: *YEARS)    + years
+                    : %subdt(today: *MONTHS) + months
+                    : %subdt(today: *DAYS)   + days);
+p_assert(date = today + %years(years) + %months(months) + %days(days)
+         : 'Returned value ''' + %char(date) + ''' does not match +
+            expected value ''' + %char(today) + '''');
+
+// Produce todays's date + 7 days - 4 months
+days   = 7;
+months = -4;
+years  = 0;
+date = f_dateSerial(%subdt(today: *YEARS)    + years
+                    : %subdt(today: *MONTHS) + months
+                    : %subdt(today: *DAYS)   + days);
+p_assert(date = today + %years(years) + %months(months) + %days(days)
+         : 'Returned value ''' + %char(date) + ''' does not match +
+            expected value ''' + %char(today) + '''');
+
+// Produce todays's date + 7 days - 4 months + 10 years
+days   = 7;
+months = -4;
+years  = 10;
+date = f_dateSerial(%subdt(today: *YEARS)    + years
+                    : %subdt(today: *MONTHS) + months
+                    : %subdt(today: *DAYS)   + days);
+p_assert(date = today + %years(years) + %months(months) + %days(days)
+         : 'Returned value ''' + %char(date) + ''' does not match +
+            expected value ''' + %char(today) + '''');
+
+// Produce todays's date - 7 days + 4 months - 10 years
+days   = -7;
+months = 4;
+years  = -10;
+date = f_dateSerial(%subdt(today: *YEARS)    + years
+                    : %subdt(today: *MONTHS) + months
+                    : %subdt(today: *DAYS)   + days);
+p_assert(date = today + %years(years) + %months(months) + %days(days)
+         : 'Returned value ''' + %char(date) + ''' does not match +
+            expected value ''' + %char(today) + '''');
+
+// Produce date from passed values
+date = f_dateSerial(i_year: i_month: i_day);
+inpDate = %date(%editc(%dec(i_year : 4: 0): 'X') + '-' +
+                %editc(%dec(i_month: 2: 0): 'X') + '-' +
+                %editc(%dec(i_day  : 2: 0): 'X'));
+p_assert(date = inpDate
+         : 'Returned value ''' + %char(date) + ''' does not match +
+            expected value ''' + %char(inpDate) + '''');
+sndMsg('The specified date was: ' + %char(date): cTrue);
+
+return;
+
+
+end-proc main;
+

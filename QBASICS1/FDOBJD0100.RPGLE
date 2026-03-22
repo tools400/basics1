@@ -1,20 +1,22 @@
-      /IF NOT DEFINED(objd0100_t)
-      /DEFINE objd0100_t
-      *===============================================================*
-      *  QUSROBJD API - OBJD0300                                      *
-      *===============================================================*
-      *
-     D objd0100_t      DS                  qualified           based(pDummy)
-     D  bytRet                       10I 0
-     D  bytAvl                       10I 0
-     D  name                         10A
-     D  lib                          10A
-     D  type                         10A
-     D  rtnLib                       10A
-     D  auxStgP                      10I 0
-     D  owner                        10A
-     D  domain                        2A
-     D  crtDatTim                    13A
-     D  chgDatTim                    13A
-      *
-      /ENDIF
+**FREE
+/IF NOT DEFINED(objd0100_t)
+/DEFINE objd0100_t
+//===============================================================*
+//  QUSROBJD API - OBJD0300                                      *
+//===============================================================*
+
+dcl-ds objd0100_t qualified           based(pDummy);
+  bytRet          int(10);
+  bytAvl          int(10);
+  name            char(10);
+  lib             char(10);
+  type            char(10);
+  rtnLib          char(10);
+  auxStgP         int(10);
+  owner           char(10);
+  domain          char(2);
+  crtDatTim       char(13);
+  chgDatTim       char(13);
+end-ds;
+
+/ENDIF

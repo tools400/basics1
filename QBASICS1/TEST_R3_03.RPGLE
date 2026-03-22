@@ -1,132 +1,127 @@
-      *===============================================================*
-      *    CALL PGM(TEST_R3_03) PARM('Hello World!')                  *
-      *===============================================================*
-      *   >>PRE-COMPILER<<                                            *
-      *                                                               *
-      *     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
-      *                              SRCFILE(&SL/&SF) +               *
-      *                              SRCMBR(&SM);                     *
-      *                                                               *
-      *     >>COMPILE<<                                               *
-      *       >>PARM<< TRUNCNBR(*NO);                                 *
-      *       >>PARM<< DBGVIEW(*LIST);                                *
-      *       >>PARM<< TGTRLS(*CURRENT);                              *
-      *     >>END-COMPILE<<                                           *
-      *                                                               *
-      *     >>EXECUTE<<                                               *
-      *                                                               *
-      *     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
-      *                              MODULE(&LI/&OB) +                *
-      *                              ACTGRP(*NEW) +                   *
-      *                              BNDSRVPGM(&LI/BASICS1) +         *
-      *                              TGTRLS(*CURRENT) +               *
-      *                              DETAIL(*BASIC);                  *
-      *                                                               *
-      *   >>END-PRE-COMPILER<<                                        *
-      *===============================================================*
-     H DEBUG
-     H OPTION(*SRCSTMT : *NODEBUGIO)
-     H DECEDIT('0,') DATEDIT(*DMY.)
-     H DATFMT(*ISO )  TIMFMT(*ISO )
-     H EXPROPTS(*RESDECPOS)
-     H EXTBININT(*YES)
-      *===============================================================*
-      *
-      * ------------------------------------
-      *  Type Definitions
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  External Prototypes
-      * ------------------------------------
-      /COPY QBASICS1,PBASICS1
-      *
-      * ------------------------------------
-      *  Global Fields
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Global Constants
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Prototypes
-      * ------------------------------------
-      *
-     D PGM_ENTRY_POINT...
-     D                 PR                         extpgm('TEST_R3_03')
-     D  gi_text                      32A   const  options(*nopass)
-      *
-     D main...
-     D                 PR
-     D  i_text                       32A   const
-      *
-      *===============================================================*
-      *  Program Entry Point
-      *===============================================================*
-      *
-     D PGM_ENTRY_POINT...
-     D                 PI
-     D  gi_text                      32A   const  options(*nopass)
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+**FREE
+//===============================================================*
+//    CALL PGM(TEST_R3_03) PARM('Hello World!')                  *
+//===============================================================*
+//   >>PRE-COMPILER<<                                            *
+//                                                               *
+//     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
+//                              SRCFILE(&SL/&SF) +               *
+//                              SRCMBR(&SM);                     *
+//                                                               *
+//     >>COMPILE<<                                               *
+//       >>PARM<< TRUNCNBR(*NO);                                 *
+//       >>PARM<< DBGVIEW(*LIST);                                *
+//       >>PARM<< TGTRLS(*CURRENT);                              *
+//     >>END-COMPILE<<                                           *
+//                                                               *
+//     >>EXECUTE<<                                               *
+//                                                               *
+//     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
+//                              MODULE(&LI/&OB) +                *
+//                              ACTGRP(*NEW) +                   *
+//                              BNDSRVPGM(&LI/BASICS1) +         *
+//                              TGTRLS(*CURRENT) +               *
+//                              DETAIL(*BASIC);                  *
+//                                                               *
+//   >>END-PRE-COMPILER<<                                        *
+//===============================================================*
+ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
+ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
+ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
+ctl-opt EXPROPTS(*RESDECPOS);
+ctl-opt EXTBININT(*YES);
+//===============================================================*
 
-         if (%parms() >= %parmNum(gi_text));
-            main(gi_text);
-         else;
-            main('Hello World!');
-         endif;
+// ------------------------------------
+//  Type Definitions
+// ------------------------------------
 
-         *inlr = *on;
+// ------------------------------------
+//  External Prototypes
+// ------------------------------------
+/COPY QBASICS1,PBASICS1
 
-         return;
+// ------------------------------------
+//  Global Fields
+// ------------------------------------
 
-      /END-FREE
-      *
-      *===============================================================*
-      *  Main procedure
-      *===============================================================*
-     P main...
-     P                 B
-      *
-     D main...
-     D                 PI
-     D  i_text                       32A   const
-      *
-      *  Helper fields
-     D msg             DS                  likeds(msg_t      ) inz
-     D aString         S            128A   inz varying
-     D leftLen         S             10I 0 inz
-     D rightLen        S             10I 0 inz
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+// ------------------------------------
+//  Global Constants
+// ------------------------------------
 
-         aString = f_space(5) + %trim(i_text) + f_space(5);
-         msg = f_newMsg('': aString + '<');
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+// ------------------------------------
+//  Prototypes
+// ------------------------------------
 
-         aString = f_space(5: '*') + %trim(i_text) + f_space(5: '*');
-         msg = f_newMsg('': aString + '<');
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+dcl-pr PGM_ENTRY_POINT
+       extpgm('TEST_R3_03');
+  gi_text         char(32) const  options(*nopass);
+end-pr;
 
-         aString = f_space(5: '%') + %trim(i_text) + f_space(5: '%');
-         msg = f_newMsg('': aString + '<');
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+dcl-pr main;
+  i_text          char(32) const;
+end-pr;
 
-         aString = f_space(5: '-') + %trim(i_text) + f_space(5: '-');
-         leftLen  = %int(%len(aString) / 2);
-         rightLen = %len(aString) - leftLen;
+//===============================================================*
+//  Program Entry Point
+//===============================================================*
 
-         msg = f_newMsg('': f_left(aString: leftLen) + '<');
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+dcl-pi PGM_ENTRY_POINT;
+  gi_text         char(32) const  options(*nopass);
+end-pi;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-         msg = f_newMsg('': f_right(aString: rightLen) + '<');
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+if (%parms() >= %parmNum(gi_text));
+   main(gi_text);
+else;
+   main('Hello World!');
+endif;
 
-         return;
+*inlr = *on;
 
-      /END-FREE
-      *
-     P main...
-     P                 E
-      *
+return;
+
+
+//===============================================================*
+//  Main procedure
+//===============================================================*
+dcl-proc main;
+
+dcl-pi main;
+  i_text          char(32) const;
+end-pi;
+
+//  Helper fields
+dcl-ds msg likeds(msg_t      ) inz;
+dcl-s aString         varchar(128) inz;
+dcl-s leftLen         int(10) inz;
+dcl-s rightLen        int(10) inz;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+aString = f_space(5) + %trim(i_text) + f_space(5);
+msg = f_newMsg('': aString + '<');
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+aString = f_space(5: '*') + %trim(i_text) + f_space(5: '*');
+msg = f_newMsg('': aString + '<');
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+aString = f_space(5: '%') + %trim(i_text) + f_space(5: '%');
+msg = f_newMsg('': aString + '<');
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+aString = f_space(5: '-') + %trim(i_text) + f_space(5: '-');
+leftLen  = %int(%len(aString) / 2);
+rightLen = %len(aString) - leftLen;
+
+msg = f_newMsg('': f_left(aString: leftLen) + '<');
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+msg = f_newMsg('': f_right(aString: rightLen) + '<');
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+return;
+
+
+end-proc main;
+

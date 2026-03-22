@@ -1,175 +1,170 @@
-      *===============================================================*
-      *    CALL PGM(TEST_R3_09)                                       *
-      *===============================================================*
-      *   >>PRE-COMPILER<<                                            *
-      *                                                               *
-      *     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
-      *                              SRCFILE(&SL/&SF) +               *
-      *                              SRCMBR(&SM);                     *
-      *                                                               *
-      *     >>COMPILE<<                                               *
-      *       >>PARM<< TRUNCNBR(*NO);                                 *
-      *       >>PARM<< DBGVIEW(*LIST);                                *
-      *       >>PARM<< TGTRLS(*CURRENT);                              *
-      *     >>END-COMPILE<<                                           *
-      *                                                               *
-      *     >>EXECUTE<<                                               *
-      *                                                               *
-      *     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
-      *                              MODULE(&LI/&OB) +                *
-      *                              ACTGRP(*NEW) +                   *
-      *                              BNDSRVPGM(&LI/BASICS1) +         *
-      *                              TGTRLS(*CURRENT) +               *
-      *                              DETAIL(*BASIC);                  *
-      *                                                               *
-      *   >>END-PRE-COMPILER<<                                        *
-      *===============================================================*
-     H DEBUG
-     H OPTION(*SRCSTMT : *NODEBUGIO)
-     H DECEDIT('0,') DATEDIT(*DMY.)
-     H DATFMT(*ISO )  TIMFMT(*ISO )
-     H EXPROPTS(*RESDECPOS)
-     H EXTBININT(*YES)
-      *===============================================================*
-      *
-      * ------------------------------------
-      *  Type Definitions
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  External Prototypes
-      * ------------------------------------
-      /COPY QBASICS1,PBASICS1
-      *
-      * ------------------------------------
-      *  Global Fields
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Global Constants
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Prototypes
-      * ------------------------------------
-      *
-     D PGM_ENTRY_POINT...
-     D                 PR                         extpgm('TEST_R3_09')
-      *
-     D main...
-     D                 PR
-      *
-      *===============================================================*
-      *  Program Entry Point
-      *===============================================================*
-      *
-     D PGM_ENTRY_POINT...
-     D                 PI
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+**FREE
+//===============================================================*
+//    CALL PGM(TEST_R3_09)                                       *
+//===============================================================*
+//   >>PRE-COMPILER<<                                            *
+//                                                               *
+//     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
+//                              SRCFILE(&SL/&SF) +               *
+//                              SRCMBR(&SM);                     *
+//                                                               *
+//     >>COMPILE<<                                               *
+//       >>PARM<< TRUNCNBR(*NO);                                 *
+//       >>PARM<< DBGVIEW(*LIST);                                *
+//       >>PARM<< TGTRLS(*CURRENT);                              *
+//     >>END-COMPILE<<                                           *
+//                                                               *
+//     >>EXECUTE<<                                               *
+//                                                               *
+//     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
+//                              MODULE(&LI/&OB) +                *
+//                              ACTGRP(*NEW) +                   *
+//                              BNDSRVPGM(&LI/BASICS1) +         *
+//                              TGTRLS(*CURRENT) +               *
+//                              DETAIL(*BASIC);                  *
+//                                                               *
+//   >>END-PRE-COMPILER<<                                        *
+//===============================================================*
+ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
+ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
+ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
+ctl-opt EXPROPTS(*RESDECPOS);
+ctl-opt EXTBININT(*YES);
+//===============================================================*
 
-         main();
+// ------------------------------------
+//  Type Definitions
+// ------------------------------------
 
-         *inlr = *on;
+// ------------------------------------
+//  External Prototypes
+// ------------------------------------
+/COPY QBASICS1,PBASICS1
 
-         return;
+// ------------------------------------
+//  Global Fields
+// ------------------------------------
 
-      /END-FREE
-      *
-      *===============================================================*
-      *  Main procedure
-      *===============================================================*
-     P main...
-     P                 B
-      *
-     D main...
-     D                 PI
-      *
-      *  Helper fields
-     D isEqual         S               N   inz
-     D text            C                   const('+
-     D                                     A spaceman came travelling on his +
-     D                                     ship from afar, +
-     D                                     ''twas light years of time since +
-     D                                     his mission did start, +
-     D                                     And over a village he halted his +
-     D                                     craft, +
-     D                                     And it hung in the sky like a +
-     D                                     star, just like a star...')
-     D searchArg       S            256A   inz   varying
-     D searchText      S             32A   inz   varying
-     D startPos        S             10I 0 inz
-     D position        S             10I 0 inz
-      *
-     D msg             DS                  likeds(msg_t      ) inz
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+// ------------------------------------
+//  Global Constants
+// ------------------------------------
 
-         msg = f_newMsg(cMsg_ID_NONE: text);
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+// ------------------------------------
+//  Prototypes
+// ------------------------------------
 
-         startPos  = %len(text);
-         searchArg = 'star';
-         position  = f_scanR(searchArg: text);
-         exsr sndMsg;
+dcl-pr PGM_ENTRY_POINT
+       extpgm('TEST_R3_09');
+end-pr;
 
-         startPos  = 190;
-         searchArg = 'star';
-         position  = f_scanR(searchArg: text: startPos);
-         exsr sndMsg;
+dcl-pr main;
+end-pr;
 
-         startPos  = 170;
-         searchArg = 'star';
-         position  = f_scanR(searchArg: text: startPos);
-         exsr sndMsg;
+//===============================================================*
+//  Program Entry Point
+//===============================================================*
 
-         startPos  = 90;
-         searchArg = 'star';
-         position  = f_scanR(searchArg: text: startPos);
-         exsr sndMsg;
+dcl-pi PGM_ENTRY_POINT;
+end-pi;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-         startPos  = %len(text);
-         searchArg = text;
-         position  = f_scanR(searchArg: text: startPos);
-         exsr sndMsg;
+main();
 
-         msg = f_newMsg(cMsg_ID_NONE: '- Search argument longer than text: -');
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+*inlr = *on;
 
-         startPos  = %len(text);
-         searchArg = text + ' an extension';
-         position  = f_scanR(searchArg: text: startPos);
-         exsr sndMsg;
+return;
 
-         return;
 
-         begsr sndMsg;
+//===============================================================*
+//  Main procedure
+//===============================================================*
+dcl-proc main;
 
-         if %len(searchArg) > 10;
-            searchText = %subst(searchArg: 1: 10) + ' ...';
-         else;
-            searchText = searchArg;
-         endif;
+dcl-pi main;
+end-pi;
 
-         if position = 0;
-            msg = f_newMsg(cMsg_ID_NONE: 'Search argument ''' +
-                           searchText +
-                           ''' was not found before position ' +
-                           %char(startPos) + '.');
-         else;
-            msg = f_newMsg(cMsg_ID_NONE: 'Search argument ''' +
-                                         searchText +
-                                         ''' found at position ' +
-                                         %char(position) + '. ' +
-                                         'Start position: ' + %char(startPos));
-         endif;
+//  Helper fields
+dcl-s isEqual         ind inz;
+dcl-c text const('+
+A spaceman came travelling on his +
+ship from afar, +
+''twas light years of time since +
+his mission did start, +
+And over a village he halted his +
+craft, +
+And it hung in the sky like a +
+star, just like a star...');
+dcl-s searchArg       varchar(256) inz;
+dcl-s searchText      varchar(32) inz;
+dcl-s startPos        int(10) inz;
+dcl-s position        int(10) inz;
 
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+dcl-ds msg likeds(msg_t      ) inz;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-         endsr;
+msg = f_newMsg(cMsg_ID_NONE: text);
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-      /END-FREE
-      *
-     P main...
-     P                 E
-      *
+startPos  = %len(text);
+searchArg = 'star';
+position  = f_scanR(searchArg: text);
+exsr sndMsg;
+
+startPos  = 190;
+searchArg = 'star';
+position  = f_scanR(searchArg: text: startPos);
+exsr sndMsg;
+
+startPos  = 170;
+searchArg = 'star';
+position  = f_scanR(searchArg: text: startPos);
+exsr sndMsg;
+
+startPos  = 90;
+searchArg = 'star';
+position  = f_scanR(searchArg: text: startPos);
+exsr sndMsg;
+
+startPos  = %len(text);
+searchArg = text;
+position  = f_scanR(searchArg: text: startPos);
+exsr sndMsg;
+
+msg = f_newMsg(cMsg_ID_NONE: '- Search argument longer than text: -');
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+startPos  = %len(text);
+searchArg = text + ' an extension';
+position  = f_scanR(searchArg: text: startPos);
+exsr sndMsg;
+
+return;
+
+begsr sndMsg;
+
+   if %len(searchArg) > 10;
+      searchText = %subst(searchArg: 1: 10) + ' ...';
+   else;
+      searchText = searchArg;
+   endif;
+
+   if position = 0;
+      msg = f_newMsg(cMsg_ID_NONE: 'Search argument ''' +
+                     searchText +
+                     ''' was not found before position ' +
+                     %char(startPos) + '.');
+   else;
+      msg = f_newMsg(cMsg_ID_NONE: 'Search argument ''' +
+                                   searchText +
+                                   ''' found at position ' +
+                                   %char(position) + '. ' +
+                                   'Start position: ' + %char(startPos));
+   endif;
+
+   f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+endsr;
+
+
+end-proc main;
+

@@ -1,7 +1,8 @@
-      /IF NOT DEFINED(url_t)
-      /DEFINE url_t
-      *
-      *  URL
-     D url_t           S            446A   varying
-      *
-      /ENDIF
+**FREE
+/IF NOT DEFINED(url_t)
+/DEFINE url_t
+
+//  URL
+dcl-s url_t           varchar(446);
+
+/ENDIF

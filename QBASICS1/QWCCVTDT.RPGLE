@@ -1,72 +1,79 @@
-      /IF NOT DEFINED(QWCCVTDT)
-      /DEFINE QWCCVTDT
-      *
-      *  Convert Date and Time Format (QWCCVTDT) API
-     D QWCCVTDT...
-     D                 PR                         extpgm('QWCCVTDT')
-     D  i_iFormat                    10A   const
-     D  i_iValue                  65535A   const options(*varsize)
-     D  i_oFormat                    10A   const
-     D  o_oValue                  65535A          options(*varsize)
-     D  io_errCode                65535A          options(*varsize)
-     D  i_iTimezone                  10A   const  options(*nopass)              | optGrp 1
-     D  i_oTimezone                  10A   const  options(*nopass)              |
-     D  o_timezone                65535A          options(*nopass: *varsize)    |
-     D  i_lenTimezone                10I 0 const  options(*nopass)              |
-     D  i_precInd                     1A   const  options(*nopass)              |
-     D  i_iTimeInd                    1A   const  options(*nopass)              | optGrp 2
-      *
-      *  Time Zone Information Value Structure
-     D QWCCVTDT_timezone_t...
-     D                 DS                  qualified               based(pDummy)
-     D  bytRet                 1      4I 0
-     D  bytAvl                 5      8I 0
-     D  desc                   9     18A
-     D  reserved_1            19     19A
-     D  dayLightInd           20     20A
-     D  curOffset             21     24I 0
-     D  curFullName           25     74A
-     D  curAbbrevName         75     84A
-     D  curMsgInd             85     91A
-     D  msgFile               92    101A
-     D  msgFileLib           102    111A
-      *
-      *  This table shows the structure used for the input and output variables when
-      *  the format is *JOB, *SYSVAL, *YMD, *MDY, *DMY, and *JUL and the precision
-      *  indicator specifies milliseconds.
-     D QWCCVTDT_dateTime_16_t...
-     D                 DS                  qualified               based(pDummy)
-     D  century                1      1A
-     D  date                   2      7A
-     D  time                   8     13A
-     D  mSecs                 14     16A
-      *
-      *  This table shows the structure used for the input and output variables when
-      *  the format is *YYMD, *MDYY, *DMYY, and *LONGJUL and the precision indicator
-      *  specifies milliseconds.
-     D QWCCVTDT_dateTime_17_t...
-     D                 DS                  qualified               based(pDummy)
-     D  date                   1      8A
-     D  time                   9     14A
-     D  mSecs                 15     17A
-      *
-      *  This table shows the structure used for the input and output variables when
-      *  the format is *JOB, *SYSVAL, *YMD, *MDY, *DMY, and *JUL and the precision
-      *  indicator specifies microseconds.
-     D QWCCVTDT_dateTime_19_t...
-     D                 DS                  qualified               based(pDummy)
-     D  century                1      1A
-     D  date                   2      7A
-     D  time                   8     13A
-     D  mSecs                 14     19A
-      *
-      *  This table shows the structure used for the input and output variables when
-      *  the format is *YYMD, *MDYY, *DMYY, and *LONGJUL and the precision indicator
-      *  specifies microseconds.
-     D QWCCVTDT_dateTime_20_t...
-     D                 DS                  qualified               based(pDummy)
-     D  date                   1      8A
-     D  time                   9     14A
-     D  mSecs                 15     20A
-      *
-      /ENDIF
+**FREE
+/IF NOT DEFINED(QWCCVTDT)
+/DEFINE QWCCVTDT
+
+//  Convert Date and Time Format (QWCCVTDT) API
+dcl-pr QWCCVTDT
+       extpgm('QWCCVTDT');
+  i_iFormat       char(10) const;
+  i_iValue        char(65535) const options(*varsize);
+  i_oFormat       char(10) const;
+  o_oValue        char(65535) options(*varsize);
+  io_errCode      char(65535) options(*varsize);
+  i_iTimezone     char(10) const  options(*nopass);                      // | optGrp 1
+  i_oTimezone     char(10) const  options(*nopass);                      // |
+  o_timezone      char(65535) options(*nopass: *varsize);                // |
+  i_lenTimezone   int(10) const  options(*nopass);                       // |
+  i_precInd       char(1) const  options(*nopass);                       // |
+  i_iTimeInd      char(1) const  options(*nopass);                       // | optGrp 2
+end-pr;
+
+//  Time Zone Information Value Structure
+dcl-ds QWCCVTDT_timezone_t
+       qualified               based(pDummy);
+  bytRet          int(10);
+  bytAvl          int(10);
+  desc            char(10);
+  reserved_1      char(1);
+  dayLightInd     char(1);
+  curOffset       int(10);
+  curFullName     char(50);
+  curAbbrevName   char(10);
+  curMsgInd       char(7);
+  msgFile         char(10);
+  msgFileLib      char(10);
+end-ds;
+
+//  This table shows the structure used for the input and output variables when
+//  the format is *JOB, *SYSVAL, *YMD, *MDY, *DMY, and *JUL and the precision
+//  indicator specifies milliseconds.
+dcl-ds QWCCVTDT_dateTime_16_t
+       qualified               based(pDummy);
+  century         char(1);
+  date            char(6);
+  time            char(6);
+  mSecs           char(3);
+end-ds;
+
+//  This table shows the structure used for the input and output variables when
+//  the format is *YYMD, *MDYY, *DMYY, and *LONGJUL and the precision indicator
+//  specifies milliseconds.
+dcl-ds QWCCVTDT_dateTime_17_t
+       qualified               based(pDummy);
+  date            char(8);
+  time            char(6);
+  mSecs           char(3);
+end-ds;
+
+//  This table shows the structure used for the input and output variables when
+//  the format is *JOB, *SYSVAL, *YMD, *MDY, *DMY, and *JUL and the precision
+//  indicator specifies microseconds.
+dcl-ds QWCCVTDT_dateTime_19_t
+       qualified               based(pDummy);
+  century         char(1);
+  date            char(6);
+  time            char(6);
+  mSecs           char(6);
+end-ds;
+
+//  This table shows the structure used for the input and output variables when
+//  the format is *YYMD, *MDYY, *DMYY, and *LONGJUL and the precision indicator
+//  specifies microseconds.
+dcl-ds QWCCVTDT_dateTime_20_t
+       qualified               based(pDummy);
+  date            char(8);
+  time            char(6);
+  mSecs           char(6);
+end-ds;
+
+/ENDIF

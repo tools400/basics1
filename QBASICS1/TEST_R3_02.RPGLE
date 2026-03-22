@@ -1,172 +1,167 @@
-      *===============================================================*
-      *    CALL PGM(TEST_R3_02) PARM(65)                              *
-      *===============================================================*
-      *   >>PRE-COMPILER<<                                            *
-      *                                                               *
-      *     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
-      *                              SRCFILE(&SL/&SF) +               *
-      *                              SRCMBR(&SM);                     *
-      *                                                               *
-      *     >>COMPILE<<                                               *
-      *       >>PARM<< TRUNCNBR(*NO);                                 *
-      *       >>PARM<< DBGVIEW(*LIST);                                *
-      *       >>PARM<< TGTRLS(*CURRENT);                              *
-      *     >>END-COMPILE<<                                           *
-      *                                                               *
-      *     >>EXECUTE<<                                               *
-      *                                                               *
-      *     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
-      *                              MODULE(&LI/&OB) +                *
-      *                              ACTGRP(*NEW) +                   *
-      *                              BNDSRVPGM(&LI/BASICS1) +         *
-      *                              TGTRLS(*CURRENT) +               *
-      *                              DETAIL(*BASIC);                  *
-      *                                                               *
-      *   >>END-PRE-COMPILER<<                                        *
-      *===============================================================*
-     H DEBUG
-     H OPTION(*SRCSTMT : *NODEBUGIO)
-     H DECEDIT('0,') DATEDIT(*DMY.)
-     H DATFMT(*ISO )  TIMFMT(*ISO )
-     H EXPROPTS(*RESDECPOS)
-     H EXTBININT(*YES)
-      *===============================================================*
-      *
-      * ------------------------------------
-      *  Type Definitions
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  External Prototypes
-      * ------------------------------------
-      /COPY QBASICS1,PBASICS1
-      *
-      * ------------------------------------
-      *  Global Fields
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Global Constants
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Prototypes
-      * ------------------------------------
-      *
-     D PGM_ENTRY_POINT...
-     D                 PR                         extpgm('TEST_R3_02')
-     D  gi_width                     15P 5 const  options(*nopass)
-      *
-     D main...
-     D                 PR
-     D  i_width                      10I 0 const
-      *
-      *===============================================================*
-      *  Program Entry Point
-      *===============================================================*
-      *
-     D PGM_ENTRY_POINT...
-     D                 PI
-     D  gi_width                     15P 5 const  options(*nopass)
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+**FREE
+//===============================================================*
+//    CALL PGM(TEST_R3_02) PARM(65)                              *
+//===============================================================*
+//   >>PRE-COMPILER<<                                            *
+//                                                               *
+//     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
+//                              SRCFILE(&SL/&SF) +               *
+//                              SRCMBR(&SM);                     *
+//                                                               *
+//     >>COMPILE<<                                               *
+//       >>PARM<< TRUNCNBR(*NO);                                 *
+//       >>PARM<< DBGVIEW(*LIST);                                *
+//       >>PARM<< TGTRLS(*CURRENT);                              *
+//     >>END-COMPILE<<                                           *
+//                                                               *
+//     >>EXECUTE<<                                               *
+//                                                               *
+//     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
+//                              MODULE(&LI/&OB) +                *
+//                              ACTGRP(*NEW) +                   *
+//                              BNDSRVPGM(&LI/BASICS1) +         *
+//                              TGTRLS(*CURRENT) +               *
+//                              DETAIL(*BASIC);                  *
+//                                                               *
+//   >>END-PRE-COMPILER<<                                        *
+//===============================================================*
+ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
+ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
+ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
+ctl-opt EXPROPTS(*RESDECPOS);
+ctl-opt EXTBININT(*YES);
+//===============================================================*
 
-         if (%parms() >= %parmNum(gi_width));
-            main(gi_width);
-         else;
-            main(60);
-         endif;
+// ------------------------------------
+//  Type Definitions
+// ------------------------------------
 
-         *inlr = *on;
+// ------------------------------------
+//  External Prototypes
+// ------------------------------------
+/COPY QBASICS1,PBASICS1
 
-         return;
+// ------------------------------------
+//  Global Fields
+// ------------------------------------
 
-      /END-FREE
-      *
-      *===============================================================*
-      *  Main procedure
-      *===============================================================*
-     P main...
-     P                 B
-      *
-     D main...
-     D                 PI
-     D  i_width                      10I 0 const
-      *
-      *  Helper fields
-     D theText         S            512A   varying inz('Test wordWrap():&N+
-     D                                     ''The quick brown fox -
-     D                                     jumps over the lazy dog.'' is a -
-     D                                     sentence that includes every letter -
-     D                                     of the alphabet.&PThat is why it is -
-     D                                     often found as a sample sentence -
-     D                                     within font managing software. Of -
-     D                                     course I know that the text I am -
-     D                                     writing is somewhat silly.&BHowever -
-     D                                     the only purpose of the text is to -
-     D                                     show how the wordWrap-function -
-     D                                     works.')
-     D aLine           S             80A   inz
-     D startPos        S             10U 0 inz
-     D numLine         S              3I 0 inz
-     D msg             DS                  likeds(msg_t      ) inz
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+// ------------------------------------
+//  Global Constants
+// ------------------------------------
 
-         p_assert(i_width >= 1 and i_width <= 80:
-                  'i_width is out of range. It must be between 1 and 80');
+// ------------------------------------
+//  Prototypes
+// ------------------------------------
 
-         // Perform word wrap without respect to end-of-paragraph markers:
-         msg = f_newMsg('': '*** No EOP charcater: ***');
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+dcl-pr PGM_ENTRY_POINT
+       extpgm('TEST_R3_02');
+  gi_width        packed(15:5) const  options(*nopass);
+end-pr;
 
-         numLine  = 0;
-         startPos = 1;
-         dow   startPos > 0;
-            numLine = numLine + 1;
-            aLine = f_wordWrap(theText: i_width: startPos) + '<';
-            msg = f_newMsg('': 'Line ' + %char(numLine) + ': ' + aLine);
-            f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-         enddo;
+dcl-pr main;
+  i_width         int(10) const;
+end-pr;
 
-         // Perform word wrap with respect to end-of-paragraph markers
-         // of message descriptions:
-         msg = f_newMsg('': '*** EOP charcater of message description: ***');
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+//===============================================================*
+//  Program Entry Point
+//===============================================================*
 
-         numLine  = 0;
-         startPos = 1;
-         dow   startPos > 0;
-            numLine = numLine + 1;
-            aLine = f_wordWrap(theText: i_width: startPos:
-                               cWORDWRAP_PARAGRAPH_MSGD) + '<';
-            msg = f_newMsg('': 'Line ' + %char(numLine) + ': ' + aLine);
-            f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-         enddo;
+dcl-pi PGM_ENTRY_POINT;
+  gi_width        packed(15:5) const  options(*nopass);
+end-pi;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-         // Perform word wrap with respect to standard text
-         // end-of-paragraph markers:
-         theText = f_replace('&N': '\n': theText);
-         theText = f_replace('&B': '\N': theText);
-         theText = f_replace('&P': '\n': theText);
+if (%parms() >= %parmNum(gi_width));
+   main(gi_width);
+else;
+   main(60);
+endif;
 
-         msg = f_newMsg('': '*** Standard text EOP charcaters: ***');
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+*inlr = *on;
 
-         numLine  = 0;
-         startPos = 1;
-         dow   startPos > 0;
-            numLine = numLine + 1;
-            aLine = f_wordWrap(theText: i_width: startPos:
-                               cWORDWRAP_PARAGRAPH_TEXT) + '<';
-            msg = f_newMsg('': 'Line ' + %char(numLine) + ': ' + aLine);
-            f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-         enddo;
+return;
 
-         return;
 
-      /END-FREE
-      *
-     P main...
-     P                 E
-      *
+//===============================================================*
+//  Main procedure
+//===============================================================*
+dcl-proc main;
+
+dcl-pi main;
+  i_width         int(10) const;
+end-pi;
+
+//  Helper fields
+dcl-s theText         varchar(512) inz('Test wordWrap():&N+
+''The quick brown fox -
+jumps over the lazy dog.'' is a -
+sentence that includes every letter -
+of the alphabet.&PThat is why it is -
+often found as a sample sentence -
+within font managing software. Of -
+course I know that the text I am -
+writing is somewhat silly.&BHowever -
+the only purpose of the text is to -
+show how the wordWrap-function -
+works.');
+dcl-s aLine           char(80) inz;
+dcl-s startPos        uns(10) inz;
+dcl-s numLine         int(3) inz;
+dcl-ds msg likeds(msg_t      ) inz;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+p_assert(i_width >= 1 and i_width <= 80:
+         'i_width is out of range. It must be between 1 and 80');
+
+// Perform word wrap without respect to end-of-paragraph markers:
+msg = f_newMsg('': '*** No EOP charcater: ***');
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+numLine  = 0;
+startPos = 1;
+dow   startPos > 0;
+   numLine = numLine + 1;
+   aLine = f_wordWrap(theText: i_width: startPos) + '<';
+   msg = f_newMsg('': 'Line ' + %char(numLine) + ': ' + aLine);
+   f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+enddo;
+
+// Perform word wrap with respect to end-of-paragraph markers
+// of message descriptions:
+msg = f_newMsg('': '*** EOP charcater of message description: ***');
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+numLine  = 0;
+startPos = 1;
+dow   startPos > 0;
+   numLine = numLine + 1;
+   aLine = f_wordWrap(theText: i_width: startPos:
+                      cWORDWRAP_PARAGRAPH_MSGD) + '<';
+   msg = f_newMsg('': 'Line ' + %char(numLine) + ': ' + aLine);
+   f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+enddo;
+
+// Perform word wrap with respect to standard text
+// end-of-paragraph markers:
+theText = f_replace('&N': '\n': theText);
+theText = f_replace('&B': '\N': theText);
+theText = f_replace('&P': '\n': theText);
+
+msg = f_newMsg('': '*** Standard text EOP charcaters: ***');
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+numLine  = 0;
+startPos = 1;
+dow   startPos > 0;
+   numLine = numLine + 1;
+   aLine = f_wordWrap(theText: i_width: startPos:
+                      cWORDWRAP_PARAGRAPH_TEXT) + '<';
+   msg = f_newMsg('': 'Line ' + %char(numLine) + ': ' + aLine);
+   f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+enddo;
+
+return;
+
+
+end-proc main;
+

@@ -1,46 +1,48 @@
-      /IF NOT DEFINED(mbrd0200_t)
-      /DEFINE mbrd0200_t
-      *===============================================================*
-      *  QUSRMBRD API - MBRD0200                                      *
-      *===============================================================*
-     D mbrd0200_t      DS                  qualified           based(pDummy)
-     D  bytePrv                      10I 0
-     D  byteAvl                      10I 0
-     D  filNme                       10A
-     D  filLib                       10A
-     D  mbr                          10A
-     D  attr                         10A
-     D  srcTyp                       10A
-     D  crtDatTim                    13A
-     D  chgDatTim                    13A
-     D  text                         50A
-     D  isSrcFile                     1A
-      * - - - - - - - - - - - - - - - - -
-     D rmtFile                        1A
-     D lglFile                        1A
-     D odpSharing                     1A
-     D reserved_1                     2A
-     D numRcdAllMbr                  10I 0
-     D numDltRcd                     10I 0
-     D dtaSpcSize                    10I 0
-     D accPthSize                    10I 0
-     D numPhyMbrs                    10I 0
-     D mbrChgDatTim                  13A
-     D mbrSavDatTim                  13A
-     D mbrRstDatTim                  13A
-     D mbrExpDate                     7A
-     D reserved_2                     6A
-     D numDaysUsed                   10I 0
-     D dateLastUsed                   7A
-     D useResetDate                   7A
-     D reserved_3                     2A
-     D dtaSpcSizeMult                10I 0
-     D accPthSizeMult                10I 0
-     D mbrTextCCSID                  10I 0
-     D ofsAddInf                     10I 0
-     D lenAddInf                     10I 0
-     D numRcdAllMbrU                 10U 0
-     D numDltRcdU                    10U 0
-     D reserved_4                     6A
-      *
-      /ENDIF
+**FREE
+/IF NOT DEFINED(mbrd0200_t)
+/DEFINE mbrd0200_t
+//===============================================================*
+//  QUSRMBRD API - MBRD0200                                      *
+//===============================================================*
+dcl-ds mbrd0200_t qualified           based(pDummy);
+  bytePrv         int(10);
+  byteAvl         int(10);
+  filNme          char(10);
+  filLib          char(10);
+  mbr             char(10);
+  attr            char(10);
+  srcTyp          char(10);
+  crtDatTim       char(13);
+  chgDatTim       char(13);
+  text            char(50);
+  isSrcFile       char(1);
+  // - - - - - - - - - - - - - - - - -
+  rmtFile         char(1);
+  lglFile         char(1);
+  odpSharing      char(1);
+  reserved_1      char(2);
+  numRcdAllMbr    int(10);
+  numDltRcd       int(10);
+  dtaSpcSize      int(10);
+  accPthSize      int(10);
+  numPhyMbrs      int(10);
+  mbrChgDatTim    char(13);
+  mbrSavDatTim    char(13);
+  mbrRstDatTim    char(13);
+  mbrExpDate      char(7);
+  reserved_2      char(6);
+  numDaysUsed     int(10);
+  dateLastUsed    char(7);
+  useResetDate    char(7);
+  reserved_3      char(2);
+  dtaSpcSizeMult  int(10);
+  accPthSizeMult  int(10);
+  mbrTextCCSID    int(10);
+  ofsAddInf       int(10);
+  lenAddInf       int(10);
+  numRcdAllMbrU   uns(10);
+  numDltRcdU      uns(10);
+  reserved_4      char(6);
+end-ds;
+
+/ENDIF

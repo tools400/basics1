@@ -1,24 +1,27 @@
-      /IF NOT DEFINED(msg_t     )
-      /DEFINE msg_t
-      * ============================================================= *
-      *   Message structure                                           *
-      * ============================================================= *
-      *
-     D msg_t           DS                  qualified           based(pDummy)
-      /if defined(*V5R3M0)
-     D  ID                                 likeds(msgID_t)
-      /else
-     D  ID                            7A
-      /endif
-     D  data                        512A
-     D  type                         10A
-     D  file                         10A
-     D  lib                          10A
-      *
-      /if defined(*V5R3M0)
-     D msgID_t         DS                  qualified           based(pDummy)
-     D  prefix                        3A
-     D  nbr                           4S 0
-      /endif
-      *
-      /ENDIF
+**FREE
+/IF NOT DEFINED(msg_t     )
+/DEFINE msg_t
+// ============================================================= *
+//   Message structure                                           *
+// ============================================================= *
+
+dcl-ds msg_t qualified           based(pDummy);
+/if defined(*V5R3M0)
+  ID   likeds(msgID_t);
+/else
+  ID   char(7);
+/endif
+  data char(512);
+  type char(10);
+  file char(10);
+  lib  char(10);
+end-ds;
+
+/if defined(*V5R3M0)
+dcl-ds msgID_t qualified           based(pDummy);
+  prefix          char(3);
+  nbr             zoned(4);
+end-ds;
+/endif
+
+/ENDIF

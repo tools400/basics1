@@ -1,234 +1,230 @@
-      *===============================================================*
-      *    CALL PGM(TEST_RC_01)                                       *
-      *===============================================================*
-      *   >>PRE-COMPILER<<                                            *
-      *                                                               *
-      *     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
-      *                              SRCFILE(&SL/&SF) +               *
-      *                              SRCMBR(&SM);                     *
-      *                                                               *
-      *     >>COMPILE<<                                               *
-      *       >>PARM<< TRUNCNBR(*NO);                                 *
-      *       >>PARM<< DBGVIEW(*LIST);                                *
-      *       >>PARM<< OPTION(*EVENTF);                               *
-      *       >>PARM<< TGTRLS(*CURRENT);                              *
-      *     >>END-COMPILE<<                                           *
-      *                                                               *
-      *     >>EXECUTE<<                                               *
-      *                                                               *
-      *     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
-      *                              MODULE(&LI/&OB) +                *
-      *                              ACTGRP(*NEW) +                   *
-      *                              BNDSRVPGM(&LI/BASICS1) +         *
-      *                              BNDDIR(QC2LE) +                  *
-      *                              TGTRLS(*CURRENT) +               *
-      *                              DETAIL(*BASIC);                  *
-      *                                                               *
-      *   >>END-PRE-COMPILER<<                                        *
-      *===============================================================*
-     H DEBUG
-     H OPTION(*SRCSTMT : *NODEBUGIO)
-     H DECEDIT('0,') DATEDIT(*DMY.)
-     H DATFMT(*ISO )  TIMFMT(*ISO )
-     H EXPROPTS(*RESDECPOS)
-     H EXTBININT(*YES)
-      *===============================================================*
-      *
-      * ------------------------------------
-      *  Type Definitions
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  External Prototypes
-      * ------------------------------------
-      /COPY QBASICS1,PBASICS1
-      *
-      * ------------------------------------
-      *  Global Fields
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Global Constants
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Prototypes
-      * ------------------------------------
-      *
-     D PGM_ENTRY_POINT...
-     D                 PR                         extpgm('TEST_RC_01')
-      *
-     D main...
-     D                 PR
-      *
-      *===============================================================*
-      *  Program Entry Point
-      *===============================================================*
-      *
-     D PGM_ENTRY_POINT...
-     D                 PI
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+**FREE
+//===============================================================*
+//    CALL PGM(TEST_RC_01)                                       *
+//===============================================================*
+//   >>PRE-COMPILER<<                                            *
+//                                                               *
+//     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
+//                              SRCFILE(&SL/&SF) +               *
+//                              SRCMBR(&SM);                     *
+//                                                               *
+//     >>COMPILE<<                                               *
+//       >>PARM<< TRUNCNBR(*NO);                                 *
+//       >>PARM<< DBGVIEW(*LIST);                                *
+//       >>PARM<< OPTION(*EVENTF);                               *
+//       >>PARM<< TGTRLS(*CURRENT);                              *
+//     >>END-COMPILE<<                                           *
+//                                                               *
+//     >>EXECUTE<<                                               *
+//                                                               *
+//     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
+//                              MODULE(&LI/&OB) +                *
+//                              ACTGRP(*NEW) +                   *
+//                              BNDSRVPGM(&LI/BASICS1) +         *
+//                              BNDDIR(QC2LE) +                  *
+//                              TGTRLS(*CURRENT) +               *
+//                              DETAIL(*BASIC);                  *
+//                                                               *
+//   >>END-PRE-COMPILER<<                                        *
+//===============================================================*
+ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
+ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
+ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
+ctl-opt EXPROPTS(*RESDECPOS);
+ctl-opt EXTBININT(*YES);
+//===============================================================*
 
-         main();
+// ------------------------------------
+//  Type Definitions
+// ------------------------------------
 
-         *inlr = *on;
+// ------------------------------------
+//  External Prototypes
+// ------------------------------------
+/COPY QBASICS1,PBASICS1
 
-         return;
+// ------------------------------------
+//  Global Fields
+// ------------------------------------
 
-      /END-FREE
-      *
-      *===============================================================*
-      *  Main procedure
-      *===============================================================*
-     P main...
-     P                 B
-      *
-     D main...
-     D                 PI
-      *
-      *  Helper fields
-     D x               S             10I 0                           inz
-     D y               S             10I 0                           inz
-     D size            S             10I 0                           inz
-     D key             S                   like(BasicMap_key_t     ) inz
-     D pValue          S               *                             inz
-     D hMap            S                   like(BasicMap_handle_t  ) inz
-     D nbrOfElm        S             10I 0                      inz
-     D aSize           S             10I 0                      inz
-     D aField          S           3000A                             inz
-     D aPointer        S               *                             inz
-     D isFound         S               N                             inz
-     D anArray         DS                  dim(10)   qualified
-     D  size                               like(aSize        )       inz
-     D  trimSize                           like(aSize        )       inz
-     D  data                               like(aField       )       inz
-      *
-     D msg             DS                  likeds(msg_t      )  inz
-      *
-     D MAX_INT_VALUE   C                   2147483647
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+// ------------------------------------
+//  Global Constants
+// ------------------------------------
 
-         // Initialize Array
-         anArray( 1).data = 'Donald Duck';
-         anArray( 2).data = 'Dagobert Duck';
-         anArray( 3).data = 'Tick';
-         anArray( 4).data = 'Trick';
-         anArray( 5).data = 'Track';
-         anArray( 6).data = 'Daisy';
-         anArray( 7).data = 'Klaas Klever';
-         anArray( 8).data = 'Daniel Düsentrieb';
-         anArray( 9).data = 'Micky Maus';
-         anArray(10).data = 'Goofy';
+// ------------------------------------
+//  Prototypes
+// ------------------------------------
 
-         // Set size of trimmed field data
-         for x = 1 to %elem(anArray);
-            anArray(x).size     = %len(anArray(x).data);
-            anArray(x).trimSize = %len(%trimR(anArray(x).data));
-            p_assert(anArray(x).size <> anArray(x).trimSize                                 //RADDAT
-                     : 'Size and trimmed size must be different');
-         endfor;
+dcl-pr PGM_ENTRY_POINT
+       extpgm('TEST_RC_01');
+end-pr;
 
-         // Create BasicMap
-         hMap = BasicMap_new();
+dcl-pr main;
+end-pr;
 
-         // Add elements to map
-         for x = 1 to %elem(anArray);
-            y = %elem(anArray) - x + 1;
-            BasicMap_put(hMap: 'Element_' + %editc(y: 'X')
-                             : %addr(anArray(x).data)
-                             : anArray(x).trimSize   );
-         endfor;
+//===============================================================*
+//  Program Entry Point
+//===============================================================*
 
-         // Verify number of elements on stack
-         nbrOfElm = BasicMap_getNumE(hMap);
-         p_assert(nbrOfElm = %elem(anArray)
-                  : 'Number of elements on stack does not match expected +
-                     number of ' + %char(%elem(anArray)));
+dcl-pi PGM_ENTRY_POINT;
+end-pi;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-         // Search map for key 'Element_0000000003'
-         x = 3;
-         aPointer = BasicMap_get(hMap: 'Element_' + %editc(x: 'X')
-                                     : %addr(aField)
-                                     : %size(aField));
+main();
 
-         p_assert(aPointer <> *NULL
-                  : 'Entry not found: ' + 'Element_3');
+*inlr = *on;
 
-         // Check map for key 'Element_0000000007'
-         x = 7;
-         isFound = BasicMap_containsKey(hMap: 'Element_' + %editc(x: 'X'));
+return;
 
-         p_assert(isFound
-                  : 'Entry not found: ' + 'Element_7');
 
-         // Check map for key 'Element_99'
-         x = 99;
-         isFound = BasicMap_containsKey(hMap: 'Element_' + %editc(x: 'X'));
+//===============================================================*
+//  Main procedure
+//===============================================================*
+dcl-proc main;
 
-         p_assert(not isFound
-                  : 'Entry found: ' + 'Element_99');
+dcl-pi main;
+end-pi;
 
-         // Get element by index
-         for x = 1 to %elem(anArray);
-            y = %elem(anArray) - x + 1;
-            aPointer = BasicMap_getValueByIndex(hMap: x
-                                                    : %addr(aField)
-                                                    : %size(aField));
-            p_assert(aPointer <> *NULL
-                     : 'Entry not found: ' + 'index=4');
-            p_assert(%str(aPointer) = anArray(y).data
-                     : 'Element contains invalid data');
+//  Helper fields
+dcl-s x               int(10) inz;
+dcl-s y               int(10) inz;
+dcl-s size            int(10) inz;
+dcl-s key             like(BasicMap_key_t     ) inz;
+dcl-s pValue          pointer inz;
+dcl-s hMap            like(BasicMap_handle_t  ) inz;
+dcl-s nbrOfElm        int(10) inz;
+dcl-s aSize           int(10) inz;
+dcl-s aField          char(3000) inz;
+dcl-s aPointer        pointer inz;
+dcl-s isFound         ind inz;
+dcl-ds anArray dim(10)   qualified;
+  size            like(aSize        )       inz;
+  trimSize        like(aSize        )       inz;
+  data            like(aField       )       inz;
+end-ds;
 
-            size = BasicMap_getSizeByIndex(hMap: x);
+dcl-ds msg likeds(msg_t      )  inz;
 
-            p_assert(size = anArray(y).trimSize
-                     : 'Element contains invalid data');
-         endfor;
+dcl-c MAX_INT_VALUE 2147483647;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-         // Test index out of bounds
-         size = BasicMap_getSizeByIndex(hMap: 0);
-         p_assert(size = -1
-                  : 'Expected -1 for out of bounds condition');
+// Initialize Array
+anArray( 1).data = 'Donald Duck';
+anArray( 2).data = 'Dagobert Duck';
+anArray( 3).data = 'Tick';
+anArray( 4).data = 'Trick';
+anArray( 5).data = 'Track';
+anArray( 6).data = 'Daisy';
+anArray( 7).data = 'Klaas Klever';
+anArray( 8).data = 'Daniel Dsentrieb';
+anArray( 9).data = 'Micky Maus';
+anArray(10).data = 'Goofy';
 
-         size = BasicMap_getSizeByIndex(hMap: MAX_INT_VALUE);
-         p_assert(size = -1
-                  : 'Expected -1 for out of bounds condition');
+// Set size of trimmed field data
+for x = 1 to %elem(anArray);
+   anArray(x).size     = %len(anArray(x).data);
+   anArray(x).trimSize = %len(%trimR(anArray(x).data));
+   p_assert(anArray(x).size <> anArray(x).trimSize                                   //RADDAT
+            : 'Size and trimmed size must be different');
+endfor;
 
-         pValue = BasicMap_getValueByIndex(hMap: 0);
-         p_assert(pValue = *NULL
-                  : 'Expected -1 for out of bounds condition');
+// Create BasicMap
+hMap = BasicMap_new();
 
-         pValue = BasicMap_getValueByIndex(hMap: MAX_INT_VALUE);
-         p_assert(pValue = *NULL
-                  : 'Expected -1 for out of bounds condition');
+// Add elements to map
+for x = 1 to %elem(anArray);
+   y = %elem(anArray) - x + 1;
+   BasicMap_put(hMap: 'Element_' + %editc(y: 'X')
+                    : %addr(anArray(x).data)
+                    : anArray(x).trimSize   );
+endfor;
 
-         key = BasicMap_getKeyByIndex(hMap: 0);
-         p_assert(key = ''
-                  : 'Expected empty string for out of bounds condition');
+// Verify number of elements on stack
+nbrOfElm = BasicMap_getNumE(hMap);
+p_assert(nbrOfElm = %elem(anArray)
+         : 'Number of elements on stack does not match expected +
+            number of ' + %char(%elem(anArray)));
 
-         key = BasicMap_getKeyByIndex(hMap: MAX_INT_VALUE);
-         p_assert(key = ''
-                  : 'Expected empty string for out of bounds condition');
+// Search map for key 'Element_0000000003'
+x = 3;
+aPointer = BasicMap_get(hMap: 'Element_' + %editc(x: 'X')
+                            : %addr(aField)
+                            : %size(aField));
 
-         // Change size of data
-         BasicMap_put(hMap: 'ChangeSize': 'HelloWorld');
-         p_assert(BasicMap_getSize(hMap: 'ChangeSize') = 10);
+p_assert(aPointer <> *NULL
+         : 'Entry not found: ' + 'Element_3');
 
-         BasicMap_put(hMap: 'ChangeSize': 'Hello World!');
-         p_assert(BasicMap_getSize(hMap: 'ChangeSize') = 12);
+// Check map for key 'Element_0000000007'
+x = 7;
+isFound = BasicMap_containsKey(hMap: 'Element_' + %editc(x: 'X'));
 
-         // Delete map
-         BasicMap_delete(hMap);
+p_assert(isFound
+         : 'Entry not found: ' + 'Element_7');
 
-         p_assert(hMap = BasicMap_null()
-                  : 'Map handle not set to NULL');
+// Check map for key 'Element_99'
+x = 99;
+isFound = BasicMap_containsKey(hMap: 'Element_' + %editc(x: 'X'));
 
-         return;
+p_assert(not isFound
+         : 'Entry found: ' + 'Element_99');
 
-      /END-FREE
-      *
-     P main...
-     P                 E
-      *
+// Get element by index
+for x = 1 to %elem(anArray);
+   y = %elem(anArray) - x + 1;
+   aPointer = BasicMap_getValueByIndex(hMap: x
+                                           : %addr(aField)
+                                           : %size(aField));
+   p_assert(aPointer <> *NULL
+            : 'Entry not found: ' + 'index=4');
+   p_assert(%str(aPointer) = anArray(y).data
+            : 'Element contains invalid data');
+
+   size = BasicMap_getSizeByIndex(hMap: x);
+
+   p_assert(size = anArray(y).trimSize
+            : 'Element contains invalid data');
+endfor;
+
+// Test index out of bounds
+size = BasicMap_getSizeByIndex(hMap: 0);
+p_assert(size = -1
+         : 'Expected -1 for out of bounds condition');
+
+size = BasicMap_getSizeByIndex(hMap: MAX_INT_VALUE);
+p_assert(size = -1
+         : 'Expected -1 for out of bounds condition');
+
+pValue = BasicMap_getValueByIndex(hMap: 0);
+p_assert(pValue = *NULL
+         : 'Expected -1 for out of bounds condition');
+
+pValue = BasicMap_getValueByIndex(hMap: MAX_INT_VALUE);
+p_assert(pValue = *NULL
+         : 'Expected -1 for out of bounds condition');
+
+key = BasicMap_getKeyByIndex(hMap: 0);
+p_assert(key = ''
+         : 'Expected empty string for out of bounds condition');
+
+key = BasicMap_getKeyByIndex(hMap: MAX_INT_VALUE);
+p_assert(key = ''
+         : 'Expected empty string for out of bounds condition');
+
+// Change size of data
+BasicMap_put(hMap: 'ChangeSize': 'HelloWorld');
+p_assert(BasicMap_getSize(hMap: 'ChangeSize') = 10);
+
+BasicMap_put(hMap: 'ChangeSize': 'Hello World!');
+p_assert(BasicMap_getSize(hMap: 'ChangeSize') = 12);
+
+// Delete map
+BasicMap_delete(hMap);
+
+p_assert(hMap = BasicMap_null()
+         : 'Map handle not set to NULL');
+
+return;
+
+
+end-proc main;
+

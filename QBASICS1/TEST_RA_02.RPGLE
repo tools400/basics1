@@ -1,189 +1,186 @@
-      *===============================================================*
-      *    CALL PGM(TEST_RA_02)                                       *
-      *===============================================================*
-      *   >>PRE-COMPILER<<                                            *
-      *                                                               *
-      *     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
-      *                              SRCFILE(&SL/&SF) +               *
-      *                              SRCMBR(&SM);                     *
-      *                                                               *
-      *     >>COMPILE<<                                               *
-      *       >>PARM<< TRUNCNBR(*NO);                                 *
-      *       >>PARM<< DBGVIEW(*LIST);                                *
-      *       >>PARM<< TGTRLS(*CURRENT);                              *
-      *     >>END-COMPILE<<                                           *
-      *                                                               *
-      *     >>EXECUTE<<                                               *
-      *                                                               *
-      *     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
-      *                              MODULE(&LI/&OB) +                *
-      *                              ACTGRP(*NEW) +                   *
-      *                              BNDSRVPGM(&LI/BASICS1) +         *
-      *                              BNDDIR(QC2LE) +                  *
-      *                              TGTRLS(*CURRENT) +               *
-      *                              DETAIL(*BASIC);                  *
-      *                                                               *
-      *   >>END-PRE-COMPILER<<                                        *
-      *===============================================================*
-     H DEBUG
-     H OPTION(*SRCSTMT : *NODEBUGIO)
-     H DECEDIT('0,') DATEDIT(*DMY.)
-     H DATFMT(*ISO )  TIMFMT(*ISO )
-     H EXPROPTS(*RESDECPOS)
-     H EXTBININT(*YES)
-      *===============================================================*
-      *
-      * ------------------------------------
-      *  Type Definitions
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  External Prototypes
-      * ------------------------------------
-      /COPY QBASICS1,PBASICS1
-      *
-      * ------------------------------------
-      *  Global Fields
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Global Constants
-      * ------------------------------------
-     D cTYPE_TEST...
-     D                 C                   const('*TEST')
-      *
-      * ------------------------------------
-      *  Prototypes
-      * ------------------------------------
-      *
-     D PGM_ENTRY_POINT...
-     D                 PR                         extpgm('TEST_RA_02')
-      *
-     D main...
-     D                 PR
-      *
-      *===============================================================*
-      *  Program Entry Point
-      *===============================================================*
-      *
-     D PGM_ENTRY_POINT...
-     D                 PI
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+**FREE
+//===============================================================*
+//    CALL PGM(TEST_RA_02)                                       *
+//===============================================================*
+//   >>PRE-COMPILER<<                                            *
+//                                                               *
+//     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
+//                              SRCFILE(&SL/&SF) +               *
+//                              SRCMBR(&SM);                     *
+//                                                               *
+//     >>COMPILE<<                                               *
+//       >>PARM<< TRUNCNBR(*NO);                                 *
+//       >>PARM<< DBGVIEW(*LIST);                                *
+//       >>PARM<< TGTRLS(*CURRENT);                              *
+//     >>END-COMPILE<<                                           *
+//                                                               *
+//     >>EXECUTE<<                                               *
+//                                                               *
+//     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
+//                              MODULE(&LI/&OB) +                *
+//                              ACTGRP(*NEW) +                   *
+//                              BNDSRVPGM(&LI/BASICS1) +         *
+//                              BNDDIR(QC2LE) +                  *
+//                              TGTRLS(*CURRENT) +               *
+//                              DETAIL(*BASIC);                  *
+//                                                               *
+//   >>END-PRE-COMPILER<<                                        *
+//===============================================================*
+ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
+ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
+ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
+ctl-opt EXPROPTS(*RESDECPOS);
+ctl-opt EXTBININT(*YES);
+//===============================================================*
 
-         main();
+// ------------------------------------
+//  Type Definitions
+// ------------------------------------
 
-         *inlr = *on;
+// ------------------------------------
+//  External Prototypes
+// ------------------------------------
+/COPY QBASICS1,PBASICS1
 
-         return;
+// ------------------------------------
+//  Global Fields
+// ------------------------------------
 
-      /END-FREE
-      *
-      *===============================================================*
-      *  Main procedure
-      *===============================================================*
-     P main...
-     P                 B
-      *
-     D main...
-     D                 PI
-      *
-      *  Helper fields
-     D x               S             10I 0                            inz
-     D numE            S             10I 0                            inz
-     D hList           S                   like(BasicList_handle_t )  inz
-     D anArray         DS                  dim(10)   qualified
-     D  data                               like(aString      )        inz
-     D aString         S             32A   varying                    inz
-      *
-     D elem            DS                  qualified
-     D  isNull                       10I 0 inz
-     D  isNotNull                    10I 0 inz
-      *
-     D msg             DS                  likeds(msg_t      )        inz
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+// ------------------------------------
+//  Global Constants
+// ------------------------------------
+dcl-c cTYPE_TEST
+      const('*TEST');
 
-         // Initialize Array
-         anArray( 1).data = 'Donald Duck';
-         anArray( 2).data = 'Dagobert Duck';
-         anArray( 3).data = 'Tick';
-         anArray( 4).data = 'Trick';
-         anArray( 5).data = 'Track';
-         anArray( 6).data = 'Daisy';
-         anArray( 7).data = 'Klaas Klever';
-         anArray( 8).data = 'Daniel Düsentrieb';
-         anArray( 9).data = 'Micky Maus';
-         anArray(10).data = 'Goofy';
+// ------------------------------------
+//  Prototypes
+// ------------------------------------
 
-         // Create BasicList
-         hList = BasicList_new(cTYPE_TEST);
+dcl-pr PGM_ENTRY_POINT
+       extpgm('TEST_RA_02');
+end-pr;
 
-         // Add elements to list
-         for x = 1 to %elem(anArray);
-            BasicList_addString(hList: anArray(x).data);
-         endfor;
+dcl-pr main;
+end-pr;
 
-         // Verify elements in list
-         for x = 1 to %elem(anArray);
-            aString = BasicList_getString(hList: x);
-            p_assert(aString = anArray(x).data
-                     : 'Field contents do not match');
-         endfor;
+//===============================================================*
+//  Program Entry Point
+//===============================================================*
 
-         // Add a NULL values
-         x = BasicList_addNull(hList);
-         p_assert(x = %elem(anArray) + 1
-                  : 'Unexpected number of elements in BasicList');
+dcl-pi PGM_ENTRY_POINT;
+end-pi;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-         x = BasicList_getNumE(hList);
-         p_assert(x = %elem(anArray) + 1
-                  : 'Unexpected number of elements in BasicList');
+main();
 
-         // Test the latest element for a NULL value
-         p_assert(BasicList_isNullValue(hList: x)
-                  : 'BasicList_isNullValue returned invalid value');
+*inlr = *on;
 
-         // Test the last string element for a NULL value
-         p_assert(not BasicList_isNullValue(hList: %elem(anArray))
-                  : 'BasicList_isNullValue returned invalid value');
+return;
 
-         // Set some element to NULL
-         numE = BasicList_getNumE(hList);
-         BasicList_setNull(hList: 3);
-         BasicList_setNull(hList: 6);
-         BasicList_setNull(hList: 8);
 
-         // Verify number of elements
-         p_assert(BasicList_getNumE(hList) = numE
-                  : 'List contains invalid number of elements');
+//===============================================================*
+//  Main procedure
+//===============================================================*
+dcl-proc main;
 
-         // Count NULL and non-NULL values
-         for x = 1 to BasicList_getNumE(hList);
-            if (BasicList_isNullValue(hList: x));
-               elem.isNull = elem.isNull + 1;
-               p_assert(x = 3 or x = 6 or x = 8 or x = 11
-                        : 'Found element that should not be NULL');
-            else;
-               elem.isNotNull = elem.isNotNull + 1;
-            endif;
-         endfor;
+dcl-pi main;
+end-pi;
 
-         p_assert(elem.isNull = 4
-                  : 'List contains invalid number of NULL elements');
-         p_assert(elem.isNotNull = 7
-                  : 'List contains invalid number of non-NULL elements');
+//  Helper fields
+dcl-s x               int(10) inz;
+dcl-s numE            int(10) inz;
+dcl-s hList           like(BasicList_handle_t )  inz;
+dcl-ds anArray dim(10)   qualified;
+  data            like(aString      )        inz;
+end-ds;
+dcl-s aString         varchar(32) inz;
 
-         // Delete list
-         BasicList_delete(hList);
+dcl-ds elem qualified;
+  isNull          int(10) inz;
+  isNotNull       int(10) inz;
+end-ds;
 
-         p_assert(hList = BasicList_null()
-                  : 'List handle not set to NULL');
+dcl-ds msg likeds(msg_t      )        inz;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-         return;
+// Initialize Array
+anArray( 1).data = 'Donald Duck';
+anArray( 2).data = 'Dagobert Duck';
+anArray( 3).data = 'Tick';
+anArray( 4).data = 'Trick';
+anArray( 5).data = 'Track';
+anArray( 6).data = 'Daisy';
+anArray( 7).data = 'Klaas Klever';
+anArray( 8).data = 'Daniel Dsentrieb';
+anArray( 9).data = 'Micky Maus';
+anArray(10).data = 'Goofy';
 
-      /END-FREE
-      *
-     P main...
-     P                 E
-      *
+// Create BasicList
+hList = BasicList_new(cTYPE_TEST);
+
+// Add elements to list
+for x = 1 to %elem(anArray);
+   BasicList_addString(hList: anArray(x).data);
+endfor;
+
+// Verify elements in list
+for x = 1 to %elem(anArray);
+   aString = BasicList_getString(hList: x);
+   p_assert(aString = anArray(x).data
+            : 'Field contents do not match');
+endfor;
+
+// Add a NULL values
+x = BasicList_addNull(hList);
+p_assert(x = %elem(anArray) + 1
+         : 'Unexpected number of elements in BasicList');
+
+x = BasicList_getNumE(hList);
+p_assert(x = %elem(anArray) + 1
+         : 'Unexpected number of elements in BasicList');
+
+// Test the latest element for a NULL value
+p_assert(BasicList_isNullValue(hList: x)
+         : 'BasicList_isNullValue returned invalid value');
+
+// Test the last string element for a NULL value
+p_assert(not BasicList_isNullValue(hList: %elem(anArray))
+         : 'BasicList_isNullValue returned invalid value');
+
+// Set some element to NULL
+numE = BasicList_getNumE(hList);
+BasicList_setNull(hList: 3);
+BasicList_setNull(hList: 6);
+BasicList_setNull(hList: 8);
+
+// Verify number of elements
+p_assert(BasicList_getNumE(hList) = numE
+         : 'List contains invalid number of elements');
+
+// Count NULL and non-NULL values
+for x = 1 to BasicList_getNumE(hList);
+   if (BasicList_isNullValue(hList: x));
+      elem.isNull = elem.isNull + 1;
+      p_assert(x = 3 or x = 6 or x = 8 or x = 11
+               : 'Found element that should not be NULL');
+   else;
+      elem.isNotNull = elem.isNotNull + 1;
+   endif;
+endfor;
+
+p_assert(elem.isNull = 4
+         : 'List contains invalid number of NULL elements');
+p_assert(elem.isNotNull = 7
+         : 'List contains invalid number of non-NULL elements');
+
+// Delete list
+BasicList_delete(hList);
+
+p_assert(hList = BasicList_null()
+         : 'List handle not set to NULL');
+
+return;
+
+
+end-proc main;
+

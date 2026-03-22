@@ -1,345 +1,339 @@
-      // -------------------------------------------------------------------
-      //  BASICS1RC  - SrvPgm: Basic Routines - Date and Time
-      // -------------------------------------------------------------------
-      //  Author  :  Thomas Raddatz
-      //  Date    :  19.02.2009
-      //  E-mail  :  thomas.raddatz@Tools400.de
-      //  Homepage:  www.tools400.de
-      // -------------------------------------------------------------------
-      //
-      //  This software is free software, you can redistribute it and/or
-      //  modify it under the terms of the GNU General Public License (GPL)
-      //  as published by the Free Software Foundation.
-      //
-      //  See GNU General Public License for details.
-      //          http://www.opensource.org
-      //          http://www.opensource.org/licenses/gpl-license.html
-      //
-      // -------------------------------------------------------------------
-      //  History:
-      //
-      //  Datum       Name          Änderung
-      //  ----------  ------------  ---------------------------------------
-      //
-      // -------------------------------------------------------------------
-      //   >>PRE-COMPILER<<
-      //
-      //     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +
-      //                              SRCFILE(&SL/&SF) +
-      //                              SRCMBR(&SM);
-      //
-      //     >>COMPILE<<
-      //       >>PARM<< TRUNCNBR(*NO);
-      //       >>PARM<< DBGVIEW(*LIST);
-      //       >>PARM<< TGTRLS(V7R3M0);
-      //     >>END-COMPILE<<
-      //
-      //     >>EXECUTE<<
-      //
-      //   >>END-PRE-COMPILER<<
-      // -------------------------------------------------------------------
-     H NOMAIN
-      *  Standard H-Specs
-      /COPY QBASICS1,H_SPEC
-      /COPY QBASICS1,COPYRIGHT
-      *=====================================================================*
+**FREE
+// -------------------------------------------------------------------
+//  BASICS1RC  - SrvPgm: Basic Routines - Date and Time
+// -------------------------------------------------------------------
+//  Author  :  Thomas Raddatz
+//  Date    :  19.02.2009
+//  E-mail  :  thomas.raddatz@Tools400.de
+//  Homepage:  www.tools400.de
+// -------------------------------------------------------------------
+//
+//  This software is free software, you can redistribute it and/or
+//  modify it under the terms of the GNU General Public License (GPL)
+//  as published by the Free Software Foundation.
+//
+//  See GNU General Public License for details.
+//          http://www.opensource.org
+//          http://www.opensource.org/licenses/gpl-license.html
+//
+// -------------------------------------------------------------------
+//  History:
+//
+//  Datum       Name          Änderung
+//  ----------  ------------  ---------------------------------------
+//
+// -------------------------------------------------------------------
+//   >>PRE-COMPILER<<
+//
+//     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +
+//                              SRCFILE(&SL/&SF) +
+//                              SRCMBR(&SM);
+//
+//     >>COMPILE<<
+//       >>PARM<< OPTION(*EVENTF);                                     *
+//       >>PARM<< TRUNCNBR(*NO);
+//       >>PARM<< DBGVIEW(*LIST);
+//       >>PARM<< TGTRLS(V7R3M0);
+//     >>END-COMPILE<<
+//
+//     >>EXECUTE<<
+//
+//   >>END-PRE-COMPILER<<
+// -------------------------------------------------------------------
+ctl-opt NOMAIN;
+//  Standard H-Specs
+/COPY QBASICS1,H_SPEC
+/COPY QBASICS1,COPYRIGHT
+//=====================================================================*
 
-      // -----------------------------------------
-      //  Exported functions
-      // -----------------------------------------
-      /COPY QBASICS1,PBASICS1RE
+// -----------------------------------------
+//  Exported functions
+// -----------------------------------------
+/COPY QBASICS1,PBASICS1RE
 
-      // -----------------------------------------
-      //  Reference fields
-      // -----------------------------------------
-      /COPY QBASICS1,BASICS1R0
+// -----------------------------------------
+//  Reference fields
+// -----------------------------------------
+/COPY QBASICS1,BASICS1R0
 
-      // -----------------------------------------
-      //  Imported Prototypes
-      // -----------------------------------------
-      /COPY QBASICS1,QWCCVTDT                      Convert Date and Time Format (QWCCVTDT) API
-      /COPY QBASICS1,PBASICS1R2                    API Error Handling
+// -----------------------------------------
+//  Imported Prototypes
+// -----------------------------------------
+/COPY QBASICS1,QWCCVTDT                      Convert Date and Time Format (QWCCVTDT) API
+/COPY QBASICS1,PBASICS1R2                    API Error Handling
 
-      // -----------------------------------------
-      //  Private prototypes
-      // -----------------------------------------
+// -----------------------------------------
+//  Private prototypes
+// -----------------------------------------
 
-      // -----------------------------------------
-      //  Global constants
-      // -----------------------------------------
+// -----------------------------------------
+//  Global constants
+// -----------------------------------------
 
-     D EPOCHSTART      s               z   inz(z'1970-01-01-00.00.00.000000')
+dcl-s EPOCHSTART      timestamp inz(z'1970-01-01-00.00.00.000000');
 
-      // -----------------------------------------
-      //  Global fields
-      // -----------------------------------------
+// -----------------------------------------
+//  Global fields
+// -----------------------------------------
 
-      // -----------------------------------------------------------------------
-      //  Produces a date from a given year, month and day.
-      // -----------------------------------------------------------------------
-      //  Parameters:
-      //   i_year        - Year of the date. Range: 1-9999
-      //   i_month       - Day of the date. Any numeric value.
-      //   i_day         - Day of the date. Any numeric value.
-      //
-      //  Returns:
-      //   date          - Date.
-      // -----------------------------------------------------------------------
-     P f_dateSerial...
-     P                 b                   export
-     D                 pi              D
-     D  i_year                       10I 0 const
-     D  i_month                      10I 0 const
-     D  i_day                        10I 0 const
+// -----------------------------------------------------------------------
+//  Produces a date from a given year, month and day.
+// -----------------------------------------------------------------------
+//  Parameters:
+//   i_year        - Year of the date. Range: 1-9999
+//   i_month       - Day of the date. Any numeric value.
+//   i_day         - Day of the date. Any numeric value.
+//
+//  Returns:
+//   date          - Date.
+// -----------------------------------------------------------------------
+dcl-proc f_dateSerial export;
+dcl-pi *N              date;
+  i_year          int(10) const;
+  i_month         int(10) const;
+  i_day           int(10) const;
+end-pi;
 
-      //  Return value
-     D date            s               D   inz
+//  Return value
+dcl-s date            date inz;
 
-      //  Helper fields
-     D tmpDate         s             10A   inz
-      /free
+//  Helper fields
+dcl-s tmpDate         char(10) inz;
 
-         tmpDate = %editc(%dec(i_year: 4: 0): 'X') + '-' + '01' + '-' + '01';
-         date = %date(tmpDate: *ISO);
-         date = date + %months(i_month-1);
-         date = date + %days(i_day-1);
+tmpDate = %editc(%dec(i_year: 4: 0): 'X') + '-' + '01' + '-' + '01';
+date = %date(tmpDate: *ISO);
+date = date + %months(i_month-1);
+date = date + %days(i_day-1);
 
-         return date;
+return date;
 
-      /end-free
-     P                 e
+end-proc;
 
-      // -----------------------------------------------------------------------
-      //  Converts an epoch date to a RPG timestamp.
-      // -----------------------------------------------------------------------
-      //  Parameters:
-      //
-      //   i_epochSecs   - The UNIX timestamp, in UNIX epoch format (number of
-      //                   seconds since midnight, Jan 1, 1970).
-      //   i_adjustUTC   - Determine whether the time should be adjusted by the
-      //                   UTC offset.
-      //                   true  - adjust for UTC offset
-      //                   false - do not adjust for UTC offset
-      //
-      //  Returns:
-      //   timestamp     - RPG timestamp value
-      // -----------------------------------------------------------------------
-     P f_cvtEpochTS...
-     P                 b                   export
-     D                 pi              z
-     D  i_epochSecs                  10i 0 const
-     D  i_adjustUTC                    n   const options(*nopass: *omit)
+// -----------------------------------------------------------------------
+//  Converts an epoch date to a RPG timestamp.
+// -----------------------------------------------------------------------
+//  Parameters:
+//
+//   i_epochSecs   - The UNIX timestamp, in UNIX epoch format (number of
+//                   seconds since midnight, Jan 1, 1970).
+//   i_adjustUTC   - Determine whether the time should be adjusted by the
+//                   UTC offset.
+//                   true  - adjust for UTC offset
+//                   false - do not adjust for UTC offset
+//
+//  Returns:
+//   timestamp     - RPG timestamp value
+// -----------------------------------------------------------------------
+dcl-proc f_cvtEpochTS export;
+dcl-pi *N              timestamp;
+  i_epochSecs     int(10) const;
+  i_adjustUTC     ind const options(*nopass: *omit);
+end-pi;
 
-      // Return value
-     D timestamp       s               z   inz
+// Return value
+dcl-s timestamp       timestamp inz;
 
-      // Parameter position
-     D p_adjustUTC     c                   2
+// Parameter position
+dcl-c p_adjustUTC 2;
 
-      // Optional parameters
-     D adjustUTC       s                   like(i_adjustUTC)
+// Optional parameters
+dcl-s adjustUTC       like(i_adjustUTC);
 
-      // Variables.
-     D utc             ds                  likeds(cee_utco_t) inz
-      /free
+// Variables.
+dcl-ds utc likeds(cee_utco_t) inz;
 
-         if (%parms() >= p_adjustUTC and %addr(i_adjustUTC) <> *null);
-            adjustUTC = i_adjustUTC;
-         else;
-            adjustUTC = cTrue;
-         endif;
+if (%parms() >= p_adjustUTC and %addr(i_adjustUTC) <> *null);
+   adjustUTC = i_adjustUTC;
+else;
+   adjustUTC = cTrue;
+endif;
 
-         timestamp = EPOCHSTART + %seconds(i_epochSecs);
-         if (adjustUTC);
-              CEEUTCO(utc.offHours: utc.offMins: utc.offSecs);
-              timestamp = timestamp + %seconds(%int(utc.offSecs));
-         endif;
+timestamp = EPOCHSTART + %seconds(i_epochSecs);
+if (adjustUTC);
+   CEEUTCO(utc.offHours: utc.offMins: utc.offSecs);
+   timestamp = timestamp + %seconds(%int(utc.offSecs));
+endif;
 
-         return timestamp;
+return timestamp;
 
-      /end-free
-     p                 e
+end-proc;
 
-      // -----------------------------------------------------------------------
-      //  Converts a RPG timestamp to an epoch value.
-      // -----------------------------------------------------------------------
-      //  Parameters:
-      //
-      //   i_timestamp   - The OS/400 timestamp value.
-      //   i_adjustUTC   - Determine whether the time should be adjusted by the
-      //                   UTC offset.
-      //                   true  - adjust for UTC offset
-      //                   false - do not adjust for UTC offset
-      //
-      //  Returns:
-      //   epoch         - Epoch value
-      // -----------------------------------------------------------------------
-     P f_cvtTSEpoch...
-     P                 b                   export
-     D                 pi            10i 0
-     D  i_timestamp                    z   const
-     D  i_adjustUTC                    n   const options(*nopass: *omit)
+// -----------------------------------------------------------------------
+//  Converts a RPG timestamp to an epoch value.
+// -----------------------------------------------------------------------
+//  Parameters:
+//
+//   i_timestamp   - The OS/400 timestamp value.
+//   i_adjustUTC   - Determine whether the time should be adjusted by the
+//                   UTC offset.
+//                   true  - adjust for UTC offset
+//                   false - do not adjust for UTC offset
+//
+//  Returns:
+//   epoch         - Epoch value
+// -----------------------------------------------------------------------
+dcl-proc f_cvtTSEpoch export;
+dcl-pi *N              int(10);
+  i_timestamp     timestamp const;
+  i_adjustUTC     ind const options(*nopass: *omit);
+end-pi;
 
-      // Return value
-     D epochSecs       s             10i 0 inz
+// Return value
+dcl-s epochSecs       int(10) inz;
 
-      // Parameter position
-     D p_adjustUTC     c                   2
+// Parameter position
+dcl-c p_adjustUTC 2;
 
-      // Optional parameters
-     D adjustUTC       s                   like(i_adjustUTC)
+// Optional parameters
+dcl-s adjustUTC       like(i_adjustUTC);
 
-      // Constants.
-     D PIC_TIMESTAMP   c                   'YYYY-MM-DD-HH.MI.SS.999999'
+// Constants.
+dcl-c PIC_TIMESTAMP 'YYYY-MM-DD-HH.MI.SS.999999';
 
-      // Variables.
-     D utc             ds                  likeds(cee_utco_t) inz
-     D tsSecs          s              8f   inz
-     D epochStartSecs  s              8f   inz
-      /free
+// Variables.
+dcl-ds utc likeds(cee_utco_t) inz;
+dcl-s tsSecs          float(8) inz;
+dcl-s epochStartSecs  float(8) inz;
 
-         if (%parms() >= p_adjustUTC and %addr(i_adjustUTC) <> *null);
-            adjustUTC = i_adjustUTC;
-         else;
-            adjustUTC = cTrue;
-         endif;
+if (%parms() >= p_adjustUTC and %addr(i_adjustUTC) <> *null);
+   adjustUTC = i_adjustUTC;
+else;
+   adjustUTC = cTrue;
+endif;
 
-         CEESECS(%char(i_timestamp): PIC_TIMESTAMP: tsSecs: *omit);
-         CEESECS(%char(EPOCHSTART): PIC_TIMESTAMP: epochStartSecs: *omit);
+CEESECS(%char(i_timestamp): PIC_TIMESTAMP: tsSecs: *omit);
+CEESECS(%char(EPOCHSTART): PIC_TIMESTAMP: epochStartSecs: *omit);
 
-         epochSecs = tsSecs - epochStartSecs;
-         if (adjustUTC);
-              CEEUTCO(utc.offHours: utc.offMins: utc.offSecs);
-              epochSecs = epochSecs - %int(utc.offSecs);
-         endif;
+epochSecs = tsSecs - epochStartSecs;
+if (adjustUTC);
+   CEEUTCO(utc.offHours: utc.offMins: utc.offSecs);
+   epochSecs = epochSecs - %int(utc.offSecs);
+endif;
 
-         return epochSecs;
+return epochSecs;
 
-      /end-free
-     p                 e
+end-proc;
 
-      // -----------------------------------------------------------------------
-      //  Converts a MI time value to a RPG timestamp.
-      // -----------------------------------------------------------------------
-      //  Parameters:
-      //
-      //   i_miTime      - MI time value.
-      //   i_adjustUTC   - Determine whether the time should be adjusted by the
-      //                   UTC offset.
-      //                   true  - adjust for UTC offset
-      //                   false - do not adjust for UTC offset
-      //
-      //  Returns:
-      //   timestamp     - RPG timestamp value
-      // -----------------------------------------------------------------------
-     P f_cvtMiTimeTS...
-     P                 b                   export
-     D                 pi              z
-     D  i_miTime                     20a   const
-     D  i_adjustUTC                    n   const options(*nopass: *omit)
+// -----------------------------------------------------------------------
+//  Converts a MI time value to a RPG timestamp.
+// -----------------------------------------------------------------------
+//  Parameters:
+//
+//   i_miTime      - MI time value.
+//   i_adjustUTC   - Determine whether the time should be adjusted by the
+//                   UTC offset.
+//                   true  - adjust for UTC offset
+//                   false - do not adjust for UTC offset
+//
+//  Returns:
+//   timestamp     - RPG timestamp value
+// -----------------------------------------------------------------------
+dcl-proc f_cvtMiTimeTS export;
+dcl-pi *N              timestamp;
+  i_miTime        char(20) const;
+  i_adjustUTC     ind const options(*nopass: *omit);
+end-pi;
 
-      // Return value
-     D timestamp       s               z   inz
+// Return value
+dcl-s timestamp       timestamp inz;
 
-      // Parameter position
-     D p_adjustUTC     c                   2
+// Parameter position
+dcl-c p_adjustUTC 2;
 
-      // Optional parameters
-     D adjustUTC       s                   like(i_adjustUTC)
+// Optional parameters
+dcl-s adjustUTC       like(i_adjustUTC);
 
-      // Variables
-     D tmpDate         ds                  qualified
-     D  date                   1      8a   inz('00010101')
-     D  time                   9     14a   inz('000000')
-     D  mSecs                 15     20a   inz('000000')
-     D utc             ds                  likeds(cee_utco_t) inz
-     D timeZone        s            116a
-     D errCode         ds                  likeds(errCode_t) inz
-      /free
+// Variables
+dcl-ds tmpDate qualified;
+  date            char(8) inz('00010101');
+  time            char(6) inz('000000');
+  mSecs           char(6) inz('000000');
+end-ds;
+dcl-ds utc likeds(cee_utco_t) inz;
+dcl-s timeZone        char(116);
+dcl-ds errCode likeds(errCode_t) inz;
 
-         if (%parms() >= p_adjustUTC and %addr(i_adjustUTC) <> *null);
-            adjustUTC = i_adjustUTC;
-         else;
-            adjustUTC = cTrue;
-         endif;
+if (%parms() >= p_adjustUTC and %addr(i_adjustUTC) <> *null);
+   adjustUTC = i_adjustUTC;
+else;
+   adjustUTC = cTrue;
+endif;
 
-         errCode = f_newApiErrCode(cFalse);
-         QWCCVTDT('*DTS' : i_miTime : '*YYMD' : tmpDate: errCode
-                  : '*JOB': '*JOB': timeZone: %len(timeZone): '1');
+errCode = f_newApiErrCode(cFalse);
+QWCCVTDT('*DTS' : i_miTime : '*YYMD' : tmpDate: errCode
+         : '*JOB': '*JOB': timeZone: %len(timeZone): '1');
 
-         timestamp = %date(tmpDate.date: *ISO0) +
-                     %time(tmpDate.time: *ISO0);
-         timestamp += %mseconds(%int(tmpDate.mSecs));
+timestamp = %date(tmpDate.date: *ISO0) +
+            %time(tmpDate.time: *ISO0);
+timestamp += %mseconds(%int(tmpDate.mSecs));
 
-         if (not adjustUTC);
-              CEEUTCO(utc.offHours: utc.offMins: utc.offSecs);
-              timestamp = timestamp - %seconds(%int(utc.offSecs));
-         endif;
+if (not adjustUTC);
+   CEEUTCO(utc.offHours: utc.offMins: utc.offSecs);
+   timestamp = timestamp - %seconds(%int(utc.offSecs));
+endif;
 
-         return timestamp;
+return timestamp;
 
-      /end-free
-     p                 e
+end-proc;
 
-      // -----------------------------------------------------------------------
-      //  Converts a RPG timestamp to an epoch value.
-      // -----------------------------------------------------------------------
-      //  Parameters:
-      //
-      //   i_timestamp   - The OS/400 timestamp value.
-      //   i_adjustUTC   - Determine whether the time should be adjusted by the
-      //                   UTC offset.
-      //                   true  - adjust for UTC offset
-      //                   false - do not adjust for UTC offset
-      //
-      //  Returns:
-      //   epoch         - Epoch value
-      // -----------------------------------------------------------------------
-     P f_cvtTSMiTime...
-     P                 b                   export
-     D                 pi            20a
-     D  i_timestamp                    z   const
-     D  i_adjustUTC                    n   const options(*nopass: *omit)
+// -----------------------------------------------------------------------
+//  Converts a RPG timestamp to an epoch value.
+// -----------------------------------------------------------------------
+//  Parameters:
+//
+//   i_timestamp   - The OS/400 timestamp value.
+//   i_adjustUTC   - Determine whether the time should be adjusted by the
+//                   UTC offset.
+//                   true  - adjust for UTC offset
+//                   false - do not adjust for UTC offset
+//
+//  Returns:
+//   epoch         - Epoch value
+// -----------------------------------------------------------------------
+dcl-proc f_cvtTSMiTime export;
+dcl-pi *N              char(20);
+  i_timestamp     timestamp const;
+  i_adjustUTC     ind const options(*nopass: *omit);
+end-pi;
 
-      // Return value
-     D miTime          s             20a   inz(*ALLx'00')
+// Return value
+dcl-s miTime          char(20) inz(*ALLx'00');
 
-      // Parameter position
-     D p_adjustUTC     c                   2
+// Parameter position
+dcl-c p_adjustUTC 2;
 
-      // Optional parameters
-     D adjustUTC       s                   like(i_adjustUTC)
+// Optional parameters
+dcl-s adjustUTC       like(i_adjustUTC);
 
-      // Variables
-     D timestamp       s                   like(i_timestamp)
-     D tmpDate         ds                  qualified
-     D  date                   1      8a   inz('00010101')
-     D  time                   9     14a   inz('000000')
-     D  mSecs                 15     20a   inz('000000')
-     D utc             ds                  likeds(cee_utco_t) inz
-     D timeZone        s            116a
-     D errCode         ds                  likeds(errCode_t) inz
-      /free
+// Variables
+dcl-s timestamp       like(i_timestamp);
+dcl-ds tmpDate qualified;
+  date            char(8) inz('00010101');
+  time            char(6) inz('000000');
+  mSecs           char(6) inz('000000');
+end-ds;
+dcl-ds utc likeds(cee_utco_t) inz;
+dcl-s timeZone        char(116);
+dcl-ds errCode likeds(errCode_t) inz;
 
-         if (%parms() >= p_adjustUTC and %addr(i_adjustUTC) <> *null);
-            adjustUTC = i_adjustUTC;
-         else;
-            adjustUTC = cTrue;
-         endif;
+if (%parms() >= p_adjustUTC and %addr(i_adjustUTC) <> *null);
+   adjustUTC = i_adjustUTC;
+else;
+   adjustUTC = cTrue;
+endif;
 
-         timestamp = i_timestamp;
+timestamp = i_timestamp;
 
-         if (not adjustUTC);
-              CEEUTCO(utc.offHours: utc.offMins: utc.offSecs);
-              timestamp = timestamp + %seconds(%int(utc.offSecs));
-         endif;
+if (not adjustUTC);
+   CEEUTCO(utc.offHours: utc.offMins: utc.offSecs);
+   timestamp = timestamp + %seconds(%int(utc.offSecs));
+endif;
 
-         errCode = f_newApiErrCode(cFalse);
-         QWCCVTDT('*YYMD' : %char(timestamp: *ISO0) : '*DTS' : miTime: errCode
-                  : '*JOB': '*JOB': timeZone: %len(timeZone): '1');
+errCode = f_newApiErrCode(cFalse);
+QWCCVTDT('*YYMD' : %char(timestamp: *ISO0) : '*DTS' : miTime: errCode
+         : '*JOB': '*JOB': timeZone: %len(timeZone): '1');
 
-         return miTime;
+return miTime;
 
-      /end-free
-     p                 e
-      *
+end-proc;
+//

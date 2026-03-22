@@ -1,112 +1,108 @@
-      *===============================================================*
-      *    CALL PGM(TEST_R2_01)                                       *
-      *===============================================================*
-      *   >>PRE-COMPILER<<                                            *
-      *                                                               *
-      *     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
-      *                              SRCFILE(&SL/&SF) +               *
-      *                              SRCMBR(&SM);                     *
-      *                                                               *
-      *     >>COMPILE<<                                               *
-      *       >>PARM<< TRUNCNBR(*NO);                                 *
-      *       >>PARM<< DBGVIEW(*LIST);                                *
-      *       >>PARM<< TGTRLS(*CURRENT);                              *
-      *     >>END-COMPILE<<                                           *
-      *                                                               *
-      *     >>EXECUTE<<                                               *
-      *                                                               *
-      *     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
-      *                              MODULE(&LI/&OB) +                *
-      *                              ACTGRP(*NEW) +                   *
-      *                              BNDSRVPGM(&LI/BASICS1) +         *
-      *                              TGTRLS(*CURRENT) +               *
-      *                              DETAIL(*BASIC);                  *
-      *                                                               *
-      *   >>END-PRE-COMPILER<<                                        *
-      *===============================================================*
-     H DEBUG
-     H OPTION(*SRCSTMT : *NODEBUGIO)
-     H DECEDIT('0,') DATEDIT(*DMY.)
-     H DATFMT(*ISO )  TIMFMT(*ISO )
-     H EXPROPTS(*RESDECPOS)
-     H EXTBININT(*YES)
-     H BNDDIR('QC2LE')
-      *===============================================================*
-      *
-      * ------------------------------------
-      *  Type Definitions
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  External Prototypes
-      * ------------------------------------
-      /COPY QBASICS1,PBASICS1
-      *
-      * ------------------------------------
-      *  Global Fields
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Global Constants
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Prototypes
-      * ------------------------------------
-      *
-     D PGM_ENTRY_POINT...
-     D                 PR                         extpgm('TEST_R2_01')
-      *
-     D main...
-     D                 PR
-      *
-      *===============================================================*
-      *  Program Entry Point
-      *===============================================================*
-      *
-     D PGM_ENTRY_POINT...
-     D                 PI
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+**FREE
+//===============================================================*
+//    CALL PGM(TEST_R2_01)                                       *
+//===============================================================*
+//   >>PRE-COMPILER<<                                            *
+//                                                               *
+//     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
+//                              SRCFILE(&SL/&SF) +               *
+//                              SRCMBR(&SM);                     *
+//                                                               *
+//     >>COMPILE<<                                               *
+//       >>PARM<< TRUNCNBR(*NO);                                 *
+//       >>PARM<< DBGVIEW(*LIST);                                *
+//       >>PARM<< TGTRLS(*CURRENT);                              *
+//     >>END-COMPILE<<                                           *
+//                                                               *
+//     >>EXECUTE<<                                               *
+//                                                               *
+//     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
+//                              MODULE(&LI/&OB) +                *
+//                              ACTGRP(*NEW) +                   *
+//                              BNDSRVPGM(&LI/BASICS1) +         *
+//                              TGTRLS(*CURRENT) +               *
+//                              DETAIL(*BASIC);                  *
+//                                                               *
+//   >>END-PRE-COMPILER<<                                        *
+//===============================================================*
+ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
+ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
+ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
+ctl-opt EXPROPTS(*RESDECPOS);
+ctl-opt EXTBININT(*YES);
+ctl-opt BNDDIR('QC2LE');
+//===============================================================*
 
-         main();
+// ------------------------------------
+//  Type Definitions
+// ------------------------------------
 
-         *inlr = *on;
+// ------------------------------------
+//  External Prototypes
+// ------------------------------------
+/COPY QBASICS1,PBASICS1
 
-         return;
+// ------------------------------------
+//  Global Fields
+// ------------------------------------
 
-      /END-FREE
-      *
-      *===============================================================*
-      *  Main procedure
-      *===============================================================*
-     P main...
-     P                 B
-      *
-     D main...
-     D                 PI
-      *
-     D fclose...
-     D                 PR            10I 0        extproc('fclose')
-     D  i_pStreamF                     *   value
-      *
-      *  Helper fields
-     D msg             DS                  likeds(msg_t     ) inz
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+// ------------------------------------
+//  Global Constants
+// ------------------------------------
 
-         fClose(*NULL);
-         if   f_errno <> 0;
-            msg = f_newMsg('CPF9897': f_strerror(f_errno));
-            f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-            msg = f_cvtErrnoToMsg(f_errno);
-            f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-         endif;
+// ------------------------------------
+//  Prototypes
+// ------------------------------------
 
-         return;
+dcl-pr PGM_ENTRY_POINT
+       extpgm('TEST_R2_01');
+end-pr;
 
-      /END-FREE
-      *
-     P main...
-     P                 E
-      *
+dcl-pr main;
+end-pr;
+
+//===============================================================*
+//  Program Entry Point
+//===============================================================*
+
+dcl-pi PGM_ENTRY_POINT;
+end-pi;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+main();
+
+*inlr = *on;
+
+return;
+
+
+//===============================================================*
+//  Main procedure
+//===============================================================*
+dcl-proc main;
+
+dcl-pi main;
+end-pi;
+
+dcl-pr fclose
+       int(10) extproc('fclose');
+  i_pStreamF      pointer value;
+end-pr;
+
+//  Helper fields
+dcl-ds msg likeds(msg_t     ) inz;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+fClose(*NULL);
+if   f_errno <> 0;
+   msg = f_newMsg('CPF9897': f_strerror(f_errno));
+   f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+   msg = f_cvtErrnoToMsg(f_errno);
+   f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+endif;
+
+return;
+
+
+end-proc main;
+

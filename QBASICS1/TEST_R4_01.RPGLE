@@ -1,147 +1,142 @@
-      *===============================================================*
-      *    CALL PGM(TEST_R4_01) PARM('1')                             *
-      *===============================================================*
-      *   >>PRE-COMPILER<<                                            *
-      *                                                               *
-      *     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
-      *                              SRCFILE(&SL/&SF) +               *
-      *                              SRCMBR(&SM);                     *
-      *                                                               *
-      *     >>COMPILE<<                                               *
-      *       >>PARM<< TRUNCNBR(*NO);                                 *
-      *       >>PARM<< DBGVIEW(*LIST);                                *
-      *       >>PARM<< TGTRLS(*CURRENT);                              *
-      *     >>END-COMPILE<<                                           *
-      *                                                               *
-      *     >>EXECUTE<<                                               *
-      *                                                               *
-      *     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
-      *                              MODULE(&LI/&OB) +                *
-      *                              ACTGRP(*NEW) +                   *
-      *                              BNDSRVPGM(&LI/BASICS1) +         *
-      *                              TGTRLS(*CURRENT) +               *
-      *                              DETAIL(*BASIC);                  *
-      *                                                               *
-      *   >>END-PRE-COMPILER<<                                        *
-      *===============================================================*
-     H DEBUG
-     H OPTION(*SRCSTMT : *NODEBUGIO)
-     H DECEDIT('0,') DATEDIT(*DMY.)
-     H DATFMT(*ISO )  TIMFMT(*ISO )
-     H EXPROPTS(*RESDECPOS)
-     H EXTBININT(*YES)
-      *===============================================================*
-      *
-      * ------------------------------------
-      *  Type Definitions
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  External Prototypes
-      * ------------------------------------
-      /COPY QBASICS1,PBASICS1
-      *
-      * ------------------------------------
-      *  Global Fields
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Global Constants
-      * ------------------------------------
-      *
-      * ------------------------------------
-      *  Prototypes
-      * ------------------------------------
-      *
-     D PGM_ENTRY_POINT...
-     D                 PR                         extpgm('TEST_R4_01')
-     D  gi_boolean                    1A   const  options(*nopass)
-      *
-     D main...
-     D                 PR
-     D  i_boolean                      N   const
-      *
-      *===============================================================*
-      *  Program Entry Point
-      *===============================================================*
-      *
-     D PGM_ENTRY_POINT...
-     D                 PI
-     D  gi_boolean                    1A   const  options(*nopass)
-      *
-      *  Local helper fields
-     D msg             DS                  likeds(msg_t     ) inz
-     D procedure       S            256A   inz
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+**FREE
+//===============================================================*
+//    CALL PGM(TEST_R4_01) PARM('1')                             *
+//===============================================================*
+//   >>PRE-COMPILER<<                                            *
+//                                                               *
+//     >>CRTCMD<<  CRTRPGMOD    MODULE(&LI/&OB) +                *
+//                              SRCFILE(&SL/&SF) +               *
+//                              SRCMBR(&SM);                     *
+//                                                               *
+//     >>COMPILE<<                                               *
+//       >>PARM<< TRUNCNBR(*NO);                                 *
+//       >>PARM<< DBGVIEW(*LIST);                                *
+//       >>PARM<< TGTRLS(*CURRENT);                              *
+//     >>END-COMPILE<<                                           *
+//                                                               *
+//     >>EXECUTE<<                                               *
+//                                                               *
+//     >>CMD<<     CRTPGM       PGM(&LI/&OB) +                   *
+//                              MODULE(&LI/&OB) +                *
+//                              ACTGRP(*NEW) +                   *
+//                              BNDSRVPGM(&LI/BASICS1) +         *
+//                              TGTRLS(*CURRENT) +               *
+//                              DETAIL(*BASIC);                  *
+//                                                               *
+//   >>END-PRE-COMPILER<<                                        *
+//===============================================================*
+ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
+ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
+ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
+ctl-opt EXPROPTS(*RESDECPOS);
+ctl-opt EXTBININT(*YES);
+//===============================================================*
 
-         procedure = f_this();
-         msg = f_newMsg(cMSG_ID_NONE: '=> ' + '*N/'
-                                            + '*N' + '.'
-                                            + %trimR(procedure));
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+// ------------------------------------
+//  Type Definitions
+// ------------------------------------
 
-         if (%parms() >= %parmNum(gi_boolean));
-            main(gi_boolean);
-         else;
-            main(*on);
-         endif;
+// ------------------------------------
+//  External Prototypes
+// ------------------------------------
+/COPY QBASICS1,PBASICS1
 
-         *inlr = *on;
+// ------------------------------------
+//  Global Fields
+// ------------------------------------
 
-         return;
+// ------------------------------------
+//  Global Constants
+// ------------------------------------
 
-      /END-FREE
-      *
-      *===============================================================*
-      *  Main procedure
-      *===============================================================*
-     P main...
-     P                 B
-      *
-     D main...
-     D                 PI
-     D  i_boolean                      N   const
-      *
-      *  Local helper fields
-     D msg             DS                  likeds(msg_t     ) inz
-     D procedure       S            256A   inz
-     D module          S             10A   inz
-     D program         S             10A   inz
-      * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      /FREE
+// ------------------------------------
+//  Prototypes
+// ------------------------------------
 
-         procedure = f_this();
-         msg = f_newMsg(cMSG_ID_NONE: '=> ' + '*N/'
-                                            + '*N' + '.'
-                                            + %trimR(procedure));
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+dcl-pr PGM_ENTRY_POINT
+       extpgm('TEST_R4_01');
+  gi_boolean      char(1) const  options(*nopass);
+end-pr;
 
-         procedure = f_this(module);
-         msg = f_newMsg(cMSG_ID_NONE: '=> ' + '*N/'
-                                            + %trimR(module) + '.'
-                                            + %trimR(procedure));
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+dcl-pr main;
+  i_boolean       ind const;
+end-pr;
 
-         procedure = f_this(module: program);
-         msg = f_newMsg(cMSG_ID_NONE: '=> ' + %trimR(program) + '/'
-                                            + %trimR(module) + '.'
-                                            + %trimR(procedure));
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+//===============================================================*
+//  Program Entry Point
+//===============================================================*
 
-         procedure = f_caller(module: program);
-         msg = f_newMsg(cMSG_ID_NONE: '=> ' + %trimR(program) + '/'
-                                            + %trimR(module) + '.'
-                                            + %trimR(procedure));
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+dcl-pi PGM_ENTRY_POINT;
+  gi_boolean      char(1) const  options(*nopass);
+end-pi;
 
-         p_assert(i_boolean                        :                                        //RADDAT
-                  'Error detected by p_assert()'   );
+//  Local helper fields
+dcl-ds msg likeds(msg_t     ) inz;
+dcl-s procedure       char(256) inz;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-         return;
+procedure = f_this();
+msg = f_newMsg(cMSG_ID_NONE: '=> ' + '*N/'
+                                   + '*N' + '.'
+                                   + %trimR(procedure));
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-      /END-FREE
-      *
-     P main...
-     P                 E
-      *
+if (%parms() >= %parmNum(gi_boolean));
+   main(gi_boolean);
+else;
+   main(*on);
+endif;
+
+*inlr = *on;
+
+return;
+
+
+//===============================================================*
+//  Main procedure
+//===============================================================*
+dcl-proc main;
+
+dcl-pi main;
+  i_boolean       ind const;
+end-pi;
+
+//  Local helper fields
+dcl-ds msg likeds(msg_t     ) inz;
+dcl-s procedure       char(256) inz;
+dcl-s module          char(10) inz;
+dcl-s program         char(10) inz;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+procedure = f_this();
+msg = f_newMsg(cMSG_ID_NONE: '=> ' + '*N/'
+                                   + '*N' + '.'
+                                   + %trimR(procedure));
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+procedure = f_this(module);
+msg = f_newMsg(cMSG_ID_NONE: '=> ' + '*N/'
+                                   + %trimR(module) + '.'
+                                   + %trimR(procedure));
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+procedure = f_this(module: program);
+msg = f_newMsg(cMSG_ID_NONE: '=> ' + %trimR(program) + '/'
+                                   + %trimR(module) + '.'
+                                   + %trimR(procedure));
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+procedure = f_caller(module: program);
+msg = f_newMsg(cMSG_ID_NONE: '=> ' + %trimR(program) + '/'
+                                   + %trimR(module) + '.'
+                                   + %trimR(procedure));
+f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+
+p_assert(i_boolean                        :                                          //RADDAT
+         'Error detected by p_assert()'   );
+
+return;
+
+
+end-proc main;
+

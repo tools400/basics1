@@ -1,221 +1,243 @@
-      /IF NOT DEFINED(BASICS1RG)
-      /DEFINE BASICS1RG
-      *
-     D BasicProperties_handle_t...
-     D                 S               *                      based(pDummy)
-      *
-     D BasicProperties_decVal_t...
-     D                 S             31P10                    based(pDummy)
-      *
-      *  Creates a new BasicProperties.
-     D BasicProperties_new...
-     D                 PR                         like(BasicProperties_handle_t)
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_new+
-     D                                     ')
-     D  i_increment                  10U 0 const  options(*nopass: *omit)
-     D  i_heapID                     10I 0 const  options(*nopass: *omit)
-      *
-      *  Clones a given BasicProperties.
-     D BasicProperties_clone...
-     D                 PR                         like(BasicProperties_handle_t)
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_clone+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-      *
-      *  Load properties from a given physical file member.
-     D BasicProperties_loadFromMember...
-     D                 PR            10I 0
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_loadFromMember+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-     D  i_file                       10A   const  varying
-     D  i_lib                        10A   const  varying
-     D                                            options(*nopass: *omit)
-     D  i_mbr                        10A   const  varying
-     D                                            options(*nopass: *omit)
-      *
-      *  Load properties from a given stream file.
-     D BasicProperties_loadFromStmf...
-     D                 PR            10I 0
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_loadFromStmf+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-     D  i_stmf                     5000A   const  varying options(*varsize)
-      *
-      *  Removes the entry that is associated to the specified key.
-     D BasicProperties_remove...
-     D                 PR            10I 0
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_remove+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-     D  i_key                              const  like(BasicMap_key_t    )
-     D                                            options(*varsize)
-      *
-      *  Returns true if the list of properties contains a entry matching
-      *  the specified key value.
-     D BasicProperties_containsKey...
-     D                 PR              N
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_containsKey+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-     D  i_key                              const  like(BasicMap_key_t          )
-     D                                            options(*varsize)
-      *
-      *  Returns the string that is associated to the specified key.
-     D BasicProperties_getString...
-     D                 PR          4096A          varying
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_getString+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-     D  i_key                              const  like(BasicMap_key_t          )
-     D                                            options(*varsize)
-     D  i_default                  4096A   const  varying
-     D                                            options(*nopass: *varsize)
-      *
-      *  Returns the integer value that is associated to the specified key.
-     D BasicProperties_getInteger...
-     D                 PR            10I 0
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_getInteger+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-     D  i_key                              const  like(BasicMap_key_t          )
-     D                                            options(*varsize)
-     D  i_default                    10I 0 const  options(*nopass)
-      *
-      *  Returns the boolean value that is associated to the specified key.
-     D BasicProperties_getBoolean...
-     D                 PR              N
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_getBoolean+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-     D  i_key                              const  like(BasicMap_key_t          )
-     D                                            options(*varsize)
-     D  i_default                      N   const  options(*nopass)
-      *
-      *  Returns the decimal value that is associated to the specified key.
-     D BasicProperties_getDecimal...
-     D                 PR                         like(BasicProperties_decVal_t)
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_getDecimal+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-     D  i_key                              const  like(BasicMap_key_t          )
-     D                                            options(*varsize)
-     D  i_default                          const  like(BasicProperties_decVal_t)
-     D                                            options(*nopass)
-      *
-      *  Associates the specified string value to a given key.
-     D BasicProperties_putString...
-     D                 PR            10I 0
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_putString+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-     D  i_key                              const  like(BasicMap_key_t          )
-     D                                            options(*varsize)
-     D  i_string                   4096A   const  varying
-     D                                            options(*varsize)
-      *
-      *  Associates the specified integer value to a given key.
-     D BasicProperties_putInteger...
-     D                 PR            10I 0
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_putInteger+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-     D  i_key                              const  like(BasicMap_key_t          )
-     D                                            options(*varsize)
-     D  i_integer                    10I 0 const
-      *
-      *  Associates the specified boolean value to a given key.
-     D BasicProperties_putBoolean...
-     D                 PR            10I 0
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_putBoolean+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-     D  i_key                              const  like(BasicMap_key_t          )
-     D                                            options(*varsize)
-     D  i_boolean                      N   const
-      *
-      *  Associates the specified decimal value to a given key.
-     D BasicProperties_putDecimal...
-     D                 PR                         like(BasicProperties_decVal_t)
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_putDecimal+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-     D  i_key                              const  like(BasicMap_key_t          )
-     D                                            options(*varsize)
-     D  i_decimal                          const  like(BasicProperties_decVal_t)
-      *
-      *  Returns the number of key-value mappings in this properties list.
-     D BasicProperties_getNumE...
-     D                 PR            10I 0
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_getNumE+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-      *
-      *  Returns the heap ID of a given BasicProperties.
-     D BasicProperties_getHeapID...
-     D                 PR            10I 0
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_getHeapID+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-      *
-      *  Removes all entries from a given properties list.
-     D BasicProperties_clear...
-     D                 PR            10I 0
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_clear+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-      *
-      *  Deletes a given BasicProperties.
-     D BasicProperties_delete...
-     D                 PR            10I 0
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_delete+
-     D                                     ')
-     D  io_pProperties...
-     D                                            like(BasicProperties_handle_t)
-      *
-      *  Returns a BasicProperties NULL handle.
-     D BasicProperties_null...
-     D                 PR                         like(BasicProperties_handle_t)
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_null+
-     D                                     ')
-      *
-      *  Checks a given BasicProperties handle for a NULL value.
-     D BasicProperties_isNull...
-     D                 PR              N
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_isNull+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-      *
-      *  Returns the list of key values from a given properties list.
-     D BasicProperties_newKeySet...
-     D                 PR                         like(BasicKeySet_handle_t)
-     D                                     extproc('BASICS1RG+
-     D                                     _BasicProperties_newKeySet+
-     D                                     ')
-     D  i_pProperties                      const  like(BasicProperties_handle_t)
-      *
-      * -----------------------------------------
-      *  Imported prototypes
-      * -----------------------------------------
-      *
-      /ENDIF
+**FREE
+/IF NOT DEFINED(BASICS1RG)
+/DEFINE BASICS1RG
+
+dcl-s BasicProperties_handle_t
+      pointer based(pDummy);
+
+dcl-s BasicProperties_decVal_t
+      packed(31:10) based(pDummy);
+
+//  Creates a new BasicProperties.
+dcl-pr BasicProperties_new
+       like(BasicProperties_handle_t)
+       extproc('BASICS1RG+
+       _BasicProperties_new+
+       ');
+  i_increment     uns(10) const  options(*nopass: *omit);
+  i_heapID        int(10) const  options(*nopass: *omit);
+end-pr;
+
+//  Clones a given BasicProperties.
+dcl-pr BasicProperties_clone
+       like(BasicProperties_handle_t)
+       extproc('BASICS1RG+
+       _BasicProperties_clone+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+end-pr;
+
+//  Load properties from a given physical file member.
+dcl-pr BasicProperties_loadFromMember
+       int(10)
+       extproc('BASICS1RG+
+       _BasicProperties_loadFromMember+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+  i_file          varchar(10) const;
+  i_lib           varchar(10) const
+       options(*nopass: *omit);
+  i_mbr           varchar(10) const
+       options(*nopass: *omit);
+end-pr;
+
+//  Load properties from a given stream file.
+dcl-pr BasicProperties_loadFromStmf
+       int(10)
+       extproc('BASICS1RG+
+       _BasicProperties_loadFromStmf+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+  i_stmf          varchar(5000) const   options(*varsize);
+end-pr;
+
+//  Removes the entry that is associated to the specified key.
+dcl-pr BasicProperties_remove
+       int(10)
+       extproc('BASICS1RG+
+       _BasicProperties_remove+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+  i_key           const  like(BasicMap_key_t    )
+       options(*varsize);
+end-pr;
+
+//  Returns true if the list of properties contains a entry matching
+//  the specified key value.
+dcl-pr BasicProperties_containsKey
+       ind
+       extproc('BASICS1RG+
+       _BasicProperties_containsKey+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+  i_key           const  like(BasicMap_key_t          )
+       options(*varsize);
+end-pr;
+
+//  Returns the string that is associated to the specified key.
+dcl-pr BasicProperties_getString
+       varchar(4096)
+       extproc('BASICS1RG+
+       _BasicProperties_getString+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+  i_key           const  like(BasicMap_key_t          )
+       options(*varsize);
+  i_default       varchar(4096) const
+       options(*nopass: *varsize);
+end-pr;
+
+//  Returns the integer value that is associated to the specified key.
+dcl-pr BasicProperties_getInteger
+       int(10)
+       extproc('BASICS1RG+
+       _BasicProperties_getInteger+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+  i_key           const  like(BasicMap_key_t          )
+       options(*varsize);
+  i_default       int(10) const  options(*nopass);
+end-pr;
+
+//  Returns the boolean value that is associated to the specified key.
+dcl-pr BasicProperties_getBoolean
+       ind
+       extproc('BASICS1RG+
+       _BasicProperties_getBoolean+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+  i_key           const  like(BasicMap_key_t          )
+       options(*varsize);
+  i_default       ind const  options(*nopass);
+end-pr;
+
+//  Returns the decimal value that is associated to the specified key.
+dcl-pr BasicProperties_getDecimal
+       like(BasicProperties_decVal_t)
+       extproc('BASICS1RG+
+       _BasicProperties_getDecimal+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+  i_key           const  like(BasicMap_key_t          )
+       options(*varsize);
+  i_default       const  like(BasicProperties_decVal_t)
+       options(*nopass);
+end-pr;
+
+//  Associates the specified string value to a given key.
+dcl-pr BasicProperties_putString
+       int(10)
+       extproc('BASICS1RG+
+       _BasicProperties_putString+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+  i_key           const  like(BasicMap_key_t          )
+       options(*varsize);
+  i_string        varchar(4096) const
+       options(*varsize);
+end-pr;
+
+//  Associates the specified integer value to a given key.
+dcl-pr BasicProperties_putInteger
+       int(10)
+       extproc('BASICS1RG+
+       _BasicProperties_putInteger+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+  i_key           const  like(BasicMap_key_t          )
+       options(*varsize);
+  i_integer       int(10) const;
+end-pr;
+
+//  Associates the specified boolean value to a given key.
+dcl-pr BasicProperties_putBoolean
+       int(10)
+       extproc('BASICS1RG+
+       _BasicProperties_putBoolean+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+  i_key           const  like(BasicMap_key_t          )
+       options(*varsize);
+  i_boolean       ind const;
+end-pr;
+
+//  Associates the specified decimal value to a given key.
+dcl-pr BasicProperties_putDecimal
+       like(BasicProperties_decVal_t)
+       extproc('BASICS1RG+
+       _BasicProperties_putDecimal+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+  i_key           const  like(BasicMap_key_t          )
+       options(*varsize);
+  i_decimal       const  like(BasicProperties_decVal_t);
+end-pr;
+
+//  Returns the number of key-value mappings in this properties list.
+dcl-pr BasicProperties_getNumE
+       int(10)
+       extproc('BASICS1RG+
+       _BasicProperties_getNumE+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+end-pr;
+
+//  Returns the heap ID of a given BasicProperties.
+dcl-pr BasicProperties_getHeapID
+       int(10)
+       extproc('BASICS1RG+
+       _BasicProperties_getHeapID+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+end-pr;
+
+//  Removes all entries from a given properties list.
+dcl-pr BasicProperties_clear
+       int(10)
+       extproc('BASICS1RG+
+       _BasicProperties_clear+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+end-pr;
+
+//  Deletes a given BasicProperties.
+dcl-pr BasicProperties_delete
+       int(10)
+       extproc('BASICS1RG+
+       _BasicProperties_delete+
+       ');
+  io_pProperties
+       like(BasicProperties_handle_t);
+end-pr;
+
+//  Returns a BasicProperties NULL handle.
+dcl-pr BasicProperties_null
+       like(BasicProperties_handle_t)
+       extproc('BASICS1RG+
+       _BasicProperties_null+
+       ');
+end-pr;
+
+//  Checks a given BasicProperties handle for a NULL value.
+dcl-pr BasicProperties_isNull
+       ind
+       extproc('BASICS1RG+
+       _BasicProperties_isNull+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+end-pr;
+
+//  Returns the list of key values from a given properties list.
+dcl-pr BasicProperties_newKeySet
+       like(BasicKeySet_handle_t)
+       extproc('BASICS1RG+
+       _BasicProperties_newKeySet+
+       ');
+  i_pProperties   const  like(BasicProperties_handle_t);
+end-pr;
+
+// -----------------------------------------
+//  Imported prototypes
+// -----------------------------------------
+
+/ENDIF
