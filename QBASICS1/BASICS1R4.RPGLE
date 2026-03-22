@@ -18,7 +18,7 @@
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Änderung                                 *
+      *  Datum       Name          Ã„nderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  12.07.2006  Th.Raddatz    Changed f_caller() and f_this() to       *
       *                            return the statement ID as the next      *

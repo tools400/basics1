@@ -18,7 +18,7 @@
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Änderung                                 *
+      *  Datum       Name          Ã„nderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  26.01.2005  Th.Raddatz    Changed f_val to use self-written code   *
       *                            instead of MI function cvtefnd().        *
@@ -662,7 +662,7 @@
       *  Parameter positions
      D p_startPos      C                   const(4)
       *
-      *  Standardwerte für nicht übergebene Parameter
+      *  Standardwerte fï¿½r nicht ï¿½bergebene Parameter
      D startPos        S                   like(i_startPos) inz
       *
       *  Local fields

@@ -18,7 +18,7 @@
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Änderung                                 *
+      *  Datum       Name          Ã„nderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  10.10.2006  Th.Raddatz    Changed f_getEnvVarByIndex to respect    *
       *                            the length of the environment variable.  *

@@ -18,7 +18,7 @@
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Änderung                                 *
+      *  Datum       Name          Ã„nderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  17.12.2008  Th.Raddatz    Added f_getObjLib().                     *
       *                            Changed parameter i_text of procedure    *

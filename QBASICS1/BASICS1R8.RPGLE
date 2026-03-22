@@ -18,7 +18,7 @@
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Änderung                                 *
+      *  Datum       Name          Ã„nderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  27.04.2005  Th.Raddatz    Replaced handle_t.value with             *
       *                            handle_t.pUserHandle to dynamically      *

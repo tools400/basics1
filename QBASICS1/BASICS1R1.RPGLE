@@ -18,7 +18,7 @@
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Änderung                                 *
+      *  Datum       Name          Ã„nderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  26.01.2005  Th.Raddatz    Removed Parameter i_rtnCtrlChr from      *
       *                            f_rtvMsgText().                          *

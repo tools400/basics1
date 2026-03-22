@@ -18,7 +18,7 @@
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Änderung                                 *
+      *  Datum       Name          Ã„nderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *                                                                     *
       *=====================================================================*
@@ -1144,7 +1144,7 @@
      D p_mbr           C                   const(4)
      D p_rc            C                   const(5)
       *
-      *  Felder für optionale Parameter
+      *  Felder fï¿½r optionale Parameter
      D file            S                   like(o_file   ) inz
      D lib             S                   like(o_lib    ) inz
      D mbr             S                   like(o_mbr    ) inz

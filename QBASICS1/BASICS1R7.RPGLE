@@ -18,7 +18,7 @@
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Änderung                                 *
+      *  Datum       Name          Ã„nderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *   4.02.2005  Th.Raddatz    Added f_genUUID() to generate a          *
       *                            Universal Unique Identifier (UUID).      *

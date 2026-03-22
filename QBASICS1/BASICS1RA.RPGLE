@@ -18,7 +18,7 @@
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Änderung                                 *
+      *  Datum       Name          Ã„nderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  24.08.2006  Th.Raddatz    Changed BasicList_get() to initialize    *
       *                            only that bytes of the return buffer     *

@@ -18,7 +18,7 @@
       *=====================================================================*
       *  History:                                                           *
       *                                                                     *
-      *  Datum       Name          Änderung                                 *
+      *  Datum       Name          Ã„nderung                                 *
       *  ----------  ------------  ---------------------------------------  *
       *  08.02.2006  Th.Raddatz    Changed BASICS1R2 to be compatible to    *
       *                            V5R1M0.                                  *
