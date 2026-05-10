@@ -1,4 +1,4 @@
-**FREE
+**free
 //===============================================================*
 //   >>PRE-COMPILER<<                                            *
 //                                                               *
@@ -23,11 +23,11 @@
 //                                                               *
 //   >>END-PRE-COMPILER<<                                        *
 //===============================================================*
-ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
-ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
-ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
-ctl-opt EXPROPTS(*RESDECPOS);
-ctl-opt EXTBININT(*YES);
+ctl-opt debug option(*srcstmt: *nodebugio);
+ctl-opt decedit('0,') datedit(*DMY.);
+ctl-opt datfmt(*iso) timfmt(*iso);
+ctl-opt expropts(*resdecpos);
+ctl-opt extbinint(*yes);
 //===============================================================*
 
 // ------------------------------------
@@ -37,7 +37,7 @@ ctl-opt EXTBININT(*YES);
 // ------------------------------------
 //  External Prototypes
 // ------------------------------------
-/COPY QBASICS1,PBASICS1
+/copy QBASICS1,PBASICS1
 
 // ------------------------------------
 //  Global Fields
@@ -51,8 +51,7 @@ ctl-opt EXTBININT(*YES);
 //  Prototypes
 // ------------------------------------
 
-dcl-pr PGM_ENTRY_POINT
-       extpgm('TEST_F000');
+dcl-pr PGM_ENTRY_POINT extpgm('TEST_F000');
 end-pr;
 
 dcl-pr main;
@@ -61,7 +60,6 @@ end-pr;
 //===============================================================*
 //  Program Entry Point
 //===============================================================*
-
 dcl-pi PGM_ENTRY_POINT;
 end-pi;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -77,16 +75,14 @@ return;
 //  Main procedure
 //===============================================================*
 dcl-proc main;
+  dcl-pi *n;
+  end-pi;
 
-dcl-pi main;
-end-pi;
-
-//  Helper fields
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-return;
+  return;
 
 
 end-proc main;
-

@@ -1,4 +1,4 @@
-**FREE
+**free
 //===============================================================*
 //    CALL PGM(TEST_RB_01)                                       *
 //===============================================================*
@@ -26,11 +26,11 @@
 //                                                               *
 //   >>END-PRE-COMPILER<<                                        *
 //===============================================================*
-ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
-ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
-ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
-ctl-opt EXPROPTS(*RESDECPOS);
-ctl-opt EXTBININT(*YES);
+ctl-opt debug option(*srcstmt: *nodebugio);
+ctl-opt decedit('0,') datedit(*DMY.);
+ctl-opt datfmt(*iso) timfmt(*iso);
+ctl-opt expropts(*resdecpos);
+ctl-opt extbinint(*yes);
 //===============================================================*
 
 // ------------------------------------
@@ -40,7 +40,7 @@ ctl-opt EXTBININT(*YES);
 // ------------------------------------
 //  External Prototypes
 // ------------------------------------
-/COPY QBASICS1,PBASICS1
+/copy QBASICS1,PBASICS1
 
 // ------------------------------------
 //  Global Fields
@@ -54,8 +54,7 @@ ctl-opt EXTBININT(*YES);
 //  Prototypes
 // ------------------------------------
 
-dcl-pr PGM_ENTRY_POINT
-       extpgm('TEST_RB_01');
+dcl-pr PGM_ENTRY_POINT extpgm('TEST_RB_01');
 end-pr;
 
 dcl-pr main;
@@ -64,7 +63,6 @@ end-pr;
 //===============================================================*
 //  Program Entry Point
 //===============================================================*
-
 dcl-pi PGM_ENTRY_POINT;
 end-pi;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -80,124 +78,122 @@ return;
 //  Main procedure
 //===============================================================*
 dcl-proc main;
+  dcl-pi *n;
+  end-pi;
 
-dcl-pi main;
-end-pi;
+  //  Helper fields
+  dcl-s x int(10) inz;
+  dcl-s hStack like(BasicStack_handle_t) inz;
+  dcl-s nbrOfElm int(10) inz;
+  dcl-s aSize int(10) inz;
+  dcl-s aField char(20) inz;
+  dcl-s aField1 char(20) inz;
+  dcl-s aField2 like(aField1) based(paField2);
+  dcl-s aPointer pointer inz;
+  dcl-ds anArray dim(10) qualified;
+    size     like(aSize) inz;
+    trimSize like(aSize) inz;
+    data     like(aField1) inz;
+  end-ds;
 
-//  Helper fields
-dcl-s x               int(10) inz;
-dcl-s hStack          like(BasicStack_handle_t) inz;
-dcl-s nbrOfElm        int(10) inz;
-dcl-s aSize           int(10) inz;
-dcl-s aField          char(20) inz;
-dcl-s aField1         char(20) inz;
-dcl-s aField2         like(aField1      )  based(paField2);
-dcl-s aPointer        pointer inz;
-dcl-ds anArray dim(10)   qualified;
-  size            like(aSize        )       inz;
-  trimSize        like(aSize        )       inz;
-  data            like(aField1      )       inz;
-end-ds;
+  dcl-ds msg likeds(msg_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-dcl-ds msg likeds(msg_t      )  inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Initialize Array
+  anArray( 1).data = 'Donald Duck';
+  anArray( 2).data = 'Dagobert Duck';
+  anArray( 3).data = 'Tick';
+  anArray( 4).data = 'Trick';
+  anArray( 5).data = 'Track';
+  anArray( 6).data = 'Daisy';
+  anArray( 7).data = 'Klaas Klever';
+  anArray( 8).data = 'Daniel Dsentrieb';
+  anArray( 9).data = 'Micky Maus';
+  anArray(10).data = 'Goofy';
 
-// Initialize Array
-anArray( 1).data = 'Donald Duck';
-anArray( 2).data = 'Dagobert Duck';
-anArray( 3).data = 'Tick';
-anArray( 4).data = 'Trick';
-anArray( 5).data = 'Track';
-anArray( 6).data = 'Daisy';
-anArray( 7).data = 'Klaas Klever';
-anArray( 8).data = 'Daniel Dsentrieb';
-anArray( 9).data = 'Micky Maus';
-anArray(10).data = 'Goofy';
+  // Set size of trimmed field data
+  for x = 1 to %elem(anArray);
+    anArray(x).size     = %len(anArray(x).data);
+    anArray(x).trimSize = %len(%trimR(anArray(x).data));
+    p_assert(anArray(x).size <> anArray(x).trimSize
+             : 'Size and trimmed size must be different');
+  endfor;
 
-// Set size of trimmed field data
-for x = 1 to %elem(anArray);
-   anArray(x).size     = %len(anArray(x).data);
-   anArray(x).trimSize = %len(%trimR(anArray(x).data));
-   p_assert(anArray(x).size <> anArray(x).trimSize
-            : 'Size and trimmed size must be different');
-endfor;
+  // Create BasicStack
+  hStack = BasicStack_new();
 
-// Create BasicStack
-hStack = BasicStack_new();
+  // Add elements to stack
+  for x = 1 to %elem(anArray);
+    BasicStack_push(hStack: anArray(x).data);
+  endfor;
 
-// Add elements to stack
-for x = 1 to %elem(anArray);
-   BasicStack_push(hStack: anArray(x).data);
-endfor;
+  // Verify number of elements on stack
+  nbrOfElm = BasicStack_getNumE(hStack);
+  p_assert(nbrOfElm = %elem(anArray)
+           : 'Number of elements on stack does not match expected +
+              number of ' + %char(%elem(anArray)));
 
-// Verify number of elements on stack
-nbrOfElm = BasicStack_getNumE(hStack);
-p_assert(nbrOfElm = %elem(anArray)
-         : 'Number of elements on stack does not match expected +
-            number of ' + %char(%elem(anArray)));
+  // Remove elements from stack and verify element data
+  for x = %elem(anArray) downto 1;
+    aPointer = BasicStack_pop(hStack: %addr(aField1): %size(aField1));
+    p_assert(%subst(aField1: 1: anArray(x).size) =
+             %subst(anArray(x).data : 1: anArray(x).trimSize)
+             : 'Entry data does not match');
+  endfor;
 
-// Remove elements from stack and verify element data
-for x = %elem(anArray) downto 1;
-   aPointer = BasicStack_pop(hStack: %addr(aField1): %size(aField1));
-   p_assert(%subst(aField1: 1: anArray(x).size) =
-            %subst(anArray(x).data : 1: anArray(x).trimSize)
-            : 'Entry data does not match');
-endfor;
+  // Add elements to stack
+  for x = 1 to %elem(anArray);
+    BasicStack_push(hStack: anArray(x).data);
+  endfor;
 
-// Add elements to stack
-for x = 1 to %elem(anArray);
-   BasicStack_push(hStack: anArray(x).data);
-endfor;
+  // Remove elements from stack and verify element data
+  // (reallocate memory for aField2)
+  for x = %elem(anArray) downto 1;
+    paField2 = %alloc(%size(aField2));
+    aField2  = *all'=';
+    aSize    = BasicStack_getSize(hStack);
+    aPointer = BasicStack_pop(hStack: paField2: aSize);
+    p_assert(%subst(aField2: 1: anArray(x).size) =
+             %subst(anArray(x).data : 1: anArray(x).trimSize)
+             : 'Entry data does not match');
+  endfor;
 
-// Remove elements from stack and verify element data
-// (reallocate memory for aField2)
-for x = %elem(anArray) downto 1;
-   paField2 = %alloc(%size(aField2));
-   aField2  = *all'=';
-   aSize    = BasicStack_getSize(hStack);
-   aPointer = BasicStack_pop(hStack: paField2: aSize);
-   p_assert(%subst(aField2: 1: anArray(x).size) =
-            %subst(anArray(x).data : 1: anArray(x).trimSize)
-            : 'Entry data does not match');
-endfor;
+  // Verify number of elements on stack
+  nbrOfElm = BasicStack_getNumE(hStack);
+  p_assert(nbrOfElm = 0
+           : 'Number of elements on stack does not match expected +
+              number of ' + %char(%elem(anArray)));
 
-// Verify number of elements on stack
-nbrOfElm = BasicStack_getNumE(hStack);
-p_assert(nbrOfElm = 0
-         : 'Number of elements on stack does not match expected +
-            number of ' + %char(%elem(anArray)));
+  // Delete stack
+  BasicStack_delete(hStack);
 
-// Delete stack
-BasicStack_delete(hStack);
+  // Create a fresh BasicStack
+  hStack = BasicStack_new();
 
-// Create a fresh BasicStack
-hStack = BasicStack_new();
+  // Check auto-extension of stack
+  aField = 'auto-extension check';
+  for x = 1 to 1000;
+    BasicStack_push(hStack: %addr(aField): %size(aField));
+  endfor;
 
-// Check auto-extension of stack
-aField = 'auto-extension check';
-for x = 1 to 1000;
-   BasicStack_push(hStack: %addr(aField): %size(aField));
-endfor;
+  x = 0;
+  dow (BasicStack_getNumE(hStack) > 0);
+    BasicStack_pop(hStack: %addr(aField): %size(aField));
+    x = x + 1;
+  enddo;
 
-x = 0;
-dow (BasicStack_getNumE(hStack) > 0);
-   BasicStack_pop(hStack: %addr(aField): %size(aField));
-   x = x + 1;
-enddo;
+  p_assert(x = 1000
+           : 'Did not remove expected number of elements from stack');
+  p_assert(BasicStack_getNumE(hStack) = 0
+           : 'Stack should have been empty');
 
-p_assert(x = 1000
-         : 'Did not remove expected number of elements from stack');
-p_assert(BasicStack_getNumE(hStack) = 0
-         : 'Stack should have been empty');
+  // Delete stack
+  BasicStack_delete(hStack);
 
-// Delete stack
-BasicStack_delete(hStack);
+  p_assert(hStack = BasicStack_null()
+           : 'Stack handle not set to NULL');
 
-p_assert(hStack = BasicStack_null()
-         : 'Stack handle not set to NULL');
-
-return;
+  return;
 
 
 end-proc main;
-

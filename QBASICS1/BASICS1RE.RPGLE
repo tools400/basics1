@@ -1,4 +1,4 @@
-**FREE
+**free
 // -------------------------------------------------------------------
 //  BASICS1RC  - SrvPgm: Basic Routines - Date and Time
 // -------------------------------------------------------------------
@@ -40,27 +40,27 @@
 //
 //   >>END-PRE-COMPILER<<
 // -------------------------------------------------------------------
-ctl-opt NOMAIN;
+ctl-opt nomain;
 //  Standard H-Specs
-/COPY QBASICS1,H_SPEC
-/COPY QBASICS1,COPYRIGHT
+/copy QBASICS1,H_SPEC
+/copy QBASICS1,COPYRIGHT
 //=====================================================================*
 
 // -----------------------------------------
 //  Exported functions
 // -----------------------------------------
-/COPY QBASICS1,PBASICS1RE
+/copy QBASICS1,PBASICS1RE
 
 // -----------------------------------------
 //  Reference fields
 // -----------------------------------------
-/COPY QBASICS1,BASICS1R0
+/copy QBASICS1,BASICS1R0
 
 // -----------------------------------------
 //  Imported Prototypes
 // -----------------------------------------
-/COPY QBASICS1,QWCCVTDT                      Convert Date and Time Format (QWCCVTDT) API
-/COPY QBASICS1,PBASICS1R2                    API Error Handling
+/copy QBASICS1,QWCCVTDT                      Convert Date and Time Format (QWCCVTDT) API
+/copy QBASICS1,PBASICS1R2                    API Error Handling
 
 // -----------------------------------------
 //  Private prototypes
@@ -70,7 +70,7 @@ ctl-opt NOMAIN;
 //  Global constants
 // -----------------------------------------
 
-dcl-s EPOCHSTART      timestamp inz(z'1970-01-01-00.00.00.000000');
+dcl-s EPOCHSTART timestamp inz(z'1970-01-01-00.00.00.000000');
 
 // -----------------------------------------
 //  Global fields
@@ -88,24 +88,24 @@ dcl-s EPOCHSTART      timestamp inz(z'1970-01-01-00.00.00.000000');
 //   date          - Date.
 // -----------------------------------------------------------------------
 dcl-proc f_dateSerial export;
-dcl-pi *N              date;
-  i_year          int(10) const;
-  i_month         int(10) const;
-  i_day           int(10) const;
-end-pi;
+  dcl-pi *n date;
+    i_year  int(10) const;
+    i_month int(10) const;
+    i_day   int(10) const;
+  end-pi;
 
-//  Return value
-dcl-s date            date inz;
+  //  Return value
+  dcl-s date date inz;
 
-//  Helper fields
-dcl-s tmpDate         char(10) inz;
+  //  Helper fields
+  dcl-s tmpDate char(10) inz;
 
-tmpDate = %editc(%dec(i_year: 4: 0): 'X') + '-' + '01' + '-' + '01';
-date = %date(tmpDate: *ISO);
-date = date + %months(i_month-1);
-date = date + %days(i_day-1);
+  tmpDate = %editc(%dec(i_year: 4: 0): 'X') + '-' + '01' + '-' + '01';
+  date = %date(tmpDate: *ISO);
+  date = date + %months(i_month-1);
+  date = date + %days(i_day-1);
 
-return date;
+  return date;
 
 end-proc;
 
@@ -125,36 +125,36 @@ end-proc;
 //   timestamp     - RPG timestamp value
 // -----------------------------------------------------------------------
 dcl-proc f_cvtEpochTS export;
-dcl-pi *N              timestamp;
-  i_epochSecs     int(10) const;
-  i_adjustUTC     ind const options(*nopass: *omit);
-end-pi;
+  dcl-pi *n timestamp;
+    i_epochSecs int(10) const;
+    i_adjustUTC ind options(*nopass: *omit) const;
+  end-pi;
 
-// Return value
-dcl-s timestamp       timestamp inz;
+  // Return value
+  dcl-s timestamp timestamp inz;
 
-// Parameter position
-dcl-c p_adjustUTC 2;
+  // Parameter position
+  dcl-c p_adjustUTC 2;
 
-// Optional parameters
-dcl-s adjustUTC       like(i_adjustUTC);
+  // Optional parameters
+  dcl-s adjustUTC like(i_adjustUTC);
 
-// Variables.
-dcl-ds utc likeds(cee_utco_t) inz;
+  // Variables.
+  dcl-ds utc likeds(cee_utco_t) inz;
 
-if (%parms() >= p_adjustUTC and %addr(i_adjustUTC) <> *null);
-   adjustUTC = i_adjustUTC;
-else;
-   adjustUTC = cTrue;
-endif;
+  if (%parms() >= p_adjustUTC and %addr(i_adjustUTC) <> *null);
+    adjustUTC = i_adjustUTC;
+  else;
+    adjustUTC = cTrue;
+  endif;
 
-timestamp = EPOCHSTART + %seconds(i_epochSecs);
-if (adjustUTC);
-   CEEUTCO(utc.offHours: utc.offMins: utc.offSecs);
-   timestamp = timestamp + %seconds(%int(utc.offSecs));
-endif;
+  timestamp = EPOCHSTART + %seconds(i_epochSecs);
+  if (adjustUTC);
+    CEEUTCO(utc.offHours: utc.offMins: utc.offSecs);
+    timestamp = timestamp + %seconds(%int(utc.offSecs));
+  endif;
 
-return timestamp;
+  return timestamp;
 
 end-proc;
 
@@ -173,44 +173,44 @@ end-proc;
 //   epoch         - Epoch value
 // -----------------------------------------------------------------------
 dcl-proc f_cvtTSEpoch export;
-dcl-pi *N              int(10);
-  i_timestamp     timestamp const;
-  i_adjustUTC     ind const options(*nopass: *omit);
-end-pi;
+  dcl-pi *n int(10);
+    i_timestamp timestamp const;
+    i_adjustUTC ind options(*nopass: *omit) const;
+  end-pi;
 
-// Return value
-dcl-s epochSecs       int(10) inz;
+  // Return value
+  dcl-s epochSecs int(10) inz;
 
-// Parameter position
-dcl-c p_adjustUTC 2;
+  // Parameter position
+  dcl-c p_adjustUTC 2;
 
-// Optional parameters
-dcl-s adjustUTC       like(i_adjustUTC);
+  // Optional parameters
+  dcl-s adjustUTC like(i_adjustUTC);
 
-// Constants.
-dcl-c PIC_TIMESTAMP 'YYYY-MM-DD-HH.MI.SS.999999';
+  // Constants.
+  dcl-c PIC_TIMESTAMP 'YYYY-MM-DD-HH.MI.SS.999999';
 
-// Variables.
-dcl-ds utc likeds(cee_utco_t) inz;
-dcl-s tsSecs          float(8) inz;
-dcl-s epochStartSecs  float(8) inz;
+  // Variables.
+  dcl-ds utc likeds(cee_utco_t) inz;
+  dcl-s tsSecs float(8) inz;
+  dcl-s epochStartSecs float(8) inz;
 
-if (%parms() >= p_adjustUTC and %addr(i_adjustUTC) <> *null);
-   adjustUTC = i_adjustUTC;
-else;
-   adjustUTC = cTrue;
-endif;
+  if (%parms() >= p_adjustUTC and %addr(i_adjustUTC) <> *null);
+    adjustUTC = i_adjustUTC;
+  else;
+    adjustUTC = cTrue;
+  endif;
 
-CEESECS(%char(i_timestamp): PIC_TIMESTAMP: tsSecs: *omit);
-CEESECS(%char(EPOCHSTART): PIC_TIMESTAMP: epochStartSecs: *omit);
+  CEESECS(%char(i_timestamp): PIC_TIMESTAMP: tsSecs: *omit);
+  CEESECS(%char(EPOCHSTART): PIC_TIMESTAMP: epochStartSecs: *omit);
 
-epochSecs = tsSecs - epochStartSecs;
-if (adjustUTC);
-   CEEUTCO(utc.offHours: utc.offMins: utc.offSecs);
-   epochSecs = epochSecs - %int(utc.offSecs);
-endif;
+  epochSecs = tsSecs - epochStartSecs;
+  if (adjustUTC);
+    CEEUTCO(utc.offHours: utc.offMins: utc.offSecs);
+    epochSecs = epochSecs - %int(utc.offSecs);
+  endif;
 
-return epochSecs;
+  return epochSecs;
 
 end-proc;
 
@@ -229,50 +229,50 @@ end-proc;
 //   timestamp     - RPG timestamp value
 // -----------------------------------------------------------------------
 dcl-proc f_cvtMiTimeTS export;
-dcl-pi *N              timestamp;
-  i_miTime        char(20) const;
-  i_adjustUTC     ind const options(*nopass: *omit);
-end-pi;
+  dcl-pi *n timestamp;
+    i_miTime    char(20) const;
+    i_adjustUTC ind options(*nopass: *omit) const;
+  end-pi;
 
-// Return value
-dcl-s timestamp       timestamp inz;
+  // Return value
+  dcl-s timestamp timestamp inz;
 
-// Parameter position
-dcl-c p_adjustUTC 2;
+  // Parameter position
+  dcl-c p_adjustUTC 2;
 
-// Optional parameters
-dcl-s adjustUTC       like(i_adjustUTC);
+  // Optional parameters
+  dcl-s adjustUTC like(i_adjustUTC);
 
-// Variables
-dcl-ds tmpDate qualified;
-  date            char(8) inz('00010101');
-  time            char(6) inz('000000');
-  mSecs           char(6) inz('000000');
-end-ds;
-dcl-ds utc likeds(cee_utco_t) inz;
-dcl-s timeZone        char(116);
-dcl-ds errCode likeds(errCode_t) inz;
+  // Variables
+  dcl-ds tmpDate qualified;
+    date  char(8) inz('00010101');
+    time  char(6) inz('000000');
+    mSecs char(6) inz('000000');
+  end-ds;
+  dcl-ds utc likeds(cee_utco_t) inz;
+  dcl-s timeZone char(116);
+  dcl-ds errCode likeds(errCode_t) inz;
 
-if (%parms() >= p_adjustUTC and %addr(i_adjustUTC) <> *null);
-   adjustUTC = i_adjustUTC;
-else;
-   adjustUTC = cTrue;
-endif;
+  if (%parms() >= p_adjustUTC and %addr(i_adjustUTC) <> *null);
+    adjustUTC = i_adjustUTC;
+  else;
+    adjustUTC = cTrue;
+  endif;
 
-errCode = f_newApiErrCode(cFalse);
-QWCCVTDT('*DTS' : i_miTime : '*YYMD' : tmpDate: errCode
-         : '*JOB': '*JOB': timeZone: %len(timeZone): '1');
+  errCode = f_newApiErrCode(cFalse);
+  QWCCVTDT('*DTS' : i_miTime : '*YYMD' : tmpDate: errCode
+           : '*JOB': '*JOB': timeZone: %len(timeZone): '1');
 
-timestamp = %date(tmpDate.date: *ISO0) +
-            %time(tmpDate.time: *ISO0);
-timestamp += %mseconds(%int(tmpDate.mSecs));
+  timestamp = %date(tmpDate.date: *ISO0) +
+              %time(tmpDate.time: *ISO0);
+  timestamp += %mseconds(%int(tmpDate.mSecs));
 
-if (not adjustUTC);
-   CEEUTCO(utc.offHours: utc.offMins: utc.offSecs);
-   timestamp = timestamp - %seconds(%int(utc.offSecs));
-endif;
+  if (not adjustUTC);
+    CEEUTCO(utc.offHours: utc.offMins: utc.offSecs);
+    timestamp = timestamp - %seconds(%int(utc.offSecs));
+  endif;
 
-return timestamp;
+  return timestamp;
 
 end-proc;
 
@@ -291,49 +291,48 @@ end-proc;
 //   epoch         - Epoch value
 // -----------------------------------------------------------------------
 dcl-proc f_cvtTSMiTime export;
-dcl-pi *N              char(20);
-  i_timestamp     timestamp const;
-  i_adjustUTC     ind const options(*nopass: *omit);
-end-pi;
+  dcl-pi *n char(20);
+    i_timestamp timestamp const;
+    i_adjustUTC ind options(*nopass: *omit) const;
+  end-pi;
 
-// Return value
-dcl-s miTime          char(20) inz(*ALLx'00');
+  // Return value
+  dcl-s miTime char(20) inz(*ALLx'00');
 
-// Parameter position
-dcl-c p_adjustUTC 2;
+  // Parameter position
+  dcl-c p_adjustUTC 2;
 
-// Optional parameters
-dcl-s adjustUTC       like(i_adjustUTC);
+  // Optional parameters
+  dcl-s adjustUTC like(i_adjustUTC);
 
-// Variables
-dcl-s timestamp       like(i_timestamp);
-dcl-ds tmpDate qualified;
-  date            char(8) inz('00010101');
-  time            char(6) inz('000000');
-  mSecs           char(6) inz('000000');
-end-ds;
-dcl-ds utc likeds(cee_utco_t) inz;
-dcl-s timeZone        char(116);
-dcl-ds errCode likeds(errCode_t) inz;
+  // Variables
+  dcl-s timestamp like(i_timestamp);
+  dcl-ds tmpDate qualified;
+    date  char(8) inz('00010101');
+    time  char(6) inz('000000');
+    mSecs char(6) inz('000000');
+  end-ds;
+  dcl-ds utc likeds(cee_utco_t) inz;
+  dcl-s timeZone char(116);
+  dcl-ds errCode likeds(errCode_t) inz;
 
-if (%parms() >= p_adjustUTC and %addr(i_adjustUTC) <> *null);
-   adjustUTC = i_adjustUTC;
-else;
-   adjustUTC = cTrue;
-endif;
+  if (%parms() >= p_adjustUTC and %addr(i_adjustUTC) <> *null);
+    adjustUTC = i_adjustUTC;
+  else;
+    adjustUTC = cTrue;
+  endif;
 
-timestamp = i_timestamp;
+  timestamp = i_timestamp;
 
-if (not adjustUTC);
-   CEEUTCO(utc.offHours: utc.offMins: utc.offSecs);
-   timestamp = timestamp + %seconds(%int(utc.offSecs));
-endif;
+  if (not adjustUTC);
+    CEEUTCO(utc.offHours: utc.offMins: utc.offSecs);
+    timestamp = timestamp + %seconds(%int(utc.offSecs));
+  endif;
 
-errCode = f_newApiErrCode(cFalse);
-QWCCVTDT('*YYMD' : %char(timestamp: *ISO0) : '*DTS' : miTime: errCode
-         : '*JOB': '*JOB': timeZone: %len(timeZone): '1');
+  errCode = f_newApiErrCode(cFalse);
+  QWCCVTDT('*YYMD' : %char(timestamp: *ISO0) : '*DTS' : miTime: errCode
+           : '*JOB': '*JOB': timeZone: %len(timeZone): '1');
 
-return miTime;
+  return miTime;
 
 end-proc;
-//

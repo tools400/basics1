@@ -1,4 +1,4 @@
-**FREE
+**free
 //=====================================================================*
 //  BASICS1RA  - SrvPgm: Basic Routines - BasicList                    *
 //=====================================================================*
@@ -68,65 +68,65 @@
 //                                                                     *
 //   >>END-PRE-COMPILER<<                                              *
 //=====================================================================*
-ctl-opt NOMAIN;
-ctl-opt BNDDIR('QC2LE');
+ctl-opt nomain;
+ctl-opt bnddir('QC2LE');
 //  Standard H-Specs
-/COPY QBASICS1,H_SPEC
-/COPY QBASICS1,COPYRIGHT
+/copy QBASICS1,H_SPEC
+/copy QBASICS1,COPYRIGHT
 //=====================================================================*
 
 // -----------------------------------------
 //  Exported functions
 // -----------------------------------------
-/COPY QBASICS1,PBASICS1RA
+/copy QBASICS1,PBASICS1RA
 
 // -----------------------------------------
 //  Reference fields
 // -----------------------------------------
-/COPY QBASICS1,BASICS1R0
+/copy QBASICS1,BASICS1R0
 
-dcl-ds hList_t qualified   based(pDummy)   align;
-  intType         uns(20);
-  intSize         uns(10);
-  extType         like(BasicList_type_t  );
-  memSize         uns(10);
-  numE            uns(10);
-  maxNumE         uns(10);
-  totalMemSize    uns(10);
-  increment       uns(10);
-/IF NOT DEFINED(*V5R2M0)
-  signature       like(signature_t);
-  sortSignature   like(signature_t);
-/ELSE
-  signature       likeds(signature_t);
-  sortSignature   likeds(signature_t);
-/ENDIF
-  heapID          int(10);
-  pBase           pointer;
-  pAutoSortFnc    pointer(*proc);
-  memMgr          likeds(MemoryManager_manager_t);
+dcl-ds hList_t qualified based(pDummy) align;
+  intType       uns(20);
+  intSize       uns(10);
+  extType       like(BasicList_type_t);
+  memSize       uns(10);
+  numE          uns(10);
+  maxNumE       uns(10);
+  totalMemSize  uns(10);
+  increment     uns(10);
+/if NOT DEFINED(*V5R2M0)
+  signature     like(signature_t);
+  sortSignature like(signature_t);
+/else
+  signature     likeds(signature_t);
+  sortSignature likeds(signature_t);
+/endif
+  heapID        int(10);
+  pBase         pointer;
+  pAutoSortFnc  pointer(*proc);
+  memMgr        likeds(MemoryManager_manager_t);
 end-ds;
 
-dcl-ds listE_t qualified   based(pDummy)   align;
-  type            like(BasicList_type_t  );
-  size            uns(10);
-  maxSize         uns(10);
-/IF NOT DEFINED(*V5R2M0)
-  signature       like(signature_t);
-/ELSE
-  signature       likeds(signature_t);
-/ENDIF
-  pData           pointer;
+dcl-ds listE_t qualified based(pDummy) align;
+  type      like(BasicList_type_t);
+  size      uns(10);
+  maxSize   uns(10);
+/if NOT DEFINED(*V5R2M0)
+  signature like(signature_t);
+/else
+  signature likeds(signature_t);
+/endif
+  pData     pointer;
 end-ds;
 
 //signature_t     DS                  qualified   based(pDummy)   align
 // tmStmp                         Z
 // counter                      10U 0
 
-dcl-ds signature_t qualified   based(pDummy)   align;
-  time            uns(10);
-  millitm         uns(10);
-  counter         uns(10);
+dcl-ds signature_t qualified based(pDummy) align;
+  time    uns(10);
+  millitm uns(10);
+  counter uns(10);
 end-ds;
 
 // -----------------------------------------
@@ -134,163 +134,123 @@ end-ds;
 // -----------------------------------------
 
 //  Produces a new list entry.
-dcl-pr newEntry
-       int(10)
-       extproc('newEntry');
-  io_hList        likeds(hList_t   );
-i_type          const  like(BasicList_type_t  );
+dcl-pr newEntry int(10) extproc('newEntry');
+  io_hList likeds(hList_t);
+  i_type   like(BasicList_type_t) const;
 end-pr;
 
 //  Returns a pointer to the basing pointer of the
 //  liste entry.
-dcl-pr getPointerArrayE
-       pointer
-       extproc('getPointerArrayE');
-  i_hList         const  likeds(hList_t   );
-i_index         int(10) const;
+dcl-pr getPointerArrayE pointer extproc('getPointerArrayE');
+  i_hList likeds(hList_t) const;
+  i_index int(10) const;
 end-pr;
 
 //  Returns a pointer to the element at the specified
 //  position in this list.
-dcl-pr getPointerListE
-       pointer
-       extproc('getPointerListE');
-  i_hList         const  likeds(hList_t   );
-i_index         int(10) const;
+dcl-pr getPointerListE pointer extproc('getPointerListE');
+  i_hList likeds(hList_t) const;
+  i_index int(10) const;
 end-pr;
 
 //  Frees the memory of a given element in this list.
-dcl-pr freeEntryData
-       extproc('freeEntryData');
-  io_hList        likeds(hList_t   );
-io_listE        likeds(listE_t   );
+dcl-pr freeEntryData extproc('freeEntryData');
+  io_hList likeds(hList_t);
+  io_listE likeds(listE_t);
 end-pr;
 
 //  Returns TRUE if a given list contains no data.
-dcl-pr entryData_isNULL
-       ind
-       extproc('entryData_isNULL');
-  i_listE         const  likeds(listE_t   );
+dcl-pr entryData_isNULL ind extproc('entryData_isNULL');
+  i_listE likeds(listE_t) const;
 end-pr;
 
 //  Create a very basic list handle.
-dcl-pr newListInternal
-       pointer
-       extproc('newListInternal');
-  i_extType       const  like(BasicList_type_t  );
-  i_increment     int(10) const;
-  i_heapID        int(10) const;
-  i_memMgr        const  likeds(MemoryManager...
-_manager_t);
+dcl-pr newListInternal pointer extproc('newListInternal');
+  i_extType   like(BasicList_type_t) const;
+  i_increment int(10) const;
+  i_heapID    int(10) const;
+  i_memMgr    likeds(MemoryManager_manager_t) const;
 end-pr;
 
 //  Set the entry data.
-dcl-pr setEntryData
-       int(10)
-       extproc('setEntryData');
-  io_hList        likeds(hList_t  );
-i_index         int(10) const;
-i_pEntry        pointer const;
-i_length        int(10) const;
+dcl-pr setEntryData int(10) extproc('setEntryData');
+  io_hList likeds(hList_t);
+  i_index  int(10) const;
+  i_pEntry pointer const;
+  i_length int(10) const;
 end-pr;
 
 //  Checks the range of the list index.
-dcl-pr isIndexOutOfRange
-       ind
-       extproc('isIndexOutOfRange');
-  i_hList         const  likeds(hList_t  );
-i_index         int(10) const;
+dcl-pr isIndexOutOfRange ind extproc('isIndexOutOfRange');
+  i_hList likeds(hList_t) const;
+  i_index int(10) const;
 end-pr;
 
 //  Sorts a given list.
-dcl-pr qsortCallback
-       int(10)
-       extproc('qsortCallback');
-  i_pKey          pointer value;
-  i_pElement      pointer value;
+dcl-pr qsortCallback int(10) extproc('qsortCallback');
+  i_pKey     pointer value;
+  i_pElement pointer value;
 end-pr;
 
 //  Sorts the list if it is required and if an auto-sort procedure
 //  has been specified.
-dcl-pr performAutoSort
-       ind
-       extproc('performAutoSort');
-  io_hList        likeds(hList_t  );
+dcl-pr performAutoSort ind extproc('performAutoSort');
+  io_hList likeds(hList_t);
 end-pr;
 
 //  Sorts the list.
-dcl-pr sortList
-       ind
-       extproc('sortList');
-  io_hList        likeds(hList_t  );
-i_pSortFnc      pointer(*proc) const;
+dcl-pr sortList ind extproc('sortList');
+  io_hList   likeds(hList_t);
+  i_pSortFnc pointer(*proc) const;
 end-pr;
 
 //  Returns cTrue for a sorted list, else cFalse.                                       R
-dcl-pr isSortedInternally
-       ind
-       extproc('isSortedInternally');
-  i_hList         const  likeds(hList_t  );
+dcl-pr isSortedInternally ind extproc('isSortedInternally');
+  i_hList likeds(hList_t) const;
 end-pr;
 
 //  Searches the list for an entry that matches the specified data pointer
-dcl-pr findEntryBySignature
-       int(10)
-       extproc('+
-       findEntryBySignature');
-  i_hList         const  likeds(hList_t    );
-i_signature     const  likeds(signature_t);
+dcl-pr findEntryBySignature int(10) extproc('findEntryBySignature');
+  i_hList     likeds(hList_t) const;
+  i_signature likeds(signature_t) const;
 end-pr;
 
 //  Returns a new list signature.
-dcl-pr Signature_new
-       likeds(signature_t )
-extproc('Signature_new');
+dcl-pr Signature_new likeds(signature_t) extproc('Signature_new');
 end-pr;
 
 //  Checks, whether a given handle is a valid list handle, or not.
-dcl-pr checkListHandle
-       extproc('checkListHandle');
-  i_pList         const  like(BasicList_handle_t);
+dcl-pr checkListHandle extproc('checkListHandle');
+  i_pList like(BasicList_handle_t) const;
 end-pr;
 
 //  Sends a DIAG message to signal a problem.
-dcl-pr signalProblem
-       extproc('signalProblem');
-  i_text          varchar(128) const;
-  i_proc          varchar(256) const;
+dcl-pr signalProblem extproc('signalProblem');
+  i_text varchar(128) const;
+  i_proc varchar(256) const;
 end-pr;
 
 //  Sends an ESCAPE message to signal an error condition.
-dcl-pr signalError
-       extproc('signalError');
-  i_text          varchar(128) const;
-  i_proc          varchar(256) const;
+dcl-pr signalError extproc('signalError');
+  i_text varchar(128) const;
+  i_proc varchar(256) const;
 end-pr;
 
 // -----------------------------------------
 //  Global constants
 // -----------------------------------------
-dcl-c cHANDLE_TYPE_LIST
-      const(6688841203191988545);                                        // =  *List
-dcl-c cHANDLE_SIZE
-      const(%size(hList_t));
+dcl-c cHANDLE_TYPE_LIST 6688841203191988545; // =  *List
+dcl-c cHANDLE_SIZE %size(hList_t);
 
-dcl-c cERROR_LIST_HANDLE_NULL
-      const('List handle is NULL');
-dcl-c cERROR_LIST_HANDLE_INVALID
-      const('List handle is invalid');
-dcl-c cERROR_NO_MEMORY
-      const('Failed to allocate/+
-       reallocate memory');
-dcl-c cPROBLEM_LIST_FULL
-      const('Maximum number of +
-       list items reached');
+dcl-c cERROR_LIST_HANDLE_NULL 'List handle is NULL';
+dcl-c cERROR_LIST_HANDLE_INVALID 'List handle is invalid';
+dcl-c cERROR_NO_MEMORY 'Failed to allocate/reallocate memory';
+dcl-c cPROBLEM_LIST_FULL 'Maximum number of list items reached';
 
 // -----------------------------------------
 //  Global fields
 // -----------------------------------------
-dcl-s g_pSortFnc      pointer(*proc) inz;
+dcl-s g_pSortFnc pointer(*proc) inz;
 
 //  Prototype of the external sort function. A procedure pointer
 //  of a function that matches this prototype must be passed to
@@ -302,13 +262,11 @@ dcl-s g_pSortFnc      pointer(*proc) inz;
 //     0                     key equal to element
 //     Greater than 0        key greater than element
 
-dcl-pr sortFnc
-       int(10)
-       extproc(g_pSortFnc);
-  i_pKeyData      pointer value;
-  i_keySize       int(10) value;
-  i_pElemData     pointer value;
-  i_elemSize      int(10) value;
+dcl-pr sortFnc int(10) extproc(g_pSortFnc);
+  i_pKeyData  pointer value;
+  i_keySize   int(10) value;
+  i_pElemData pointer value;
+  i_elemSize  int(10) value;
 end-pr;
 
 //=========================================================================
@@ -325,45 +283,42 @@ end-pr;
 //                   success, else NULL.
 //=========================================================================
 dcl-proc BasicList_new export;
+  dcl-pi *n like(BasicList_handle_t);
+    i_extType   like(BasicList_type_t) options(*nopass: *omit) const;
+    i_increment uns(10) options(*nopass: *omit) const;
+    i_heapID    int(10) options(*nopass: *omit) const;
+  end-pi;
 
-dcl-pi BasicList_new
-       like(BasicList_handle_t);
-  i_extType       const  like(BasicList_type_t  )
-       options(*nopass: *omit);
-  i_increment     uns(10) const  options(*nopass: *omit);
-  i_heapID        int(10) const  options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s pList like(BasicList_handle_t) inz;
 
-//  Return value
-dcl-s pList           like(BasicList_handle_t) inz;
+  //  Parameter positions
+  dcl-c p_extType 1;
+  dcl-c p_increment 2;
+  dcl-c p_heapID 3;
 
-//  Parameter positions
-dcl-c p_extType const(1);
-dcl-c p_increment const(2);
-dcl-c p_heapID const(3);
+  //  Fields for optional parameters
+  dcl-s extType like(i_extType) inz;
+  dcl-s increment like(i_increment) inz;
+  dcl-s heapID like(i_heapID) inz;
 
-//  Fields for optional parameters
-dcl-s extType         like(i_extType   ) inz;
-dcl-s increment       like(i_increment ) inz;
-dcl-s heapID          like(i_heapID    ) inz;
+  //  Loop control
+  dcl-s isDone ind inz(cFalse);
+  dcl-s isError ind inz(cFalse);
 
-//  Loop control
-dcl-s isDone          ind inz(cFalse);
-dcl-s isError         ind inz(cFalse);
+  //  Memory Manager
+/copy QBASICS1,MEMMGR
 
-//  Memory Manager
-/COPY QBASICS1,MEMMGR
+  //  Helper fields
+  dcl-s isPresent int(10) inz;
 
-//  Helper fields
-dcl-s isPresent       int(10) inz;
+  //  House keeping:
+  //     List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  House keeping:
-//     List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-// Get values of optional parameters
-// ... i_extType
+  // Get values of optional parameters
+  // ... i_extType
 if %parms() >= p_extType;
    CEETSTA(isPresent: p_extType: *omit);
 else;
@@ -376,7 +331,7 @@ else;
    extType = '';
 endif;
 
-// ... i_increment
+  // ... i_increment
 if %parms() >= p_increment;
    CEETSTA(isPresent: p_increment: *omit);
 else;
@@ -389,7 +344,7 @@ else;
    increment = 256;
 endif;
 
-// ... i_heapID
+  // ... i_heapID
 if %parms() >= p_heapID;
    CEETSTA(isPresent: p_heapID: *omit);
 else;
@@ -402,32 +357,32 @@ else;
    heapID = 0;
 endif;
 
-// Set memory manager
+  // Set memory manager
 mm_memMgr = MemoryManager_getDefaultManager();
 
-// Initialize house keeping fields
+  // Initialize house keeping fields
 pHList = *NULL;
 
-// Do until everything is done or an error occured
+  // Do until everything is done or an error occured
 dou isDone or isError;
 
-   // Create a very basic list
+  // Create a very basic list
    pHList = newListInternal(extType: increment: heapID: mm_memMgr);
 
-   // Ready
+  // Ready
    isDone = cTrue;
 enddo;
 
-// Error!
+  // Error!
 if isError;
-   // Free memory of list handle
+  // Free memory of list handle
    if pHList <> *NULL;
       mm_free(pHList);
       pHList = *NULL;
    endif;
 endif;
 
-// Set return value
+  // Set return value
 if isDone;
    pList = pHList;
 else;
@@ -437,7 +392,7 @@ endif;
 return pList;
 
 
-end-proc BasicList_new;
+end-proc;
 
 //=========================================================================
 //  Clones a given BasicList.
@@ -450,54 +405,52 @@ end-proc BasicList_new;
 //                   success, else NULL.
 //=========================================================================
 dcl-proc BasicList_clone export;
+  dcl-pi *n like(BasicList_handle_t);
+    i_pList like(BasicList_handle_t) const;
+  end-pi;
 
-dcl-pi BasicList_clone
-       like(BasicList_handle_t);
-  i_pList         const  like(BasicList_handle_t);
-end-pi;
+  //  Return value
+  dcl-s pListRtn like(BasicList_handle_t) inz;
 
-//  Return value
-dcl-s pListRtn        like(BasicList_handle_t) inz;
+  //  Loop control
+  dcl-s isDone ind inz(cFalse);
+  dcl-s isError ind inz(cFalse);
 
-//  Loop control
-dcl-s isDone          ind inz(cFalse);
-dcl-s isError         ind inz(cFalse);
+  //  Helper fields
+  dcl-s x int(10) inz;
+  dcl-s numE int(10) inz;
+  dcl-s size int(10) inz;
+  dcl-s pData pointer inz;
 
-//  Helper fields
-dcl-s x               int(10) inz;
-dcl-s numE            int(10) inz;
-dcl-s size            int(10) inz;
-dcl-s pData           pointer inz;
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
 
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-
-//  House keeping:
-//     List handle
-dcl-s pTmpList        like(BasicList_handle_t) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  House keeping:
+  //     List handle
+  dcl-s pTmpList like(BasicList_handle_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
 pListRtn = BasicList_null();
 
-// Initialize house keeping fields
+  // Initialize house keeping fields
 pTmpList = BasicList_null();
 
-// Do until everything is done or an error occured
+  // Do until everything is done or an error occured
 dou isDone or isError;
 
-   // Get access to list handle
+  // Get access to list handle
    pHList = i_pList;
 
-   // Create a new and empty list
+  // Create a new and empty list
    pTmpList = BasicList_new(hList.extType: hList.increment);
    if (BasicList_isNull(pTmpList));
       isError = cTrue;
       leave;
    endif;
 
-   // Copy list entries
+  // Copy list entries
    numE = BasicList_getNumE(i_pList);
    for x = 1 to numE;
       if (BasicList_isNullValue(i_pList: x));
@@ -509,16 +462,16 @@ dou isDone or isError;
       endif;
    endfor;
 
-   // Set return value
+  // Set return value
    pListRtn = pTmpList;
    pTmpList = BasicList_null();
 
-   // Done.
+  // Done.
    isDone = cTrue;
 enddo;
 
-// House keeping ...
-// ... pTmpList
+  // House keeping ...
+  // ... pTmpList
 if (not BasicList_isNull(pTmpList));
    BasicList_delete(pTmpList);
 endif;
@@ -526,7 +479,7 @@ endif;
 return pListRtn;
 
 
-end-proc BasicList_clone;
+end-proc;
 
 //=========================================================================
 //  Returns a given element.
@@ -545,49 +498,47 @@ end-proc BasicList_clone;
 //                   success, else NULL.
 //=========================================================================
 dcl-proc BasicList_get export;
+  dcl-pi *n pointer;
+    i_pList  like(BasicList_handle_t) const;
+    i_index  int(10) const;
+    i_pEntry pointer options(*nopass) const;
+    i_length int(10) options(*nopass) const;
+  end-pi;
 
-dcl-pi BasicList_get
-       pointer;
-  i_pList         const  like(BasicList_handle_t);
-  i_index         int(10) const;
-  i_pEntry        pointer const  options(*nopass);
-  i_length        int(10) const  options(*nopass);
-end-pi;
+  //  Return value
+  dcl-s pElemData pointer inz;
 
-//  Return value
-dcl-s pElemData       pointer inz;
+  //  Parameter positions
+  dcl-c p_pEntry 3;
+  dcl-c p_length 4;
 
-//  Parameter positions
-dcl-c p_pEntry const(3);
-dcl-c p_length const(4);
+  //  Fields for optional parameters
+  dcl-s pEntry like(i_pEntry) inz;
+  dcl-s length like(i_length) inz;
 
-//  Fields for optional parameters
-dcl-s pEntry          like(i_pEntry     ) inz;
-dcl-s length          like(i_length     ) inz;
+  //  Loop control
+  dcl-s isDone ind inz(cFalse);
+  dcl-s isError ind inz(cFalse);
 
-//  Loop control
-dcl-s isDone          ind inz(cFalse);
-dcl-s isError         ind inz(cFalse);
+  //  Helper fields
+  dcl-s maxSize int(10) inz;
+  dcl-s numRemBytes int(10) inz;
 
-//  Helper fields
-dcl-s maxSize         int(10) inz;
-dcl-s numRemBytes     int(10) inz;
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
 
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-
-//  List entry
-dcl-ds listE likeds(listE_t    ) based(pListE);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  List entry
+  dcl-ds listE likeds(listE_t) based(pListE);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Get values of optional parameters
-// ... pEntry
+  // Get values of optional parameters
+  // ... pEntry
 p_assert(%parms() <> p_pEntry
          : 'length must be specified if pEntry is passed');
 
-// ... length
+  // ... length
 if %parms() >= p_length;
    pEntry = i_pEntry;
    length = i_length;
@@ -596,35 +547,35 @@ else;
    length = 0;
 endif;
 
-// Do until everything is done or an error occured
+  // Do until everything is done or an error occured
 dou isDone or isError;
 
-   // Get access to list handle
+  // Get access to list handle
    pHList = i_pList;
 
-   // Verify range of i_index
+  // Verify range of i_index
    if isIndexOutOfRange(hList: i_index);
       isError = cTrue;
       leave;
    endif;
 
-   // Get access to entry data
+  // Get access to entry data
    pListE = getPointerListE(hList: i_index);
 
-   // Determine number of bytes to copy
+  // Determine number of bytes to copy
    if length < listE.size;
       maxSize = length;
    else;
       maxSize = listE.size;
    endif;
 
-   // Initialize return buffer (remaining bytes only)
+  // Initialize return buffer (remaining bytes only)
    numRemBytes = length - listE.size;
    if numRemBytes > 0;
       memset((pEntry + listE.size): x'00': numRemBytes);
    endif;
 
-   // Copy entry data
+  // Copy entry data
    if maxSize > 0;
       memcpy(pEntry: listE.pData: maxSize);
       pElemData = pEntry;
@@ -632,14 +583,14 @@ dou isDone or isError;
       pElemData = listE.pData;
    endif;
 
-   // Done.
+  // Done.
    isDone = cTrue;
 enddo;
 
 return pElemData;
 
 
-end-proc BasicList_get;
+end-proc;
 
 //=========================================================================
 //  Returns a given string.
@@ -652,23 +603,21 @@ end-proc BasicList_get;
 //   string        - Returns a string on success, else ''.
 //=========================================================================
 dcl-proc BasicList_getString export;
+  dcl-pi *n varchar(4096);
+    i_pList like(BasicList_handle_t) const;
+    i_index int(10) const;
+  end-pi;
 
-dcl-pi BasicList_getString
-       varchar(4096);
-  i_pList         const  like(BasicList_handle_t);
-  i_index         int(10) const;
-end-pi;
-
-//  Return value
-dcl-s string          varchar(4096) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Return value
+  dcl-s string varchar(4096) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 BasicList_get(i_pList: i_index: %addr(string): %size(string));
 
 return string;
 
 
-end-proc BasicList_getString;
+end-proc;
 
 //=========================================================================
 //  Returns a the pointer element from the specified position.
@@ -681,23 +630,21 @@ end-proc BasicList_getString;
 //   pointer       - Returns a pointer on success, else *NULL.
 //=========================================================================
 dcl-proc BasicList_getPointer export;
+  dcl-pi *n pointer;
+    i_pList like(BasicList_handle_t) const;
+    i_index int(10) const;
+  end-pi;
 
-dcl-pi BasicList_getPointer
-       pointer;
-  i_pList         const  like(BasicList_handle_t);
-  i_index         int(10) const;
-end-pi;
-
-//  Return value
-dcl-s pointer         pointer inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Return value
+  dcl-s pointer pointer inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 BasicList_get(i_pList: i_index: %addr(pointer): %size(pointer));
 
 return pointer;
 
 
-end-proc BasicList_getPointer;
+end-proc;
 
 //=========================================================================
 //  Returns the external type of the list.
@@ -709,22 +656,20 @@ end-proc BasicList_getPointer;
 //   type          - Returns the list type on success, else '';
 //=========================================================================
 dcl-proc BasicList_getListType export;
+  dcl-pi *n like(BasicList_type_t);
+    i_pList like(BasicList_handle_t) const;
+  end-pi;
 
-dcl-pi BasicList_getListType
-       like(BasicList_type_t  );
-  i_pList         const  like(BasicList_handle_t);
-end-pi;
+  //  Return value
+  dcl-s type like(BasicList_type_t) inz;
 
-//  Return value
-dcl-s type            like(BasicList_type_t  ) inz;
-
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Get access to list handle
+  // Get access to list handle
 pHList = i_pList;
 
 type = hList.extType;
@@ -732,7 +677,7 @@ type = hList.extType;
 return type;
 
 
-end-proc BasicList_getListType;
+end-proc;
 
 //=========================================================================
 //  Checks the list for a given external type.
@@ -746,23 +691,21 @@ end-proc BasicList_getListType;
 //                   else, FALSE.
 //=========================================================================
 dcl-proc BasicList_isListTypeOf export;
+  dcl-pi *n ind;
+    i_pList like(BasicList_handle_t) const;
+    i_type  like(BasicList_type_t) const;
+  end-pi;
 
-dcl-pi BasicList_isListTypeOf
-       ind;
-  i_pList         const  like(BasicList_handle_t);
-  i_type          const  like(BasicList_type_t  );
-end-pi;
+  //  Return value
+  dcl-s isValid ind inz(cFalse);
 
-//  Return value
-dcl-s isValid         ind inz(cFalse);
-
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Get access to list handle
+  // Get access to list handle
 pHList = i_pList;
 
 if i_type = hList.extType;
@@ -774,7 +717,7 @@ endif;
 return isValid;
 
 
-end-proc BasicList_isListTypeOf;
+end-proc;
 
 //=========================================================================
 //  Checks an list entry for a given type.
@@ -789,37 +732,35 @@ end-proc BasicList_isListTypeOf;
 //                   else, FALSE.
 //=========================================================================
 dcl-proc BasicList_isTypeOf export;
+  dcl-pi *n ind;
+    i_pList like(BasicList_handle_t) const;
+    i_index int(10) const;
+    i_type  like(BasicList_type_t) const;
+  end-pi;
 
-dcl-pi BasicList_isTypeOf
-       ind;
-  i_pList         const  like(BasicList_handle_t);
-  i_index         int(10) const;
-  i_type          const  like(BasicList_type_t  );
-end-pi;
+  //  Return value
+  dcl-s isValid ind inz(cFalse);
 
-//  Return value
-dcl-s isValid         ind inz(cFalse);
-
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-dcl-ds listE likeds(listE_t    ) based(pListE);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
+  dcl-ds listE likeds(listE_t) based(pListE);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Get access to list handle
+  // Get access to list handle
 pHList = i_pList;
 
-// Verify range of i_index
+  // Verify range of i_index
 if isIndexOutOfRange(hList: i_index);
    isValid = cFalse;
    return isValid;
 endif;
 
-// Get access to entry data
+  // Get access to entry data
 pListE = getPointerListE(hList: i_index);
 
-// Verify entry type
+  // Verify entry type
 if listE.type = i_type;
    isvalid = cTrue;
 else;
@@ -829,7 +770,7 @@ endif;
 return isValid;
 
 
-end-proc BasicList_isTypeOf;
+end-proc;
 
 //=========================================================================
 //  Returns the type of the specified list entry.
@@ -842,42 +783,40 @@ end-proc BasicList_isTypeOf;
 //   type          - Returns the type on success, else ''.
 //=========================================================================
 dcl-proc BasicList_getType export;
+  dcl-pi *n like(BasicList_type_t);
+    i_pList like(BasicList_handle_t) const;
+    i_index int(10) const;
+  end-pi;
 
-dcl-pi BasicList_getType
-       like(BasicList_type_t  );
-  i_pList         const  like(BasicList_handle_t);
-  i_index         int(10) const;
-end-pi;
+  //  Return value
+  dcl-s type like(BasicList_type_t) inz;
 
-//  Return value
-dcl-s type            like(BasicList_type_t  ) inz;
-
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-dcl-ds listE likeds(listE_t    ) based(pListE);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
+  dcl-ds listE likeds(listE_t) based(pListE);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Get access to list handle
+  // Get access to list handle
 pHList = i_pList;
 
-// Verify range of i_index
+  // Verify range of i_index
 if isIndexOutOfRange(hList: i_index);
    type = '';
    return type;
 endif;
 
-// Get access to entry data
+  // Get access to entry data
 pListE = getPointerListE(hList: i_index);
 
-// Return entry type
+  // Return entry type
 type = listE.type;
 
 return type;
 
 
-end-proc BasicList_getType;
+end-proc;
 
 //=========================================================================
 //  Returns the size of of an element.
@@ -890,49 +829,47 @@ end-proc BasicList_getType;
 //   size          - Returns the size of the element on success, else -1.
 //=========================================================================
 dcl-proc BasicList_getSize export;
+  dcl-pi *n int(10);
+    i_pList like(BasicList_handle_t) const;
+    i_index int(10) const;
+  end-pi;
 
-dcl-pi BasicList_getSize
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-  i_index         int(10) const;
-end-pi;
+  //  Return value
+  dcl-s size int(10) inz(-1);
 
-//  Return value
-dcl-s size            int(10) inz(-1);
+  //  Loop control
+  dcl-s isDone ind inz(cFalse);
+  dcl-s isError ind inz(cFalse);
 
-//  Loop control
-dcl-s isDone          ind inz(cFalse);
-dcl-s isError         ind inz(cFalse);
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
 
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-
-//  List entry
-dcl-ds listE likeds(listE_t    ) based(pListE);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  List entry
+  dcl-ds listE likeds(listE_t) based(pListE);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Do until everything is done or an error occured
+  // Do until everything is done or an error occured
 dou isDone or isError;
 
-   // Get access to list handle
+  // Get access to list handle
    pHList = i_pList;
 
-   // Verify range of i_index
+  // Verify range of i_index
    if isIndexOutOfRange(hList: i_index);
       isError = cTrue;
       leave;
    endif;
 
-   // Get access to entry data
+  // Get access to entry data
    pListE = getPointerListE(hList: i_index);
 
-   // Ready
+  // Ready
    isDone = cTrue;
 enddo;
 
-// Set return value
+  // Set return value
 if isDone;
    size = listE.size;
 else;
@@ -942,7 +879,7 @@ endif;
 return size;
 
 
-end-proc BasicList_getSize;
+end-proc;
 
 //=========================================================================
 //  Adds a element to a given BasicList.
@@ -957,50 +894,46 @@ end-proc BasicList_getSize;
 //                   success, else -1.
 //=========================================================================
 dcl-proc BasicList_add export;
+  dcl-pi *n int(10);
+    i_pList  like(BasicList_handle_t) const;
+    i_pEntry pointer options(*string) const;
+    i_length int(10) options(*nopass: *omit) const;
+    i_type   like(BasicList_type_t) options(*nopass: *omit) const;
+  end-pi;
 
-dcl-pi BasicList_add
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-  i_pEntry        pointer const  options(*string);
-  i_length        int(10) const  options(*nopass: *omit);
-  i_type          const  like(BasicList_type_t  )
-       options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s index int(10) inz(-1);
 
-//  Return value
-dcl-s index           int(10) inz(-1);
+  //  Parameter positions
+  dcl-c p_length 3;
+  dcl-c p_type 4;
 
-//  Parameter positions
-dcl-c p_length const(3);
-dcl-c p_type const(4);
+  //  Fields for optional parameters
+  dcl-s length like(i_length) inz;
+  dcl-s type like(i_type) inz;
 
-//  Fields for optional parameters
-dcl-s length          like(i_length     ) inz;
-dcl-s type            like(i_type       ) inz;
+  //  Loop control
+  dcl-s isDone ind inz(cFalse);
+  dcl-s isError ind inz(cFalse);
 
-//  Loop control
-dcl-s isDone          ind inz(cFalse);
-dcl-s isError         ind inz(cFalse);
+  //  Helper fields
+  dcl-s isPresent int(10) inz;
+  dcl-s x uns(10) inz;
+  dcl-s pEntryData pointer inz;
+  dcl-ds prvListSortSignature likeds(signature_t) inz;
+  dcl-ds entrySignature likeds(signature_t) inz;
 
-//  Helper fields
-dcl-s isPresent       int(10) inz;
-dcl-s x               uns(10) inz;
-dcl-s pEntryData      pointer inz;
-dcl-ds prvListSortSignature
-       likeds(signature_t) inz;
-dcl-ds entrySignature likeds(signature_t) inz;
-
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-dcl-ds listE likeds(listE_t    ) based(pListE);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
+  dcl-ds listE likeds(listE_t) based(pListE);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Do until everything is done or an error occured
+  // Do until everything is done or an error occured
 dou isDone or isError;
 
-   // Get length of entry data
+  // Get length of entry data
    if %parms() >= p_length;
       CEETSTA(isPresent: p_length: *omit);
    else;
@@ -1017,7 +950,7 @@ dou isDone or isError;
       endif;
    endif;
 
-   // Get type of entry data
+  // Get type of entry data
    if %parms() >= p_type;
       CEETSTA(isPresent: p_type: *omit);
    else;
@@ -1030,40 +963,40 @@ dou isDone or isError;
       type = cBASICLIST_TYPE_UNKNOWN;
    endif;
 
-   // Get access to list handle
+  // Get access to list handle
    pHList = i_pList;
 
-   // Produce new entry
+  // Produce new entry
    x = newEntry(hList: type);
    if x = 0;
       isError = cTrue;
       leave;
    endif;
 
-   // Get access to entry data
+  // Get access to entry data
    pListE = getPointerListE(hList: x);
 
-   // Set entry data
+  // Set entry data
    setEntryData(hList: x: i_pEntry: length);
 
-   // Save pointer to entry signature
+  // Save pointer to entry signature
    entrySignature = listE.signature;
 
-   // Sort list, if required
+  // Sort list, if required
    prvListSortSignature = hList.sortSignature;
    performAutoSort(hList);
 
-   // Find entry using its signature if the list
-   // had been sorted.
+  // Find entry using its signature if the list
+  // had been sorted.
    if (prvListSortSignature <> hList.sortSignature);
       x = findEntryBySignature(hList: entrySignature);
    endif;
 
-   // Ready
+  // Ready
    isDone = cTrue;
 enddo;
 
-// Set return value
+  // Set return value
 if isDone;
    index = x;
 else;
@@ -1073,7 +1006,7 @@ endif;
 return index;
 
 
-end-proc BasicList_add;
+end-proc;
 
 //=========================================================================
 //  Adds a string to a given BasicList.
@@ -1087,19 +1020,17 @@ end-proc BasicList_add;
 //                   success, else -1.
 //=========================================================================
 dcl-proc BasicList_addString export;
+  dcl-pi *n int(10);
+    i_pList  like(BasicList_handle_t) const;
+    i_string varchar(4096) const;
+  end-pi;
 
-dcl-pi BasicList_addString
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-  i_string        varchar(4096) const;
-end-pi;
+  //  Return value
+  dcl-s index int(10) inz(-1);
 
-//  Return value
-dcl-s index           int(10) inz(-1);
-
-//  Helper fields
-dcl-s string          like(i_string) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  dcl-s string like(i_string) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 string = i_string;
 
@@ -1110,7 +1041,7 @@ index = BasicList_add(i_pList: %addr(string)
 return index;
 
 
-end-proc BasicList_addString;
+end-proc;
 
 //=========================================================================
 //  Adds a pointer to a given BasicList.
@@ -1124,19 +1055,17 @@ end-proc BasicList_addString;
 //                   success, else -1.
 //=========================================================================
 dcl-proc BasicList_addPointer export;
+  dcl-pi *n int(10);
+    i_pList   like(BasicList_handle_t) const;
+    i_pointer pointer const;
+  end-pi;
 
-dcl-pi BasicList_addPointer
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-  i_pointer       pointer const;
-end-pi;
+  //  Return value
+  dcl-s index int(10) inz(-1);
 
-//  Return value
-dcl-s index           int(10) inz(-1);
-
-//  Helper fields
-dcl-s pointer         like(i_pointer) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  dcl-s pointer like(i_pointer) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 pointer = i_pointer;
 
@@ -1147,7 +1076,7 @@ index = BasicList_add(i_pList: %addr(pointer)
 return index;
 
 
-end-proc BasicList_addPointer;
+end-proc;
 
 //=========================================================================
 //  Adds a NULL value to a given BasicList.
@@ -1160,24 +1089,22 @@ end-proc BasicList_addPointer;
 //                   success, else -1.
 //=========================================================================
 dcl-proc BasicList_addNull export;
+  dcl-pi *n int(10);
+    i_pList like(BasicList_handle_t) const;
+  end-pi;
 
-dcl-pi BasicList_addNull
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-end-pi;
+  //  Return value
+  dcl-s index int(10) inz(-1);
 
-//  Return value
-dcl-s index           int(10) inz(-1);
-
-//  Helper fields
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 index = BasicList_add(i_pList: *NULL);
 
 return index;
 
 
-end-proc BasicList_addNull;
+end-proc;
 
 //=========================================================================
 //  Searches the list for a given element.
@@ -1192,59 +1119,57 @@ end-proc BasicList_addNull;
 //                   success, else -1.
 //=========================================================================
 dcl-proc BasicList_find export;
+  dcl-pi *n int(10);
+    i_pList  like(BasicList_handle_t) const;
+    i_pEntry pointer options(*string) const;
+    i_length int(10) options(*nopass) const;
+  end-pi;
 
-dcl-pi BasicList_find
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-  i_pEntry        pointer const  options(*string);
-  i_length        int(10) const  options(*nopass);
-end-pi;
+  //  Return value
+  dcl-s index int(10) inz(-1);
 
-//  Return value
-dcl-s index           int(10) inz(-1);
+  //  Parameter positions
+  dcl-c p_length 3;
 
-//  Parameter positions
-dcl-c p_length const(3);
+  //  Fields for optional parameters
+  dcl-s length like(i_length) inz;
 
-//  Fields for optional parameters
-dcl-s length          like(i_length     ) inz;
+  //  Loop control
+  dcl-s isDone ind inz(cFalse);
+  dcl-s isError ind inz(cFalse);
 
-//  Loop control
-dcl-s isDone          ind inz(cFalse);
-dcl-s isError         ind inz(cFalse);
+  //  Helper fields
+  dcl-s ignoreCase ind inz(cFalse);
+  dcl-s x uns(10) inz;
+  dcl-s rc int(10) inz;
 
-//  Helper fields
-dcl-s ignoreCase      ind inz(cFalse);
-dcl-s x               uns(10) inz;
-dcl-s rc              int(10) inz;
-
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-dcl-ds listE likeds(listE_t    ) based(pListE);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
+  dcl-ds listE likeds(listE_t) based(pListE);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Do until everything is done or an error occured
+  // Do until everything is done or an error occured
 dou isDone or isError;
 
-   // Get length of entry data
+  // Get length of entry data
    if %parms() >= p_length;
       length = i_length;
    else;
       length = strlen(i_pEntry);
    endif;
 
-   // Get access to list handle
+  // Get access to list handle
    pHList = i_pList;
 
-   // Spin through entries in list searching for the request element
+  // Spin through entries in list searching for the request element
    for x = 1 to hList.numE;
 
-      // Get access to entry data
+  // Get access to entry data
       pListE = getPointerListE(hList: x);
 
-      // Compare entry attributes
+  // Compare entry attributes
       if (length = listE.size);
          if ignoreCase;
             rc = memicmp(i_pEntry: listE.pData: length);
@@ -1262,14 +1187,14 @@ dou isDone or isError;
 
    endfor;
 
-   // Ready
+  // Ready
    isDone = cTrue;
 enddo;
 
 return index;
 
 
-end-proc BasicList_find;
+end-proc;
 
 //=========================================================================
 //  Searches the list for a given string.
@@ -1283,24 +1208,22 @@ end-proc BasicList_find;
 //                   success, else -1.
 //=========================================================================
 dcl-proc BasicList_findString export;
+  dcl-pi *n int(10);
+    i_pList  like(BasicList_handle_t) const;
+    i_string varchar(4096) const;
+  end-pi;
 
-dcl-pi BasicList_findString
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-  i_string        varchar(4096) const;
-end-pi;
+  //  Return value
+  dcl-s index int(10) inz(-1);
 
-//  Return value
-dcl-s index           int(10) inz(-1);
+  //  Loop control
+  dcl-s isDone ind inz(cFalse);
+  dcl-s isError ind inz(cFalse);
 
-//  Loop control
-dcl-s isDone          ind inz(cFalse);
-dcl-s isError         ind inz(cFalse);
-
-//  Helper fields
-dcl-s x               uns(10) inz;
-dcl-s string          like(i_string) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  dcl-s x uns(10) inz;
+  dcl-s string like(i_string) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 string = i_string;
 
@@ -1309,7 +1232,7 @@ index = BasicList_find(i_pList: %addr(string): %len(i_string) + 2);
 return index;
 
 
-end-proc BasicList_findString;
+end-proc;
 
 //=========================================================================
 //  Changes the element at the specified position in this list.
@@ -1325,45 +1248,42 @@ end-proc BasicList_findString;
 //                   success, else -1.
 //=========================================================================
 dcl-proc BasicList_set export;
+  dcl-pi *n int(10);
+    i_pList  like(BasicList_handle_t) const;
+    i_index  int(10) const;
+    i_pEntry pointer options(*string) const;
+    i_length int(10) options(*nopass: *omit) const;
+    i_type   like(BasicList_type_t) options(*nopass: *omit) const;
+  end-pi;
 
-dcl-pi BasicList_set
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-  i_index         int(10) const;
-  i_pEntry        pointer const  options(*string);
-  i_length        int(10) const  options(*nopass: *omit);
-  i_type          const  like(BasicList_type_t  )
-       options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s newLength int(10) inz(-1);
 
-//  Return value
-dcl-s newLength       int(10) inz(-1);
+  //  Parameter positions
+  dcl-c p_length 4;
+  dcl-c p_type 5;
 
-//  Parameter positions
-dcl-c p_length const(4);
-dcl-c p_type const(5);
+  //  Fields for optional parameters
+  dcl-s length like(i_length) inz;
+  dcl-s type like(i_type) inz;
 
-//  Fields for optional parameters
-dcl-s length          like(i_length     ) inz;
-dcl-s type            like(i_type       ) inz;
+  //  Loop control
+  dcl-s isDone ind inz(cFalse);
+  dcl-s isError ind inz(cFalse);
 
-//  Loop control
-dcl-s isDone          ind inz(cFalse);
-dcl-s isError         ind inz(cFalse);
+  //  Helper fields
+  dcl-s isPresent int(10) inz;
 
-//  Helper fields
-dcl-s isPresent       int(10) inz;
-
-//  Handle Data
-dcl-ds hList likeds(hList_t    ) based(pHList);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Handle Data
+  dcl-ds hList likeds(hList_t) based(pHList);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Do until everything is done or an error occured
+  // Do until everything is done or an error occured
 dou isDone or isError;
 
-   // Get length of entry data
+  // Get length of entry data
    if %parms() >= p_length;
       CEETSTA(isPresent: p_length: *omit);
    else;
@@ -1380,7 +1300,7 @@ dou isDone or isError;
       endif;
    endif;
 
-   // Get type of entry data
+  // Get type of entry data
    if %parms() >= p_type;
       CEETSTA(isPresent: p_type: *omit);
    else;
@@ -1393,23 +1313,23 @@ dou isDone or isError;
       type = cBASICLIST_TYPE_UNKNOWN;
    endif;
 
-   // Get access to list handle
+  // Get access to list handle
    pHList = i_pList;
 
-   // Set entry data
+  // Set entry data
    newLength = setEntryData(hList: i_index: i_pEntry: length);
 
-   // Sort list, if required
+  // Sort list, if required
    performAutoSort(hList);
 
-   // Ready
+  // Ready
    isDone = cTrue;
 enddo;
 
 return newLength;
 
 
-end-proc BasicList_set;
+end-proc;
 
 //=========================================================================
 //  Changes the element at the specified position to NULL.
@@ -1423,25 +1343,23 @@ end-proc BasicList_set;
 //                   success, else -1.
 //=========================================================================
 dcl-proc BasicList_setNull export;
+  dcl-pi *n int(10);
+    i_pList like(BasicList_handle_t) const;
+    i_index int(10) const;
+  end-pi;
 
-dcl-pi BasicList_setNull
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-  i_index         int(10) const;
-end-pi;
+  //  Return value
+  dcl-s newLength int(10) inz(-1);
 
-//  Return value
-dcl-s newLength       int(10) inz(-1);
-
-//  Helper fields
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 newLength = BasicList_set(i_pList: i_index: *NULL);
 
 return newLength;
 
 
-end-proc BasicList_setNull;
+end-proc;
 
 //=========================================================================
 //  Changes the string at the specified position in this list.
@@ -1456,20 +1374,18 @@ end-proc BasicList_setNull;
 //                   success, else -1.
 //=========================================================================
 dcl-proc BasicList_setString export;
+  dcl-pi *n int(10);
+    i_pList  like(BasicList_handle_t) const;
+    i_index  int(10) const;
+    i_string varchar(4096) const;
+  end-pi;
 
-dcl-pi BasicList_setString
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-  i_index         int(10) const;
-  i_string        varchar(4096) const;
-end-pi;
+  //  Return value
+  dcl-s newLength int(10) inz(-1);
 
-//  Return value
-dcl-s newLength       int(10) inz(-1);
-
-//  Helper fields
-dcl-s string          like(i_string) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  dcl-s string like(i_string) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 string = i_string;
 
@@ -1481,7 +1397,7 @@ newLength = BasicList_set(i_pList: i_index
 return newLength;
 
 
-end-proc BasicList_setString;
+end-proc;
 
 //=========================================================================
 //  Changes the pointer at the specified position in this list.
@@ -1496,20 +1412,18 @@ end-proc BasicList_setString;
 //                   success, else -1.
 //=========================================================================
 dcl-proc BasicList_setPointer export;
+  dcl-pi *n int(10);
+    i_pList   like(BasicList_handle_t) const;
+    i_index   int(10) const;
+    i_pointer pointer const;
+  end-pi;
 
-dcl-pi BasicList_setPointer
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-  i_index         int(10) const;
-  i_pointer       pointer const;
-end-pi;
+  //  Return value
+  dcl-s newLength int(10) inz(-1);
 
-//  Return value
-dcl-s newLength       int(10) inz(-1);
-
-//  Helper fields
-dcl-s pointer         like(i_pointer) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  dcl-s pointer like(i_pointer) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 pointer = i_pointer;
 
@@ -1521,7 +1435,7 @@ newLength = BasicList_set(i_pList: i_index
 return newLength;
 
 
-end-proc BasicList_setPointer;
+end-proc;
 
 //=========================================================================
 //  Removes the element at the specified position in this list.
@@ -1534,61 +1448,59 @@ end-proc BasicList_setPointer;
 //   rc            - Returns 0 success, else -1.
 //=========================================================================
 dcl-proc BasicList_remove export;
+  dcl-pi *n int(10);
+    i_pList like(BasicList_handle_t) const;
+    i_index int(10) const;
+  end-pi;
 
-dcl-pi BasicList_remove
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-  i_index         int(10) const;
-end-pi;
+  //  Return value
+  dcl-s rc int(10) inz(-1);
 
-//  Return value
-dcl-s rc              int(10) inz(-1);
+  //  Loop control
+  dcl-s isDone ind inz(cFalse);
+  dcl-s isError ind inz(cFalse);
 
-//  Loop control
-dcl-s isDone          ind inz(cFalse);
-dcl-s isError         ind inz(cFalse);
+  //  Helper fields
+  dcl-s pTarget pointer inz;
+  dcl-s pSource pointer inz;
+  dcl-s size uns(10) inz;
+  dcl-s curIndex uns(10) inz;
+  dcl-s numDeletedE uns(10) inz;
 
-//  Helper fields
-dcl-s pTarget         pointer inz;
-dcl-s pSource         pointer inz;
-dcl-s size            uns(10) inz;
-dcl-s curIndex        uns(10) inz;
-dcl-s numDeletedE     uns(10) inz;
+  dcl-ds range qualified;
+    from uns(10) inz;
+    to   uns(10) inz;
+  end-ds;
 
-dcl-ds range qualified;
-  from            uns(10) inz;
-  to              uns(10) inz;
-end-ds;
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
 
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
+  //  List entry
+  dcl-ds listE likeds(listE_t) based(pListE);
+  dcl-s pListE pointer based(ppListE);
 
-//  List entry
-dcl-ds listE likeds(listE_t    ) based(pListE);
-dcl-s pListE          pointer based(ppListE);
-
-//  Memory Manager
-/COPY QBASICS1,MEMMGR
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Memory Manager
+/copy QBASICS1,MEMMGR
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Set memory manager
+  // Set memory manager
 mm_memMgr = MemoryManager_getDefaultManager();
 
-// Do until everything is done or an error occured
+  // Do until everything is done or an error occured
 dou isDone or isError;
 
-   // Get access to list handle
+  // Get access to list handle
    pHList = i_pList;
 
-   // Return to caller if there are no entries in this list
+  // Return to caller if there are no entries in this list
    if hList.numE = 0;
       isDone = cTrue;
       leave;
    endif;
 
-   // Determine the range of elements to remove
+  // Determine the range of elements to remove
    if i_index = cBASICLIST_REMOVE_ALL;
       range.from = 1;
       range.to   = hList.numE;
@@ -1597,18 +1509,18 @@ dou isDone or isError;
       range.to   = i_index;
    endif;
 
-   // Remove all entries within the specified range:
+  // Remove all entries within the specified range:
    numDeletedE = 0;
 
    for curIndex = range.from to range.to;
 
-      // Increment number of removed entries
+  // Increment number of removed entries
       numDeletedE = numDeletedE + 1;
 
-      // Get access to entry data
+  // Get access to entry data
       ppListE = getPointerArrayE(hList: curIndex);
 
-      // Free entry data:
+  // Free entry data:
       if (pListE <> *NULL);
          if not entryData_isNULL(listE);
             clear listE.signature;
@@ -1623,11 +1535,11 @@ dou isDone or isError;
 
    endfor;
 
-   // If it was not the last entry that was removed
-   // from the list, ...
+  // If it was not the last entry that was removed
+  // from the list, ...
    if range.to < hList.numE;
 
-      // ... then shifts any subsequent elements to the left
+  // ... then shifts any subsequent elements to the left
       pTarget = getPointerArrayE(hList: range.from);
       pSource = getPointerArrayE(hList: range.to + 1);
       size    = (hList.numE - range.from) * %size(pDummy);
@@ -1635,26 +1547,26 @@ dou isDone or isError;
 
    endif;
 
-   // Compute number of elements remaining in this list
+  // Compute number of elements remaining in this list
    hList.numE = hList.numE - numDeletedE;
 
-   // Set new signature
+  // Set new signature
    hList.signature = Signature_new();
 
-   // Initialize freed memory
+  // Initialize freed memory
    pSource = getPointerArrayE(hList: hList.numE + 1);
    size    = numDeletedE * %size(pDummy);
    memset(pSource: x'00': size);
 
-   // We just removed an element from the list.
-   // Hence we do not need to sort the list again.
+  // We just removed an element from the list.
+  // Hence we do not need to sort the list again.
    hList.sortSignature = hList.signature;
 
-   // Done.
+  // Done.
    isDone = cTrue;
 enddo;
 
-// Set return value
+  // Set return value
 if isDone;
    rc = 0;
 else;
@@ -1664,7 +1576,7 @@ endif;
 return rc;
 
 
-end-proc BasicList_remove;
+end-proc;
 
 //=========================================================================
 //  Returns the number of elements in this list.
@@ -1677,36 +1589,34 @@ end-proc BasicList_remove;
 //                   success, else -1.
 //=========================================================================
 dcl-proc BasicList_getNumE export;
+  dcl-pi *n int(10);
+    i_pList like(BasicList_handle_t) const;
+  end-pi;
 
-dcl-pi BasicList_getNumE
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-end-pi;
+  //  Return value
+  dcl-s numE int(10) inz(-1);
 
-//  Return value
-dcl-s numE            int(10) inz(-1);
+  //  Loop control
+  dcl-s isDone ind inz(cFalse);
+  dcl-s isError ind inz(cFalse);
 
-//  Loop control
-dcl-s isDone          ind inz(cFalse);
-dcl-s isError         ind inz(cFalse);
-
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Do until everything is done or an error occured
+  // Do until everything is done or an error occured
 dou isDone or isError;
 
-   // Get access to list handle
+  // Get access to list handle
    pHList = i_pList;
 
-   // Ready
+  // Ready
    isDone = cTrue;
 enddo;
 
-// Set return value
+  // Set return value
 if isDone;
    numE = hList.numE;
 else;
@@ -1716,7 +1626,7 @@ endif;
 return numE;
 
 
-end-proc BasicList_getNumE;
+end-proc;
 
 //=========================================================================
 //  Returns the heap ID of a given BasicList.
@@ -1728,22 +1638,20 @@ end-proc BasicList_getNumE;
 //   heapID        - ID of the heap this BasicList belongs to.
 //=========================================================================
 dcl-proc BasicList_getHeapID export;
+  dcl-pi *n int(10);
+    i_pList like(BasicList_handle_t) const;
+  end-pi;
 
-dcl-pi BasicList_getHeapID
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-end-pi;
+  //  Return value
+  dcl-s heapID int(10) inz(-1);
 
-//  Return value
-dcl-s heapID          int(10) inz(-1);
-
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Get access to list handle
+  // Get access to list handle
 pHList = i_pList;
 
 heapID = hList.heapID;
@@ -1751,7 +1659,7 @@ heapID = hList.heapID;
 return heapID;
 
 
-end-proc BasicList_getHeapID;
+end-proc;
 
 //=========================================================================
 //  Sorts a list using the specified sort function.
@@ -1764,32 +1672,30 @@ end-proc BasicList_getHeapID;
 //   isSorted      - Returns TRUE on success, else FALSE.
 //=========================================================================
 dcl-proc BasicList_sort export;
+  dcl-pi *n ind;
+    i_pList    like(BasicList_handle_t) const;
+    i_pSortFnc pointer(*proc) const;
+  end-pi;
 
-dcl-pi BasicList_sort
-       ind;
-  i_pList         const  like(BasicList_handle_t);
-  i_pSortFnc      pointer(*proc) const;
-end-pi;
+  //  Return value
+  dcl-s isSorted ind inz(cFalse);
 
-//  Return value
-dcl-s isSorted        ind inz(cFalse);
-
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Get access to list handle
+  // Get access to list handle
 pHList = i_pList;
 
-// Sort the list.
+  // Sort the list.
 isSorted = sortList(hList: i_pSortFnc);
 
 return isSorted;
 
 
-end-proc BasicList_sort;
+end-proc;
 
 //=========================================================================
 //  Returns cTrue if a given list is sorted.
@@ -1801,28 +1707,26 @@ end-proc BasicList_sort;
 //   isSorted      - Returns TRUE if the list is sorted, else cFalse.
 //=========================================================================
 dcl-proc BasicList_isSorted export;
+  dcl-pi *n ind;
+    i_pList like(BasicList_handle_t) const;
+  end-pi;
 
-dcl-pi BasicList_isSorted
-       ind;
-  i_pList         const  like(BasicList_handle_t);
-end-pi;
+  //  Return value
+  dcl-s isSorted ind inz(cFalse);
 
-//  Return value
-dcl-s isSorted        ind inz(cFalse);
-
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Get access to list handle
+  // Get access to list handle
 pHList = i_pList;
 
 return isSortedInternally(hList);
 
 
-end-proc BasicList_isSorted;
+end-proc;
 
 //=========================================================================
 //  Specifies an auto-sort function for this list.
@@ -1835,29 +1739,27 @@ end-proc BasicList_isSorted;
 //   isSet         - Returns TRUE on success, else FALSE.
 //=========================================================================
 dcl-proc BasicList_setAutoSort export;
+  dcl-pi *n ind;
+    i_pList    like(BasicList_handle_t) const;
+    i_pSortFnc pointer(*proc) const;
+  end-pi;
 
-dcl-pi BasicList_setAutoSort
-       ind;
-  i_pList         const  like(BasicList_handle_t);
-  i_pSortFnc      pointer(*proc) const;
-end-pi;
+  //  Return value
+  dcl-s isSet ind inz(cFalse);
 
-//  Return value
-dcl-s isSet           ind inz(cFalse);
-
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Get access to list handle
+  // Get access to list handle
 pHList = i_pList;
 
-// Set auto-sort procedure address
+  // Set auto-sort procedure address
 hList.pAutoSortFnc = i_pSortFnc;
 
-// Sort list
+  // Sort list
 if performAutoSort(hList);
    isSet = cTrue;
 else;
@@ -1867,7 +1769,7 @@ endif;
 return isSet;
 
 
-end-proc BasicList_setAutoSort;
+end-proc;
 
 //=========================================================================
 //  Removes all entries from a given list.
@@ -1879,30 +1781,28 @@ end-proc BasicList_setAutoSort;
 //   rc              Returns 0 success, else -1.
 //=========================================================================
 dcl-proc BasicList_clear export;
+  dcl-pi *n int(10);
+    i_pList like(BasicList_handle_t) const;
+  end-pi;
 
-dcl-pi BasicList_clear
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-end-pi;
-
-//  Return value
-dcl-s rc              int(10) inz(-1);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Return value
+  dcl-s rc int(10) inz(-1);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Return to caller if there are no entries in this list
+  // Return to caller if there are no entries in this list
 if BasicList_getNumE(i_pList) = 0;
    rc = 0;
 else;
-   // Remove all entries from the list
+  // Remove all entries from the list
    rc = BasicList_remove(i_pList: cBASICLIST_REMOVE_ALL);
 endif;
 
 return rc;
 
 
-end-proc BasicList_clear;
+end-proc;
 
 //=========================================================================
 //  Returns the total size of memory used by this list.
@@ -1914,31 +1814,29 @@ end-proc BasicList_clear;
 //   totalSize     - Returns the total size of memory used by the list.
 //=========================================================================
 dcl-proc BasicList_getTotalSize export;
+  dcl-pi *n int(20);
+    i_pList like(BasicList_handle_t) const;
+  end-pi;
 
-dcl-pi BasicList_getTotalSize
-       int(20);
-  i_pList         const  like(BasicList_handle_t);
-end-pi;
+  //  Return value
+  dcl-s totalSize int(20) inz(-1);
 
-//  Return value
-dcl-s totalSize       int(20) inz(-1);
-
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(i_pList);
 
-// Get access to list handle
+  // Get access to list handle
 pHList = i_pList;
 
-// Set return value
+  // Set return value
 totalSize = hList.totalMemSize;
 
 return totalSize;
 
 
-end-proc BasicList_getTotalSize;
+end-proc;
 
 //=========================================================================
 //  Deletes a given BasicList.
@@ -1950,45 +1848,43 @@ end-proc BasicList_getTotalSize;
 //   rc              Returns 0 success, else -1.
 //=========================================================================
 dcl-proc BasicList_delete export;
+  dcl-pi *n int(10);
+    io_pList like(BasicList_handle_t);
+  end-pi;
 
-dcl-pi BasicList_delete
-       int(10);
-  io_pList        like(BasicList_handle_t);
-end-pi;
+  //  Return value
+  dcl-s rc int(10) inz(-1);
 
-//  Return value
-dcl-s rc              int(10) inz(-1);
+  //  Loop control
+  dcl-s isDone ind inz(cFalse);
+  dcl-s isError ind inz(cFalse);
 
-//  Loop control
-dcl-s isDone          ind inz(cFalse);
-dcl-s isError         ind inz(cFalse);
+  //  Memory Manager
+/copy QBASICS1,MEMMGR
 
-//  Memory Manager
-/COPY QBASICS1,MEMMGR
-
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 checkListHandle(io_pList);
 
-// Do until everything is done or an error occured
+  // Do until everything is done or an error occured
 dou isDone or isError;
 
-   // Get access to list handle
+  // Get access to list handle
    pHList = io_pList;
 
-   // Set memory manager
+  // Set memory manager
    mm_memMgr = hList.memMgr;
 
-   // Free all list entries
+  // Free all list entries
    dow hList.numE > 0;
       BasicList_remove(io_pList: hList.numE);
    enddo;
 
    p_assert(hList.numE = 0);
 
-   // Free memory of list handle
+  // Free memory of list handle
    if hList.pBase <> *NULL;
       hList.totalMemSize = hList.totalMemSize - hList.memSize;
       mm_free(hList.pBase);
@@ -1997,7 +1893,7 @@ dou isDone or isError;
 
    p_assert(hList.pBase = *NULL);
 
-   // Clear handle data
+  // Clear handle data
    clear hList;
    hList.intType       = 0;
    hList.intSize       = 0;
@@ -2012,19 +1908,19 @@ dou isDone or isError;
    hList.pBase         = *NULL;
    hList.pAutoSortFnc  = *NULL;
 
-   // Free memory of list handle
+  // Free memory of list handle
    mm_free(pHList);
 
-   // Ready
+  // Ready
    isDone = cTrue;
 enddo;
 
-// Set return parameter value
+  // Set return parameter value
 if isDone;
    io_pList = BasicList_null();
 endif;
 
-// Set return value
+  // Set return value
 if isDone;
    rc = 0;
 else;
@@ -2034,7 +1930,7 @@ endif;
 return rc;
 
 
-end-proc BasicList_delete;
+end-proc;
 
 //=========================================================================
 //  Returns a BasicList NULL handle.
@@ -2046,21 +1942,19 @@ end-proc BasicList_delete;
 //   pList         - NULL handle of a BasicList.
 //=========================================================================
 dcl-proc BasicList_null export;
+  dcl-pi *n like(BasicList_handle_t);
+  end-pi;
 
-dcl-pi BasicList_null
-       like(BasicList_handle_t);
-end-pi;
-
-//  Return value
-dcl-s pList           like(BasicList_handle_t) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Return value
+  dcl-s pList like(BasicList_handle_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 pList = *NULL;
 
 return pList;
 
 
-end-proc BasicList_null;
+end-proc;
 
 //=========================================================================
 //  Checks a given BasicList handle for a NULL value.
@@ -2072,15 +1966,13 @@ end-proc BasicList_null;
 //   isNull        - Returns TRUE if the handle is null, else FALSE.
 //=========================================================================
 dcl-proc BasicList_isNull export;
+  dcl-pi *n ind;
+    i_pList like(BasicList_handle_t) const;
+  end-pi;
 
-dcl-pi BasicList_isNull
-       ind;
-  i_pList         const  like(BasicList_handle_t);
-end-pi;
-
-//  Return value
-dcl-s isNull          ind inz(cTrue);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Return value
+  dcl-s isNull ind inz(cTrue);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if i_pList = BasicList_null();
    isNull = cTrue;
@@ -2091,7 +1983,7 @@ endif;
 return isNull;
 
 
-end-proc BasicList_isNull;
+end-proc;
 
 //=========================================================================
 //  Checks a given BasicList entry for a NULL value.
@@ -2104,33 +1996,31 @@ end-proc BasicList_isNull;
 //   isNull        - Returns TRUE if the liste entry is null, else FALSE.
 //=========================================================================
 dcl-proc BasicList_isNullValue export;
+  dcl-pi *n ind;
+    i_pList like(BasicList_handle_t) const;
+    i_index int(10) const;
+  end-pi;
 
-dcl-pi BasicList_isNullValue
-       ind;
-  i_pList         const  like(BasicList_handle_t);
-  i_index         int(10) const;
-end-pi;
+  //  Return value
+  dcl-s isNull ind inz(cTrue);
 
-//  Return value
-dcl-s isNull          ind inz(cTrue);
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(pHList);
 
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(pHList);
+  //  List entry
+  dcl-ds listE likeds(listE_t) based(pListE);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  List entry
-dcl-ds listE likeds(listE_t    ) based(pListE);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-// Get access to list handle
+  // Get access to list handle
 pHList = i_pList;
 
-// Verify range of i_index
+  // Verify range of i_index
 if isIndexOutOfRange(hList: i_index);
    p_assert(cFalse:
             'Index value (' + %char(i_index) + ') is out of range');
 endif;
 
-// Get access to entry data
+  // Get access to entry data
 pListE = getPointerListE(hList: i_index);
 
 if (listE.pData = *NULL);
@@ -2142,62 +2032,60 @@ endif;
 return isNull;
 
 
-end-proc BasicList_isNullValue;
+end-proc;
 
 //=========================================================================
 //  *** private ***
 //  Produces a new list entry.
 //=========================================================================
 dcl-proc newEntry;
+  dcl-pi *n int(10);
+    i_hList likeds(hList_t);
+    i_type  like(BasicList_type_t) const;
+  end-pi;
 
-dcl-pi newEntry
-       int(10);
-  i_hList         likeds(hList_t   );
-i_type          const  like(BasicList_type_t  );
-end-pi;
+  //  Return value
+  dcl-s index int(10) inz;
 
-//  Return value
-dcl-s index           int(10) inz;
+  //  Loop control
+  dcl-s isDone ind inz(cFalse);
+  dcl-s isError ind inz(cFalse);
 
-//  Loop control
-dcl-s isDone          ind inz(cFalse);
-dcl-s isError         ind inz(cFalse);
+  //  Helper fields
+  dcl-s newMemSize like(hList_t.memSize) inz;
+  dcl-ds listE likeds(listE_t) based(pListE);
+  dcl-s pListE pointer based(ppListE);
 
-//  Helper fields
-dcl-s newMemSize      like(hList_t.memSize) inz;
-dcl-ds listE likeds(listE_t      ) based(pListE);
-dcl-s pListE          pointer based(ppListE);
+  //  Maximum size for a non-Teraspace malloc()
+  dcl-c MAX_MEM_SIZE 16711568;
 
-//  Maximum size for a non-Teraspace malloc()
-dcl-c MAX_MEM_SIZE 16711568;
+  //  Memory Manager
+/copy QBASICS1,MEMMGR
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Memory Manager
-/COPY QBASICS1,MEMMGR
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-// Do until everything is done or an error occured
+  // Do until everything is done or an error occured
 dou isDone or isError;
 
-   // Set memory manager
+  // Set memory manager
    mm_memMgr = i_hList.memMgr;
 
-   // If the there are no more free entries in this list, ...
+  // If the there are no more free entries in this list, ...
    if i_hList.maxNumE = i_hList.numE;
 
-      // ... then check amout of used memory and
+  // ... then check amout of used memory and
       if i_hList.memSize >= MAX_MEM_SIZE;
          signalError(cPROBLEM_LIST_FULL: f_caller());
-         // signalProblem(cPROBLEM_LIST_FULL: f_caller());
-         // signalProblem(
-         //       '#list items: ' +
-         //        %char(i_hList.maxNumE): f_caller());
-         // signalProblem(
-         //       '#total size of memory: ' +
-         //        %char(i_hList.totalMemSize): f_caller());
-         // return 0;
+  // signalProblem(cPROBLEM_LIST_FULL: f_caller());
+  // signalProblem(
+  //       '#list items: ' +
+  //        %char(i_hList.maxNumE): f_caller());
+  // signalProblem(
+  //       '#total size of memory: ' +
+  //        %char(i_hList.totalMemSize): f_caller());
+  // return 0;
       endif;
 
-      // ... (re)allocate additional memory
+  // ... (re)allocate additional memory
       newMemSize = i_hList.memSize +
                    (%size(pDummy) * i_hList.increment);
 
@@ -2224,19 +2112,19 @@ dou isDone or isError;
       i_hList.totalMemSize = i_hList.totalMemSize + i_hList.memSize;
    endif;
 
-   // Increment number of entries in this list
+  // Increment number of entries in this list
    i_hList.numE = i_hList.numE + 1;
 
-   // Set new signature
+  // Set new signature
    i_hList.signature = Signature_new();
 
-   // Create liste entry
+  // Create liste entry
    ppListE = getPointerArrayE(i_hList: i_hList.numE);
    pListE = mm_allocate(%size(listE_t): i_hList.heapID);
 
    i_hList.totalMemSize = i_hList.totalMemSize + %size(listE_t);
 
-   // Initialize entry data
+  // Initialize entry data
    clear listE;
    listE.type      = i_type;
    listE.pData     = *NULL;
@@ -2244,11 +2132,11 @@ dou isDone or isError;
    listE.maxSize   = 0;
    listE.signature = Signature_new();
 
-   // Ready
+  // Ready
    isDone = cTrue;
 enddo;
 
-// Set return value
+  // Set return value
 if isDone;
    index = i_hList.numE;
 else;
@@ -2258,7 +2146,7 @@ endif;
 return index;
 
 
-end-proc newEntry;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -2266,24 +2154,22 @@ end-proc newEntry;
 //  liste entry.
 //=========================================================================
 dcl-proc getPointerArrayE;
+  dcl-pi *n pointer;
+    i_hList likeds(hList_t) const;
+    i_index int(10) const;
+  end-pi;
 
-dcl-pi getPointerArrayE
-       pointer;
-  i_hList         const  likeds(hList_t   );
-i_index         int(10) const;
-end-pi;
+  //  Return value
+  dcl-s ppListE pointer inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Return value
-dcl-s ppListE         pointer inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-// Compute memory address of list entry
+  // Compute memory address of list entry
 ppListE = i_hList.pBase + ((i_index-1) * %size(pDummy));
 
 return ppListE;
 
 
-end-proc getPointerArrayE;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -2291,56 +2177,53 @@ end-proc getPointerArrayE;
 //  position in this list.
 //=========================================================================
 dcl-proc getPointerListE;
+  dcl-pi *n pointer;
+    i_hList likeds(hList_t) const;
+    i_index int(10) const;
+  end-pi;
 
-dcl-pi getPointerListE
-       pointer;
-  i_hList         const  likeds(hList_t   );
-i_index         int(10) const;
-end-pi;
+  //  Return value
+  dcl-s pListE pointer based(ppListE);
+  dcl-s ppListE pointer inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Return value
-dcl-s pListE          pointer based(ppListE);
-dcl-s ppListE         pointer inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-// Compute memory address of list entry
+  // Compute memory address of list entry
 ppListE = getPointerArrayE(i_hList: i_index);
 
 return pListE;
 
 
-end-proc getPointerListE;
+end-proc;
 
 //=========================================================================
 //  *** private ***
 //  Frees the memory of a given element in this list.
 //=========================================================================
 dcl-proc freeEntryData;
+  dcl-pi *n;
+    i_hList  likeds(hList_t);
+    io_listE likeds(listE_t);
+  end-pi;
 
-dcl-pi freeEntryData;
-  i_hList         likeds(hList_t   );
-io_listE        likeds(listE_t   );
-end-pi;
+  //  Memory Manager
+/copy QBASICS1,MEMMGR
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Memory Manager
-/COPY QBASICS1,MEMMGR
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-// Do until everything is done or an error occured
+  // Do until everything is done or an error occured
 dou '1';
 
-   // Set memory manager
+  // Set memory manager
    mm_memMgr = i_hList.memMgr;
 
-   // Keep track of the sized of memory used by the list
+  // Keep track of the sized of memory used by the list
    i_hList.totalMemSize = i_hList.totalMemSize - io_listE.maxSize;
 
-   // Initialize entry data
+  // Initialize entry data
    if io_listE.size > 0;
       memset(io_listE.pData: x'00': io_listE.maxSize);
    endif;
 
-   // Free memory of entry entry
+  // Free memory of entry entry
    mm_free(io_listE.pData);
    io_listE.type    = '';
    io_listE.size    = 0;
@@ -2352,22 +2235,20 @@ enddo;
 return;
 
 
-end-proc freeEntryData;
+end-proc;
 
 //=========================================================================
 //  *** private ***
 //  Returns TRUE if a given list contains no data.
 //=========================================================================
 dcl-proc entryData_isNULL;
+  dcl-pi *n ind;
+    i_listE likeds(listE_t) const;
+  end-pi;
 
-dcl-pi entryData_isNULL
-       ind;
-  i_listE         const  likeds(listE_t   );
-end-pi;
-
-//  Return value
-dcl-s isNULL          ind inz(cFalse);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Return value
+  dcl-s isNULL ind inz(cFalse);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if (i_listE.size = 0) and (i_listE.pData = *NULL);
    isNULL = cTrue;
@@ -2378,41 +2259,38 @@ endif;
 return isNULL;
 
 
-end-proc entryData_isNULL;
+end-proc;
 
 //=========================================================================
 //  *** private ***
 //  Create a very basic list handle.
 //=========================================================================
 dcl-proc newListInternal;
+  dcl-pi *n pointer;
+    i_extType   like(BasicList_type_t) const;
+    i_increment int(10) const;
+    i_heapID    int(10) const;
+    i_memMgr    likeds(MemoryManager_manager_t) const;
+  end-pi;
 
-dcl-pi newListInternal
-       pointer;
-  i_extType       const  like(BasicList_type_t  );
-  i_increment     int(10) const;
-  i_heapID        int(10) const;
-  i_memMgr        const  likeds(MemoryManager...
-_manager_t);
-end-pi;
+  //  Return value
+  dcl-ds hList likeds(hList_t) based(pHList);
 
-//  Return value
-dcl-ds hList likeds(hList_t    ) based(pHList);
+  //  Memory Manager
+/copy QBASICS1,MEMMGR
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Memory Manager
-/COPY QBASICS1,MEMMGR
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-// Set memory manager
+  // Set memory manager
 mm_memMgr = i_memMgr;
 
-// Allocate memory for list handle
+  // Allocate memory for list handle
 pHList = mm_allocate(%size(hList_t): i_heapID);
 
 if pHList = *NULL;
    signalError(cERROR_NO_MEMORY: f_caller());
 endif;
 
-// Initialize list handle
+  // Initialize list handle
 clear hList;
 hList.intType       = cHANDLE_TYPE_LIST;
 hList.intSize       = %size(hList);
@@ -2432,42 +2310,40 @@ hList.heapID        = i_heapID;
 return pHList;
 
 
-end-proc newListInternal;
+end-proc;
 
 //=========================================================================
 //  *** private ***
 //  Set the entry data.
 //=========================================================================
 dcl-proc setEntryData;
+  dcl-pi *n int(10);
+    io_hList likeds(hList_t);
+    i_index  int(10) const;
+    i_pEntry pointer const;
+    i_length int(10) const;
+  end-pi;
 
-dcl-pi setEntryData
-       int(10);
-  io_hList        likeds(hList_t  );
-i_index         int(10) const;
-i_pEntry        pointer const;
-i_length        int(10) const;
-end-pi;
+  //  Return Value
+  dcl-s newLength int(10) inz(-1);
 
-//  Return Value
-dcl-s newLength       int(10) inz(-1);
+  //  Entry Data
+  dcl-ds listE likeds(listE_t) based(pListE);
 
-//  Entry Data
-dcl-ds listE likeds(listE_t    ) based(pListE);
+  //  Memory Manager
+/copy QBASICS1,MEMMGR
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Memory Manager
-/COPY QBASICS1,MEMMGR
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-// Set memory manager
+  // Set memory manager
 mm_memMgr = io_hList.memMgr;
 
-// Get access to entry data
+  // Get access to entry data
 pListE = getPointerListE(io_hList: i_index);
 
-// If the lenth of the entry data exceeds the
-// size of the allocated memory ...
+  // If the lenth of the entry data exceeds the
+  // size of the allocated memory ...
 if i_length > listE.maxSize;
-   // ... (re)allocate memory buffer
+  // ... (re)allocate memory buffer
    if listE.pData = *NULL;
       listE.pData = mm_allocate(i_length: io_hList.heapID);
    else;
@@ -2485,26 +2361,26 @@ if i_length > listE.maxSize;
    io_hList.totalMemSize = io_hList.totalMemSize + listE.maxSize;
 endif;
 
-// If entry data is available ...
+  // If entry data is available ...
 if i_length > 0;
-   // ... then copy entry data to buffer
+  // ... then copy entry data to buffer
    memcpy(listE.pData: i_pEntry: i_length);
-   // ... clear remaining data
+  // ... clear remaining data
    if i_length < listE.maxSize;
       memset(listE.pData + i_length: x'00': listE.maxSize - i_length);
    endif;
 else;
-   // ... else clear entry data
+  // ... else clear entry data
    memset(listE.pData: x'00': listE.maxSize);
 endif;
 
-// Set new signature
+  // Set new signature
 io_hList.signature = Signature_new();
 
-// Save current length of entry data
+  // Save current length of entry data
 listE.size = i_length;
 
-// Free entry data if applicable:
+  // Free entry data if applicable:
 if not entryData_isNULL(listE) and (listE.size = 0);
    freeEntryData(io_hList: listE);
 endif;
@@ -2514,20 +2390,18 @@ newLength = listE.size;
 return newLength;
 
 
-end-proc setEntryData;
+end-proc;
 
 //=========================================================================
 //  *** private ***
 //  Checks the range of the list index.
 //=========================================================================
 dcl-proc isIndexOutOfRange;
-
-dcl-pi isIndexOutOfRange
-       ind;
-  i_hList         const  likeds(hList_t  );
-i_index         int(10) const;
-end-pi;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  dcl-pi *n ind;
+    i_hList likeds(hList_t) const;
+    i_index int(10) const;
+  end-pi;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if (i_index < 1) or (i_index > i_hList.numE);
    return cTrue;
@@ -2536,31 +2410,29 @@ else;
 endif;
 
 
-end-proc isIndexOutOfRange;
+end-proc;
 
 //=========================================================================
 //  *** private ***
 //  Sorts a given list.
 //=========================================================================
 dcl-proc qsortCallback;
+  dcl-pi *n int(10);
+    i_pKey     pointer value;
+    i_pElement pointer value;
+  end-pi;
 
-dcl-pi qsortCallback
-       int(10);
-  i_pKey          pointer value;
-  i_pElement      pointer value;
-end-pi;
+  dcl-s pKey pointer based(i_pKey);
+  dcl-s pElement pointer based(i_pElement);
 
-dcl-s pKey            pointer based(i_pKey);
-dcl-s pElement        pointer based(i_pElement);
-
-dcl-ds key likeds(listE_t) based(pKey    );
-dcl-ds element likeds(listE_t) based(pElement);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  dcl-ds key likeds(listE_t) based(pKey);
+  dcl-ds element likeds(listE_t) based(pElement);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 return sortFnc(key.pData: key.size: element.pData: element.size);
 
 
-end-proc qsortCallback;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -2568,18 +2440,16 @@ end-proc qsortCallback;
 //  has been specified.
 //=========================================================================
 dcl-proc performAutoSort;
+  dcl-pi *n ind;
+    io_hList likeds(hList_t);
+  end-pi;
 
-dcl-pi performAutoSort
-       ind;
-  io_hList        likeds(hList_t  );
-end-pi;
+  //  Parameter positions
+  dcl-c p_currentE 2;
 
-//  Parameter positions
-dcl-c p_currentE const(2);
-
-//  Return value
-dcl-s isSorted        ind inz(cFalse);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Return value
+  dcl-s isSorted ind inz(cFalse);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if io_hList.pAutoSortFnc <> *NULL;
    isSorted = sortList(io_hList: io_hList.pAutoSortFnc);
@@ -2590,23 +2460,21 @@ endif;
 return isSorted;
 
 
-end-proc performAutoSort;
+end-proc;
 
 //=========================================================================
 //  *** private ***
 //  Sorts the list.
 //=========================================================================
 dcl-proc sortList;
+  dcl-pi *n ind;
+    io_hList   likeds(hList_t);
+    i_pSortFnc pointer(*proc) const;
+  end-pi;
 
-dcl-pi sortList
-       ind;
-  io_hList        likeds(hList_t  );
-i_pSortFnc      pointer(*proc) const;
-end-pi;
-
-//  Return value
-dcl-s isSorted        ind inz(cFalse);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Return value
+  dcl-s isSorted ind inz(cFalse);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if (isSortedInternally(io_hList));
    isSorted = cTrue;
@@ -2615,18 +2483,18 @@ else;
    p_assert(g_pSortFnc = *NULL
             : 'g_pSortFnc should be NULL');
 
-   // Set global variable to hold address of sort procedure
+  // Set global variable to hold address of sort procedure
    g_pSortFnc = i_pSortFnc;
 
-   // Sort list
+  // Sort list
    qsort(io_hList.pBase: io_hList.numE
                        : %size(pDummy)
                        : %paddr('qsortCallback'));
 
-   // Set sort signature
+  // Set sort signature
    io_hList.sortSignature = io_hList.signature;
 
-   // Clear global sort function pointer
+  // Clear global sort function pointer
    g_pSortFnc = *NULL;
 
    isSorted = cTrue;
@@ -2635,22 +2503,20 @@ endif;
 return isSorted;
 
 
-end-proc sortList;
+end-proc;
 
 //=========================================================================
 //  *** private ***
 //  Returns cTrue for a sorted list, else cFalse.                                       R
 //=========================================================================
 dcl-proc isSortedInternally;
+  dcl-pi *n ind;
+    i_hList likeds(hList_t) const;
+  end-pi;
 
-dcl-pi isSortedInternally
-       ind;
-  i_hList         const  likeds(hList_t  );
-end-pi;
-
-//  Return value
-dcl-s isSorted        ind inz(cFalse);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Return value
+  dcl-s isSorted ind inz(cFalse);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if i_hList.signature = i_hList.sortSignature;
    isSorted = cTrue;
@@ -2661,29 +2527,27 @@ endif;
 return isSorted;
 
 
-end-proc isSortedInternally;
+end-proc;
 
 //=========================================================================
 //  *** private ***
 //  Searches the list for an entry using the data pointer of the entry
 //=========================================================================
 dcl-proc findEntryBySignature;
+  dcl-pi *n int(10);
+    i_hList     likeds(hList_t) const;
+    i_signature likeds(signature_t) const;
+  end-pi;
 
-dcl-pi findEntryBySignature
-       int(10);
-  i_hList         const  likeds(hList_t    );
-i_signature     const  likeds(signature_t);
-end-pi;
+  //  Return value
+  dcl-s index int(10) inz(-1);
 
-//  Return value
-dcl-s index           int(10) inz(-1);
+  //  List entry
+  dcl-ds listE likeds(listE_t) based(pListE);
 
-//  List entry
-dcl-ds listE likeds(listE_t    ) based(pListE);
-
-//  Helper fields
-dcl-s x               int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  dcl-s x int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 for x = 1 to i_hList.numE;
    pListE = getPointerListE(i_hList: x);
@@ -2696,47 +2560,45 @@ endfor;
 return index;
 
 
-end-proc findEntryBySignature;
+end-proc;
 
 //=========================================================================
 //  *** private ***
 //  Returns a new list signature.
 //=========================================================================
 dcl-proc Signature_new;
+  dcl-pi *n likeds(signature_t);
+  end-pi;
 
-dcl-pi Signature_new
-       likeds(signature_t );
-end-pi;
+  //  Return value
+  dcl-ds signature likeds(signature_t) inz;
 
-//  Return value
-dcl-ds signature likeds(signature_t ) inz;
+  //  Endless counter
+  dcl-s lastCounter uns(10) inz static;
+  dcl-s maxCounter uns(10) inz(*hival) static;
+  dcl-ds now likeds(timeb_t) inz;
 
-//  Endless counter
-dcl-s lastCounter     uns(10) inz           static;
-dcl-s maxCounter      uns(10) inz(*HIVAL)   static;
-dcl-ds now likeds(timeb_t ) inz;
+  dcl-pr ftime int(10) extproc('ftime');
+    tp likeds(timeb_t) const;
+  end-pr;
 
-dcl-pr ftime           int(10) extproc('ftime');
-  tp              const  likeds(timeb_t);
-end-pr;
+  dcl-ds timeb_t qualified based(pDummy);
+    time     int(10);
+    millitm  int(10);
+    timezone int(10);
+    dstflag  int(10);
+  end-ds;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-dcl-ds timeb_t qualified               based(pDummy);
-  time            int(10);
-  millitm         int(10);
-  timezone        int(10);
-  dstflag         int(10);
-end-ds;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-// signature.tmStmp  = %timestamp();
-/IF NOT DEFINED(*V5R3M0)
+  // signature.tmStmp  = %timestamp();
+/if NOT DEFINED(*V5R3M0)
 signature.time = time(*NULL);
 signature.millitm = 0;
-/ELSE
+/else
 ftime(now);   // API introduced: V5R3
 signature.time = now.time;
 signature.millitm = now.millitm;
-/ENDIF
+/endif
 
 if lastCounter < maxCounter;
    signature.counter = lastCounter + 1;
@@ -2749,7 +2611,7 @@ lastCounter = signature.counter;
 return signature;
 
 
-end-proc Signature_new;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -2757,14 +2619,13 @@ end-proc Signature_new;
 //  Returns TRUE for a valid list handle, else FALSE.
 //=========================================================================
 dcl-proc checkListHandle;
+  dcl-pi *n;
+    i_pList like(BasicList_handle_t) const;
+  end-pi;
 
-dcl-pi checkListHandle;
-  i_pList         const  like(BasicList_handle_t);
-end-pi;
-
-//  List handle
-dcl-ds hList likeds(hList_t    ) based(i_pList);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  List handle
+  dcl-ds hList likeds(hList_t) based(i_pList);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if (BasicList_isNull(i_pList));
    signalError(cERROR_LIST_HANDLE_NULL: f_caller());
@@ -2781,22 +2642,21 @@ endif;
 return;
 
 
-end-proc checkListHandle;
+end-proc;
 
 //=========================================================================
 //  *** private ***
 //  Sends a DIAG message to signal a problem.
 //=========================================================================
 dcl-proc signalProblem;
+  dcl-pi *n;
+    i_text varchar(128) const;
+    i_proc varchar(256) const;
+  end-pi;
 
-dcl-pi signalProblem;
-  i_text          varchar(128) const;
-  i_proc          varchar(256) const;
-end-pi;
-
-//  Helper fields
-dcl-ds msg likeds(msg_t ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  dcl-ds msg likeds(msg_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 msg = f_newMsg('CPF9897'
                : 'BasicList: ERROR - ' + i_text
@@ -2806,22 +2666,21 @@ f_sndPgmMsg(msg: cMsg_Same: i_proc);
 return;
 
 
-end-proc signalProblem;
+end-proc;
 
 //=========================================================================
 //  *** private ***
 //  Sends an ESCAPE message to signal an error condition.
 //=========================================================================
 dcl-proc signalError;
+  dcl-pi *n;
+    i_text varchar(128) const;
+    i_proc varchar(256) const;
+  end-pi;
 
-dcl-pi signalError;
-  i_text          varchar(128) const;
-  i_proc          varchar(256) const;
-end-pi;
-
-//  Helper fields
-dcl-ds msg likeds(msg_t ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  dcl-ds msg likeds(msg_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 msg = f_newMsg('CPF9898'
                : 'BasicList: ERROR - ' + i_text
@@ -2831,5 +2690,4 @@ f_sndPgmMsg(msg: cMsg_Same: i_proc);
 return;
 
 
-end-proc signalError;
-
+end-proc;

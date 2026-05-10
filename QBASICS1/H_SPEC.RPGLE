@@ -1,10 +1,10 @@
-**FREE
-ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
-/IF NOT DEFINED(NO_DECEDIT)
-ctl-opt DECEDIT('0,');
-/ENDIF
-ctl-opt DATEDIT(*DMY.);
-ctl-opt DATFMT(*ISO ) TIMFMT(*ISO );
-ctl-opt EXPROPTS(*RESDECPOS);
-ctl-opt EXTBININT(*YES);
-ctl-opt CCSID(*CHAR: *JOBRUN);
+**free
+ctl-opt debug option(*srcstmt: *nodebugio);
+/if NOT DEFINED(NO_DECEDIT)
+ctl-opt decedit('0,');
+/endif
+ctl-opt datedit(*DMY.);
+ctl-opt datfmt(*iso) timfmt(*iso);
+ctl-opt expropts(*resdecpos);
+ctl-opt extbinint(*yes);
+ctl-opt ccsid(*CHAR: *jobrun);

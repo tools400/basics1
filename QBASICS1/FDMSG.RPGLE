@@ -1,11 +1,11 @@
-**FREE
-/IF NOT DEFINED(msg_t     )
-/DEFINE msg_t
+**free
+/if NOT DEFINED(msg_t     )
+/define msg_t
 // ============================================================= *
 //   Message structure                                           *
 // ============================================================= *
 
-dcl-ds msg_t qualified           based(pDummy);
+dcl-ds msg_t qualified based(pDummy);
 /if defined(*V5R3M0)
   ID   likeds(msgID_t);
 /else
@@ -18,10 +18,10 @@ dcl-ds msg_t qualified           based(pDummy);
 end-ds;
 
 /if defined(*V5R3M0)
-dcl-ds msgID_t qualified           based(pDummy);
-  prefix          char(3);
-  nbr             zoned(4);
+dcl-ds msgID_t qualified based(pDummy);
+  prefix char(3);
+  nbr    zoned(4);
 end-ds;
 /endif
 
-/ENDIF
+/endif

@@ -1,21 +1,21 @@
-**FREE
-/IF NOT DEFINED(mbrd0100_t)
-/DEFINE mbrd0100_t
+**free
+/if NOT DEFINED(mbrd0100_t)
+/define mbrd0100_t
 //===============================================================*
 //  QUSRMBRD API - MBRD0100                                      *
 //===============================================================*
-dcl-ds mbrd0100_t qualified           based(pDummy);
-  bytePrv         int(10);
-  byteAvl         int(10);
-  filNme          char(10);
-  filLib          char(10);
-  mbr             char(10);
-  attr            char(10);
-  srcTyp          char(10);
-  crtDatTim       char(13);
-  chgDatTim       char(13);
-  text            char(50);
-  isSrcFile       char(1);
+dcl-ds mbrd0100_t qualified based(pDummy);
+  bytePrv   int(10);
+  byteAvl   int(10);
+  filNme    char(10);
+  filLib    char(10);
+  mbr       char(10);
+  attr      char(10);
+  srcTyp    char(10);
+  crtDatTim char(13);
+  chgDatTim char(13);
+  text      char(50);
+  isSrcFile char(1);
 end-ds;
 
-/ENDIF
+/endif

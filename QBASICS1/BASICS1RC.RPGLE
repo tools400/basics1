@@ -1,4 +1,4 @@
-**FREE
+**free
 //=====================================================================*
 //  BASICS1RC  - SrvPgm: Basic Routines - BasicMap                     *
 //=====================================================================*
@@ -90,46 +90,46 @@
 //                                                                     *
 //   >>END-PRE-COMPILER<<                                              *
 //=====================================================================*
-ctl-opt NOMAIN;
-ctl-opt BNDDIR('QC2LE');
+ctl-opt nomain;
+ctl-opt bnddir('QC2LE');
 //  Standard H-Specs
-/COPY QBASICS1,H_SPEC
-/COPY QBASICS1,COPYRIGHT
+/copy QBASICS1,H_SPEC
+/copy QBASICS1,COPYRIGHT
 //=====================================================================*
 
 // -----------------------------------------
 //  Exported functions
 // -----------------------------------------
-/COPY QBASICS1,PBASICS1RC
+/copy QBASICS1,PBASICS1RC
 
 // -----------------------------------------
 //  Reference fields
 // -----------------------------------------
-/COPY QBASICS1,BASICS1R0
+/copy QBASICS1,BASICS1R0
 
-dcl-ds hMap_t qualified   based(pDummy)   align;
-  intType         uns(20);
-  intSize         uns(10);
-  pList           like(BasicList_handle_t);
-  pKeySet         like(BasicList_handle_t);
-  keySetRefList   pointer dim(64);
-  keySetNumRef    int(10);
-  increment       int(10);
-  heapID          int(10);
-  memMgr          likeds(MemoryManager_manager_t);
+dcl-ds hMap_t qualified based(pDummy) align;
+  intType       uns(20);
+  intSize       uns(10);
+  pList         like(BasicList_handle_t);
+  pKeySet       like(BasicList_handle_t);
+  keySetRefList pointer dim(64);
+  keySetNumRef  int(10);
+  increment     int(10);
+  heapID        int(10);
+  memMgr        likeds(MemoryManager_manager_t);
 end-ds;
 
-dcl-ds hKeySet_t qualified   based(pDummy)   align;
-  intType         uns(20);
-  intSize         uns(10);
-  x               int(10);
-  pMap            like(BasicMap_handle_t );
+dcl-ds hKeySet_t qualified based(pDummy) align;
+  intType uns(20);
+  intSize uns(10);
+  x       int(10);
+  pMap    like(BasicMap_handle_t);
 end-ds;
 
 dcl-ds mapE_t qualified;
-  pKey            pointer;
-  pData           pointer;
-  size            int(10);
+  pKey  pointer;
+  pData pointer;
+  size  int(10);
 end-ds;
 
 // -----------------------------------------
@@ -137,108 +137,83 @@ end-ds;
 // -----------------------------------------
 
 //  Produces a new KeySet handle.
-dcl-pr produceKeySetHandle
-       like(BasicKeySet_handle_t);
-  i_pMap          const  like(BasicMap_handle_t );
+dcl-pr produceKeySetHandle like(BasicKeySet_handle_t);
+  i_pMap like(BasicMap_handle_t) const;
 end-pr;
 
 //  Frees a given KeySet handle.
 dcl-pr freeKeySetHandle;
-  io_pKeySet      like(BasicKeySet_handle_t);
+  io_pKeySet like(BasicKeySet_handle_t);
 end-pr;
 
 //  Adds a key to the associated key set of a given map.
-dcl-pr addKeySetEntry
-       int(10)
-       extproc('addKeySetEntry');
-  i_pList         const  like(BasicList_handle_t);
-  i_key           const  like(BasicMap_key_t    );
+dcl-pr addKeySetEntry int(10) extproc('addKeySetEntry');
+  i_pList like(BasicList_handle_t) const;
+  i_key   like(BasicMap_key_t) const;
 end-pr;
 
 //  Removes a key from the associated key set of a given map.
-dcl-pr removeKeySetEntry
-       int(10)
-       extproc('removeKeySetEntry');
-  i_pList         const  like(BasicList_handle_t);
-  i_key           const  like(BasicMap_key_t    );
+dcl-pr removeKeySetEntry int(10) extproc('removeKeySetEntry');
+  i_pList like(BasicList_handle_t) const;
+  i_key   like(BasicMap_key_t) const;
 end-pr;
 
 //  Frees the memory of a given map entry.
-dcl-pr freeMapE
-       int(10)
-       extproc('freeMapE');
-  i_pMap          const  like(BasicMap_handle_t );
-  i_index         int(10) const;
+dcl-pr freeMapE int(10) extproc('freeMapE');
+  i_pMap  like(BasicMap_handle_t) const;
+  i_index int(10) const;
 end-pr;
 
 //  Searches the underlaying list for a given key.
-dcl-pr findMapE
-       int(10)
-       extproc('findMapE');
-  i_pMap          const  like(BasicMap_handle_t );
-  i_key           const  like(BasicMap_key_t    )
-       options(*varsize);
+dcl-pr findMapE int(10) extproc('findMapE');
+  i_pMap like(BasicMap_handle_t) const;
+  i_key  like(BasicMap_key_t) options(*varsize) const;
 end-pr;
 
 //  Sorts the map.
-dcl-pr sortMap
-       extproc('sortMap');
-  i_pMap          const  like(BasicMap_handle_t );
+dcl-pr sortMap extproc('sortMap');
+  i_pMap like(BasicMap_handle_t) const;
 end-pr;
 
-dcl-pr sortCallback
-       int(10)
-       extproc('sortCallback');
-  i_pKeyData      pointer value;
-  i_keySize       int(10) value;
-  i_pElemData     pointer value;
-  i_elemSize      int(10) value;
+dcl-pr sortCallback int(10) extproc('sortCallback');
+  i_pKeyData  pointer value;
+  i_keySize   int(10) value;
+  i_pElemData pointer value;
+  i_elemSize  int(10) value;
 end-pr;
 
 //  Checks, whether a given handle is a valid map handle, or not.
-dcl-pr checkMapHandle
-       extproc('checkMapHandle');
-  i_pMap          const  like(BasicMap_handle_t );
+dcl-pr checkMapHandle extproc('checkMapHandle');
+  i_pMap like(BasicMap_handle_t) const;
 end-pr;
 
 //  Checks, whether a given handle is a valid KeySet handle, or not.
-dcl-pr checkKeySetHandle
-       extproc('checkKeySetHandle');
-  i_pKeySet       const  like(BasicKeySet_handle_t);
+dcl-pr checkKeySetHandle extproc('checkKeySetHandle');
+  i_pKeySet like(BasicKeySet_handle_t) const;
 end-pr;
 
 //  Sends an ESCAPE message to signal an error condition.
-dcl-pr signalError
-       extproc('signalError');
-  i_text          varchar(128) const;
-  i_proc          varchar(256) const;
+dcl-pr signalError extproc('signalError');
+  i_text varchar(128) const;
+  i_proc varchar(256) const;
 end-pr;
 
 // -----------------------------------------
 //  Global constants
 // -----------------------------------------
-dcl-c cHANDLE_TYPE_MAP
-      const(6689113833186869569);                                        // =  *Map
-dcl-c cHANDLE_MAP_SIZE
-      const(%size(hMap_t));
+dcl-c cHANDLE_TYPE_MAP 6689113833186869569; // =  *Map
+dcl-c cHANDLE_MAP_SIZE %size(hMap_t);
 
-dcl-c cERROR_MAP_HANDLE_NULL
-      const('Map handle is NULL');
-dcl-c cERROR_MAP_HANDLE_INVALID
-      const('Map handle is invalid');
+dcl-c cERROR_MAP_HANDLE_NULL 'Map handle is NULL';
+dcl-c cERROR_MAP_HANDLE_INVALID 'Map handle is invalid';
 
-dcl-c cHANDLE_TYPE_KEYSET
-      const(6688555357000016705);                                        // =  *KeySet
-dcl-c cHANDLE_KEYSET_SIZE
-      const(%size(hKeySet_t));
+dcl-c cHANDLE_TYPE_KEYSET 6688555357000016705; // =  *KeySet
+dcl-c cHANDLE_KEYSET_SIZE %size(hKeySet_t);
 
-dcl-c cERROR_KEYSET_HANDLE_NULL
-      const('KeySet handle is NULL');
-dcl-c cERROR_KEYSET_HANDLE_INVALID
-      const('KeySet handle is invalid');
+dcl-c cERROR_KEYSET_HANDLE_NULL 'KeySet handle is NULL';
+dcl-c cERROR_KEYSET_HANDLE_INVALID 'KeySet handle is invalid';
 
-dcl-c cTYPE_KEYSET
-      const('*BASIC_KEYSET');
+dcl-c cTYPE_KEYSET '*BASIC_KEYSET';
 
 // -----------------------------------------
 //  Global fields
@@ -256,68 +231,66 @@ dcl-c cTYPE_KEYSET
 //                   success, else NULL.
 //=========================================================================
 dcl-proc BasicMap_new export;
+  dcl-pi *n like(BasicMap_handle_t);
+    i_increment uns(10) options(*nopass: *omit) const;
+    i_heapID    int(10) options(*nopass: *omit) const;
+  end-pi;
 
-dcl-pi BasicMap_new
-       like(BasicMap_handle_t );
-  i_increment     uns(10) const  options(*nopass: *omit);
-  i_heapID        int(10) const  options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s pMap like(BasicMap_handle_t) inz;
 
-//  Return value
-dcl-s pMap            like(BasicMap_handle_t ) inz;
+  //  Parameter positions
+  dcl-c p_increment 1;
+  dcl-c p_heapID 2;
 
-//  Parameter positions
-dcl-c p_increment const(1);
-dcl-c p_heapID const(2);
+  //  Fields for optional parameters
+  dcl-s increment like(i_increment) inz;
+  dcl-s heapID like(i_heapID) inz;
 
-//  Fields for optional parameters
-dcl-s increment       like(i_increment ) inz;
-dcl-s heapID          like(i_heapID    ) inz;
+  //  Memory Manager
+/copy QBASICS1,MEMMGR
 
-//  Memory Manager
-/COPY QBASICS1,MEMMGR
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Get values of optional parameters
+  // ... i_increment
+  if (%parms() >= p_increment and %addr(i_increment) <> *NULL);
+    increment = i_increment;
+  else;
+    increment = 256;
+  endif;
 
-// Get values of optional parameters
-// ... i_increment
-if (%parms() >= p_increment and %addr(i_increment) <> *NULL);
-   increment = i_increment;
-else;
-   increment = 256;
-endif;
+  // ... i_heapID
+  if (%parms() >= p_heapID and %addr(i_heapID) <> *NULL);
+    heapID = i_heapID;
+  else;
+    heapID = 0;
+  endif;
 
-// ... i_heapID
-if (%parms() >= p_heapID and %addr(i_heapID) <> *NULL);
-   heapID = i_heapID;
-else;
-   heapID = 0;
-endif;
+  // Set memory manager
+  mm_memMgr = MemoryManager_getDefaultManager();
 
-// Set memory manager
-mm_memMgr = MemoryManager_getDefaultManager();
+  // Allocate memory for map handle
+  pMap = mm_allocate(%size(hMap_t): heapID);
 
-// Allocate memory for map handle
-pMap = mm_allocate(%size(hMap_t): heapID);
+  // Initialize map handle
+  clear hMap;
+  hMap.intType   = cHANDLE_TYPE_MAP;
+  hMap.intSize   = %size(hMap);
+  hMap.pList     = BasicList_new('*BASICMAP': increment: heapID);
+  hMap.pKeySet   = BasicList_null();
+  clear hMap.keySetRefList;
+  hMap.keySetNumRef = 0;
+  hMap.increment = increment;
+  hMap.heapID    = heapID;
+  hMap.memMgr    = mm_memMgr;
 
-// Initialize map handle
-clear hMap;
-hMap.intType   = cHANDLE_TYPE_MAP;
-hMap.intSize   = %size(hMap);
-hMap.pList     = BasicList_new('*BASICMAP': increment: heapID);
-hMap.pKeySet   = BasicList_null();
-clear hMap.keySetRefList;
-hMap.keySetNumRef = 0;
-hMap.increment = increment;
-hMap.heapID    = heapID;
-hMap.memMgr    = mm_memMgr;
-
-return pMap;
+  return pMap;
 
 
-end-proc BasicMap_new;
+end-proc;
 
 //=========================================================================
 //  Clones a given BasicMap.
@@ -331,47 +304,45 @@ end-proc BasicMap_new;
 //                   success, else NULL.
 //=========================================================================
 dcl-proc BasicMap_clone export;
+  dcl-pi *n like(BasicMap_handle_t);
+    i_pMap like(BasicMap_handle_t) const;
+  end-pi;
 
-dcl-pi BasicMap_clone
-       like(BasicMap_handle_t );
-  i_pMap          const  like(BasicMap_handle_t );
-end-pi;
+  //  Return value
+  dcl-s pMapRtn like(BasicMap_handle_t) inz;
 
-//  Return value
-dcl-s pMapRtn         like(BasicMap_handle_t ) inz;
+  //  Local fields
+  dcl-s x int(10) inz;
+  dcl-s numE int(10) inz;
+  dcl-s key like(BasicMap_key_t) inz;
+  dcl-s size int(10) inz;
+  dcl-s pData pointer inz;
 
-//  Local fields
-dcl-s x               int(10) inz;
-dcl-s numE            int(10) inz;
-dcl-s key             like(BasicMap_key_t ) inz;
-dcl-s size            int(10) inz;
-dcl-s pData           pointer inz;
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Create a new and empty map
+  pMapRtn = BasicMap_new(hMap.increment);
 
-// Create a new and empty map
-pMapRtn = BasicMap_new(hMap.increment);
+  // Copy map entries
+  numE = BasicMap_getNumE(i_pMap);
+  for x = 1 to numE;
+    key   = BasicMap_getKeyByIndex(i_pMap: x);
+    pData = BasicMap_getValueByIndex(i_pMap: x);
+    size  = BasicMap_getSizeByIndex(i_pMap: x);
+    BasicMap_put(pMapRtn: key: pData: size);
+  endfor;
 
-// Copy map entries
-numE = BasicMap_getNumE(i_pMap);
-for x = 1 to numE;
-   key   = BasicMap_getKeyByIndex(i_pMap: x);
-   pData = BasicMap_getValueByIndex(i_pMap: x);
-   size  = BasicMap_getSizeByIndex(i_pMap: x);
-   BasicMap_put(pMapRtn: key: pData: size);
-endfor;
+  // Create a key set if the base map has a key set
+  if (not BasicList_isNull(hMap.pKeySet));
+    BasicMap_newKeySet(i_pMap);
+  endif;
 
-// Create a key set if the base map has a key set
-if (not BasicList_isNull(hMap.pKeySet));
-   BasicMap_newKeySet(i_pMap);
-endif;
-
-return pMapRtn;
+  return pMapRtn;
 
 
-end-proc BasicMap_clone;
+end-proc;
 
 //=========================================================================
 //  Removes the entry to which this map maps the specified key.
@@ -384,39 +355,36 @@ end-proc BasicMap_clone;
 //   rc            - Returns 0 on success, else -1.
 //=========================================================================
 dcl-proc BasicMap_remove export;
+  dcl-pi *n int(10);
+    i_pMap like(BasicMap_handle_t) const;
+    i_key  like(BasicMap_key_t) options(*varsize) const;
+  end-pi;
 
-dcl-pi BasicMap_remove
-       int(10);
-  i_pMap          const  like(BasicMap_handle_t );
-  i_key           const  like(BasicMap_key_t    )
-       options(*varsize);
-end-pi;
+  //  Return value
+  dcl-s rc int(10) inz(-1);
 
-//  Return value
-dcl-s rc              int(10) inz(-1);
+  //  Local fields
+  dcl-s x int(10) inz;
 
-//  Local fields
-dcl-s x               int(10) inz;
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkMapHandle(i_pMap);
 
-checkMapHandle(i_pMap);
+  // Locate element by key in list
+  x = findMapE(i_pMap: i_key);
+  if x = -1;
+    return rc;
+  endif;
 
-// Locate element by key in list
-x = findMapE(i_pMap: i_key);
-if x = -1;
-   return rc;
-endif;
+  // Free memory of map entry
+  rc = freeMapE(i_pMap: x);
 
-// Free memory of map entry
-rc = freeMapE(i_pMap: x);
-
-return rc;
+  return rc;
 
 
-end-proc BasicMap_remove;
+end-proc;
 
 //=========================================================================
 //  Returns true if this map contains a mapping for the specified key.
@@ -430,37 +398,34 @@ end-proc BasicMap_remove;
 //                   specified key, else FALSE.
 //=========================================================================
 dcl-proc BasicMap_containsKey export;
+  dcl-pi *n ind;
+    i_pMap like(BasicMap_handle_t) const;
+    i_key  like(BasicMap_key_t) options(*varsize) const;
+  end-pi;
 
-dcl-pi BasicMap_containsKey
-       ind;
-  i_pMap          const  like(BasicMap_handle_t );
-  i_key           const  like(BasicMap_key_t    )
-       options(*varsize);
-end-pi;
+  //  Return value
+  dcl-s isFound ind inz(cFalse);
 
-//  Return value
-dcl-s isFound         ind inz(cFalse);
+  //  Local fields
+  dcl-s x int(10) inz;
 
-//  Local fields
-dcl-s x               int(10) inz;
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkMapHandle(i_pMap);
 
-checkMapHandle(i_pMap);
+  // Locate element by key in list
+  if findMapE(i_pMap: i_key) = -1;
+    isFound = cFalse;
+  else;
+    isFound = cTrue;
+  endif;
 
-// Locate element by key in list
-if findMapE(i_pMap: i_key) = -1;
-   isFound = cFalse;
-else;
-   isFound = cTrue;
-endif;
-
-return isFound;
+  return isFound;
 
 
-end-proc BasicMap_containsKey;
+end-proc;
 
 //=========================================================================
 //  Returns the value to which this map maps the specified key.
@@ -475,89 +440,85 @@ end-proc BasicMap_containsKey;
 //   pElemData     - Pointer to the value addressed by 'i_key'.
 //=========================================================================
 dcl-proc BasicMap_get export;
+  dcl-pi *n pointer;
+    i_pMap   like(BasicMap_handle_t) const;
+    i_key    like(BasicMap_key_t) options(*varsize) const;
+    i_pEntry pointer options(*nopass) const;
+    i_length int(10) options(*nopass) const;
+  end-pi;
 
-dcl-pi BasicMap_get
-       pointer;
-  i_pMap          const  like(BasicMap_handle_t );
-  i_key           const  like(BasicMap_key_t    )
-       options(*varsize);
-  i_pEntry        pointer const  options(*nopass);
-  i_length        int(10) const  options(*nopass);
-end-pi;
+  //  Return value
+  dcl-s pElemData pointer inz;
 
-//  Return value
-dcl-s pElemData       pointer inz;
+  //  Parameter positions
+  dcl-c p_pEntry 3;
+  dcl-c p_length 4;
 
-//  Parameter positions
-dcl-c p_pEntry const(3);
-dcl-c p_length const(4);
+  //  Fields for optional parameters
+  dcl-s pEntry like(i_pEntry) inz;
+  dcl-s length like(i_length) inz;
 
-//  Fields for optional parameters
-dcl-s pEntry          like(i_pEntry     ) inz;
-dcl-s length          like(i_length     ) inz;
+  //  Local fields
+  dcl-s x int(10) inz;
+  dcl-s maxSize int(10) inz;
+  dcl-ds mapE likeds(mapE_t) based(pMapE);
 
-//  Local fields
-dcl-s x               int(10) inz;
-dcl-s maxSize         int(10) inz;
-dcl-ds mapE likeds(mapE_t       )
-based(pMapE         );
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkMapHandle(i_pMap);
 
-checkMapHandle(i_pMap);
+  // Get values of optional parameters
+  // ... pEntry
+  p_assert(%parms() <> p_pEntry
+           : 'length must be specified if pEntry is passed');
 
-// Get values of optional parameters
-// ... pEntry
-p_assert(%parms() <> p_pEntry
-         : 'length must be specified if pEntry is passed');
+  // ... length
+  if %parms() >= p_length;
+    pEntry = i_pEntry;
+    length = i_length;
+  else;
+    pEntry = *NULL;
+    length = 0;
+  endif;
 
-// ... length
-if %parms() >= p_length;
-   pEntry = i_pEntry;
-   length = i_length;
-else;
-   pEntry = *NULL;
-   length = 0;
-endif;
+  // Locate element by key in list
+  x = findMapE(i_pMap: i_key);
+  if x = -1;
+    return pElemData;
+  endif;
 
-// Locate element by key in list
-x = findMapE(i_pMap: i_key);
-if x = -1;
-   return pElemData;
-endif;
+  // Get element from underlaying list
+  pMapE = BasicList_get(hMap.pList: x);
+  if pMapE = *NULL;
+    return pElemData;
+  endif;
 
-// Get element from underlaying list
-pMapE = BasicList_get(hMap.pList: x);
-if pMapE = *NULL;
-   return pElemData;
-endif;
+  // Determine number of bytes to copy
+  if length < mapE.size;
+    maxSize = length;
+  else;
+    maxSize = mapE.size;
+  endif;
 
-// Determine number of bytes to copy
-if length < mapE.size;
-   maxSize = length;
-else;
-   maxSize = mapE.size;
-endif;
+  // Initialize return buffer
+  if length > 0;
+    memset(pEntry: x'00': length);
+  endif;
 
-// Initialize return buffer
-if length > 0;
-   memset(pEntry: x'00': length);
-endif;
+  // Copy entry data
+  if maxSize > 0;
+    memcpy(pEntry: mapE.pData: maxSize);
+    pElemData = pEntry;
+  else;
+    pElemData = mapE.pData;
+  endif;
 
-// Copy entry data
-if maxSize > 0;
-   memcpy(pEntry: mapE.pData: maxSize);
-   pElemData = pEntry;
-else;
-   pElemData = mapE.pData;
-endif;
-
-return pElemData;
+  return pElemData;
 
 
-end-proc BasicMap_get;
+end-proc;
 
 //=========================================================================
 //  Returns the string value to which this map maps the specified key.
@@ -570,66 +531,62 @@ end-proc BasicMap_get;
 //   string        - String value addressed by 'i_key'.
 //=========================================================================
 dcl-proc BasicMap_getString export;
+  dcl-pi *n varchar(4096);
+    i_pMap like(BasicMap_handle_t) const;
+    i_key  like(BasicMap_key_t) options(*varsize) const;
+  end-pi;
 
-dcl-pi BasicMap_getString
-       varchar(4096);
-  i_pMap          const  like(BasicMap_handle_t );
-  i_key           const  like(BasicMap_key_t    )
-       options(*varsize);
-end-pi;
+  //  Return value
+  dcl-s string varchar(4096) inz;
 
-//  Return value
-dcl-s string          varchar(4096) inz;
+  //  Local fields
+  dcl-s x int(10) inz;
+  dcl-s length int(10) inz;
+  dcl-s maxSize int(10) inz;
+  dcl-ds mapE likeds(mapE_t) based(pMapE);
 
-//  Local fields
-dcl-s x               int(10) inz;
-dcl-s length          int(10) inz;
-dcl-s maxSize         int(10) inz;
-dcl-ds mapE likeds(mapE_t       )
-based(pMapE         );
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkMapHandle(i_pMap);
 
-checkMapHandle(i_pMap);
+  // Locate element by key in list
+  x = findMapE(i_pMap: i_key);
+  if x = -1;
+    return string;
+  endif;
 
-// Locate element by key in list
-x = findMapE(i_pMap: i_key);
-if x = -1;
-   return string;
-endif;
+  // Get element from underlaying list
+  pMapE = BasicList_get(hMap.pList: x);
+  if pMapE = *NULL;
+    return string;
+  endif;
 
-// Get element from underlaying list
-pMapE = BasicList_get(hMap.pList: x);
-if pMapE = *NULL;
-   return string;
-endif;
+  // Determine size of return value
+  length = %size(string);
 
-// Determine size of return value
-length = %size(string);
+  // Determine number of bytes to copy
+  if length < mapE.size;
+    maxSize = length;
+  else;
+    maxSize = mapE.size;
+  endif;
 
-// Determine number of bytes to copy
-if length < mapE.size;
-   maxSize = length;
-else;
-   maxSize = mapE.size;
-endif;
+  // Initialize return buffer
+  if length > 0;
+    memset(%addr(string): x'00': length);
+  endif;
 
-// Initialize return buffer
-if length > 0;
-   memset(%addr(string): x'00': length);
-endif;
+  // Copy entry data
+  if maxSize > 0;
+    memcpy(%addr(string): mapE.pData: maxSize);
+  endif;
 
-// Copy entry data
-if maxSize > 0;
-   memcpy(%addr(string): mapE.pData: maxSize);
-endif;
-
-return string;
+  return string;
 
 
-end-proc BasicMap_getString;
+end-proc;
 
 //=========================================================================
 //  Returns the integer value to which this map maps the specified key.
@@ -642,29 +599,26 @@ end-proc BasicMap_getString;
 //   integer       - Integer value addressed by 'i_key'.
 //=========================================================================
 dcl-proc BasicMap_getInteger export;
+  dcl-pi *n int(10);
+    i_pMap like(BasicMap_handle_t) const;
+    i_key  like(BasicMap_key_t) options(*varsize) const;
+  end-pi;
 
-dcl-pi BasicMap_getInteger
-       int(10);
-  i_pMap          const  like(BasicMap_handle_t );
-  i_key           const  like(BasicMap_key_t    )
-       options(*varsize);
-end-pi;
+  //  Return value
+  dcl-s integer int(10) inz;
 
-//  Return value
-dcl-s integer         int(10) inz;
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (BasicMap_get(i_pMap:i_key:%addr(integer):%size(integer)) = *NULL);
+    integer = 0;
+  endif;
 
-if (BasicMap_get(i_pMap:i_key:%addr(integer):%size(integer)) = *NULL);
-   integer = 0;
-endif;
-
-return integer;
+  return integer;
 
 
-end-proc BasicMap_getInteger;
+end-proc;
 
 //=========================================================================
 //  Returns the key addressed by a given index.
@@ -677,43 +631,40 @@ end-proc BasicMap_getInteger;
 //   key           - Returns 0 on success, else -1.
 //=========================================================================
 dcl-proc BasicMap_getKeyByIndex export;
+  dcl-pi *n like(BasicMap_key_t);
+    i_pMap  like(BasicMap_handle_t) const;
+    i_index int(10) const;
+  end-pi;
 
-dcl-pi BasicMap_getKeyByIndex
-       like(BasicMap_key_t    );
-  i_pMap          const  like(BasicMap_handle_t );
-  i_index         int(10) const;
-end-pi;
+  //  Return value
+  dcl-s key like(BasicMap_key_t) inz;
 
-//  Return value
-dcl-s key             like(BasicMap_key_t    ) inz;
+  //  Local fields
+  dcl-s mapE_key like(BasicMap_key_t) based(mapE.pKey);
+  dcl-ds mapE likeds(mapE_t) based(pMapE);
 
-//  Local fields
-dcl-s mapE_key        like(BasicMap_key_t ) based(mapE.pKey);
-dcl-ds mapE likeds(mapE_t       )
-based(pMapE         );
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkMapHandle(i_pMap);
 
-checkMapHandle(i_pMap);
+  // Sort list, to keep order stable in case the user performs
+  // a BasicMap_get() once that he got the key.
+  sortMap(i_pMap);
 
-// Sort list, to keep order stable in case the user performs
-// a BasicMap_get() once that he got the key.
-sortMap(i_pMap);
+  // Get element from underlaying list
+  pMapE = BasicList_get(hMap.pList: i_index);
+  if pMapE = *NULL;
+    return '';
+  endif;
 
-// Get element from underlaying list
-pMapE = BasicList_get(hMap.pList: i_index);
-if pMapE = *NULL;
-   return '';
-endif;
+  key = %subst(mapE_key: 1: %len(mapE_key));
 
-key = %subst(mapE_key: 1: %len(mapE_key));
-
-return key;
+  return key;
 
 
-end-proc BasicMap_getKeyByIndex;
+end-proc;
 
 //=========================================================================
 //  Returns the value addressed by a given index.
@@ -728,85 +679,82 @@ end-proc BasicMap_getKeyByIndex;
 //   rc            - Returns 0 on success, else -1.
 //=========================================================================
 dcl-proc BasicMap_getValueByIndex export;
+  dcl-pi *n pointer;
+    i_pMap   like(BasicMap_handle_t) const;
+    i_index  int(10) const;
+    i_pEntry pointer options(*nopass) const;
+    i_length int(10) options(*nopass) const;
+  end-pi;
 
-dcl-pi BasicMap_getValueByIndex
-       pointer;
-  i_pMap          const  like(BasicMap_handle_t );
-  i_index         int(10) const;
-  i_pEntry        pointer const  options(*nopass);
-  i_length        int(10) const  options(*nopass);
-end-pi;
+  //  Return value
+  dcl-s pElemData pointer inz;
 
-//  Return value
-dcl-s pElemData       pointer inz;
+  //  Parameter positions
+  dcl-c p_pEntry 3;
+  dcl-c p_length 4;
 
-//  Parameter positions
-dcl-c p_pEntry const(3);
-dcl-c p_length const(4);
+  //  Fields for optional parameters
+  dcl-s pEntry like(i_pEntry) inz;
+  dcl-s length like(i_length) inz;
 
-//  Fields for optional parameters
-dcl-s pEntry          like(i_pEntry     ) inz;
-dcl-s length          like(i_length     ) inz;
+  //  Local fields
+  dcl-s maxSize int(10) inz;
+  dcl-ds mapE likeds(mapE_t) based(pMapE);
 
-//  Local fields
-dcl-s maxSize         int(10) inz;
-dcl-ds mapE likeds(mapE_t       )
-based(pMapE         );
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkMapHandle(i_pMap);
 
-checkMapHandle(i_pMap);
+  // Get values of optional parameters
+  // ... pEntry
+  p_assert(%parms() <> p_pEntry
+           : 'length must be specified if pEntry is passed');
 
-// Get values of optional parameters
-// ... pEntry
-p_assert(%parms() <> p_pEntry
-         : 'length must be specified if pEntry is passed');
+  // ... length
+  if %parms() >= p_length;
+    pEntry = i_pEntry;
+    length = i_length;
+  else;
+    pEntry = *NULL;
+    length = 0;
+  endif;
 
-// ... length
-if %parms() >= p_length;
-   pEntry = i_pEntry;
-   length = i_length;
-else;
-   pEntry = *NULL;
-   length = 0;
-endif;
+  // Sort list, to keep order stable in case the user performs
+  // a BasicMap_get() once that he got the key.
+  sortMap(i_pMap);
 
-// Sort list, to keep order stable in case the user performs
-// a BasicMap_get() once that he got the key.
-sortMap(i_pMap);
+  // Get element from underlaying list
+  pMapE = BasicList_get(hMap.pList: i_index);
+  if pMapE = *NULL;
+    return *NULL;
+  endif;
 
-// Get element from underlaying list
-pMapE = BasicList_get(hMap.pList: i_index);
-if pMapE = *NULL;
-   return *NULL;
-endif;
+  // Determine number of bytes to copy
+  if length < mapE.size;
+    maxSize = length;
+  else;
+    maxSize = mapE.size;
+  endif;
 
-// Determine number of bytes to copy
-if length < mapE.size;
-   maxSize = length;
-else;
-   maxSize = mapE.size;
-endif;
+  // Initialize return buffer
+  if length > 0;
+    memset(pEntry: x'00': length);
+  endif;
 
-// Initialize return buffer
-if length > 0;
-   memset(pEntry: x'00': length);
-endif;
+  // Copy entry data
+  if maxSize > 0;
+    memcpy(pEntry: mapE.pData: maxSize);
+    pElemData = pEntry;
+  else;
+    pElemData = mapE.pData;
+  endif;
 
-// Copy entry data
-if maxSize > 0;
-   memcpy(pEntry: mapE.pData: maxSize);
-   pElemData = pEntry;
-else;
-   pElemData = mapE.pData;
-endif;
-
-return pElemData;
+  return pElemData;
 
 
-end-proc BasicMap_getValueByIndex;
+end-proc;
 
 //=========================================================================
 //  Associates the specified value with the specified key in this map.
@@ -823,98 +771,95 @@ end-proc BasicMap_getValueByIndex;
 //   rc            - Returns 0 on success, else -1.
 //=========================================================================
 dcl-proc BasicMap_put export;
+  dcl-pi *n int(10);
+    i_pMap   like(BasicMap_handle_t) const;
+    i_key    like(BasicMap_key_t) options(*varsize) const;
+    i_pEntry pointer options(*string) const;
+    i_length int(10) options(*nopass) const;
+  end-pi;
 
-dcl-pi BasicMap_put
-       int(10);
-  i_pMap          const  like(BasicMap_handle_t );
-  i_key           const  like(BasicMap_key_t    )
-       options(*varsize);
-  i_pEntry        pointer const  options(*string);
-  i_length        int(10) const  options(*nopass);
-end-pi;
+  //  Return value
+  dcl-s rc int(10) inz(-1);
 
-//  Return value
-dcl-s rc              int(10) inz(-1);
+  //  Parameter positions
+  dcl-c p_length 4;
 
-//  Parameter positions
-dcl-c p_length const(4);
+  //  Fields for optional parameters
+  dcl-s length like(i_length) inz;
 
-//  Fields for optional parameters
-dcl-s length          like(i_length     ) inz;
+  //  Local fields
+  dcl-s x int(10) inz;
+  dcl-s key like(BasicMap_key_t) inz;
+  dcl-ds mapE likeds(mapE_t) inz;
 
-//  Local fields
-dcl-s x               int(10) inz;
-dcl-s key             like(BasicMap_key_t ) inz;
-dcl-ds mapE likeds(mapE_t       ) inz;
+  //  Memory Manager
+/copy QBASICS1,MEMMGR
 
-//  Memory Manager
-/COPY QBASICS1,MEMMGR
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkMapHandle(i_pMap);
 
-checkMapHandle(i_pMap);
+  p_assert(%len(i_key) > 0:
+           'Key length must be greater 0');
 
-p_assert(%len(i_key) > 0:
-         'Key length must be greater 0');
-
-// Get length of entry data
-if %parms() >= p_length;
-   length = i_length;
-else;
-   if i_pEntry = *NULL;
+  // Get length of entry data
+  if %parms() >= p_length;
+    length = i_length;
+  else;
+    if i_pEntry = *NULL;
       length = 0;
-   else;
+    else;
       length = strlen(i_pEntry);
-   endif;
-endif;
+    endif;
+  endif;
 
-// Set memory manager
-mm_memMgr = hMap.memMgr;
+  // Set memory manager
+  mm_memMgr = hMap.memMgr;
 
-// Locate element by key in list
-x = findMapE(i_pMap: i_key);
-if x = -1;
-   // Add new entry to map
-   key = i_key;
+  // Locate element by key in list
+  x = findMapE(i_pMap: i_key);
+  if x = -1;
+    // Add new entry to map
+    key = i_key;
 
-   clear mapE;
-   mapE.pKey  = mm_allocate(%len(key) + 2: hMap.heapID);
-   if (length = 0);
+    clear mapE;
+    mapE.pKey  = mm_allocate(%len(key) + 2: hMap.heapID);
+    if (length = 0);
       mapE.pData = *NULL;
-   else;
+    else;
       mapE.pData = mm_allocate(length: hMap.heapID);
-   endif;
-   mapE.size  = length;
-   memcpy(mapE.pKey : %addr(key): %len(key) + 2);
-   memcpy(mapE.pData: i_pEntry  : length       );
-   if BasicList_add(hMap.pList: %addr(mapE): %size(MapE)) <> -1;
+    endif;
+    mapE.size  = length;
+    memcpy(mapE.pKey : %addr(key): %len(key) + 2);
+    memcpy(mapE.pData: i_pEntry  : length       );
+    if BasicList_add(hMap.pList: %addr(mapE): %size(MapE)) <> -1;
       addKeySetEntry(hMap.pKeySet: key);
       rc = 0;
-   endif;
-   return rc;
-endif;
+    endif;
+    return rc;
+  endif;
 
-// Get existing map entry from underlaying list
-if BasicList_get(hMap.pList: x: %addr(mapE): %size(mapE)) = *NULL;
-   return rc;
-endif;
+  // Get existing map entry from underlaying list
+  if BasicList_get(hMap.pList: x: %addr(mapE): %size(mapE)) = *NULL;
+    return rc;
+  endif;
 
-// Associate new value to key
-mapE.pData = mm_reallocate(mapE.pData: length);
-mapE.size  = length;
-memcpy(mapE.pData: i_pEntry: length);
+  // Associate new value to key
+  mapE.pData = mm_reallocate(mapE.pData: length);
+  mapE.size  = length;
+  memcpy(mapE.pData: i_pEntry: length);
 
-// Write back map entry to list
-if BasicList_set(hMap.pList: x: %addr(mapE): %size(MapE)) <> -1;
-   rc = 0;
-endif;
+  // Write back map entry to list
+  if BasicList_set(hMap.pList: x: %addr(mapE): %size(MapE)) <> -1;
+    rc = 0;
+  endif;
 
-return rc;
+  return rc;
 
 
-end-proc BasicMap_put;
+end-proc;
 
 //=========================================================================
 //  Associates the specified value with the specified key in this map.
@@ -930,32 +875,29 @@ end-proc BasicMap_put;
 //   rc            - Returns 0 on success, else -1.
 //=========================================================================
 dcl-proc BasicMap_putString export;
+  dcl-pi *n int(10);
+    i_pMap   like(BasicMap_handle_t) const;
+    i_key    like(BasicMap_key_t) options(*varsize) const;
+    i_string varchar(4096) const;
+  end-pi;
 
-dcl-pi BasicMap_putString
-       int(10);
-  i_pMap          const  like(BasicMap_handle_t );
-  i_key           const  like(BasicMap_key_t    )
-       options(*varsize);
-  i_string        varchar(4096) const;
-end-pi;
+  //  Return value
+  dcl-s rc int(10) inz(-1);
 
-//  Return value
-dcl-s rc              int(10) inz(-1);
+  //  Local fields
+  dcl-s string like(i_string) inz;
 
-//  Local fields
-dcl-s string          like(i_string       ) inz;
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  string = i_string;
+  rc = BasicMap_put(i_pMap: i_key: %addr(string): %len(string) + 2);
 
-string = i_string;
-rc = BasicMap_put(i_pMap: i_key: %addr(string): %len(string) + 2);
-
-return rc;
+  return rc;
 
 
-end-proc BasicMap_putString;
+end-proc;
 
 //=========================================================================
 //  Associates the specified value with the specified key in this map.
@@ -971,32 +913,29 @@ end-proc BasicMap_putString;
 //   rc            - Returns 0 on success, else -1.
 //=========================================================================
 dcl-proc BasicMap_putInteger export;
+  dcl-pi *n int(10);
+    i_pMap    like(BasicMap_handle_t) const;
+    i_key     like(BasicMap_key_t) options(*varsize) const;
+    i_integer int(10) const;
+  end-pi;
 
-dcl-pi BasicMap_putInteger
-       int(10);
-  i_pMap          const  like(BasicMap_handle_t );
-  i_key           const  like(BasicMap_key_t    )
-       options(*varsize);
-  i_integer       int(10) const;
-end-pi;
+  //  Return value
+  dcl-s rc int(10) inz(-1);
 
-//  Return value
-dcl-s rc              int(10) inz(-1);
+  //  Local fields
+  dcl-s integer like(i_integer) inz;
 
-//  Local fields
-dcl-s integer         like(i_integer      ) inz;
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  integer = i_integer;
+  rc = BasicMap_put(i_pMap: i_key: %addr(integer): %size(integer));
 
-integer = i_integer;
-rc = BasicMap_put(i_pMap: i_key: %addr(integer): %size(integer));
-
-return rc;
+  return rc;
 
 
-end-proc BasicMap_putInteger;
+end-proc;
 
 //=========================================================================
 //  Returns the size of of the element that is associated with this key.
@@ -1009,44 +948,41 @@ end-proc BasicMap_putInteger;
 //   size          - Returns the size of the element on success, else -1.
 //=========================================================================
 dcl-proc BasicMap_getSize export;
+  dcl-pi *n int(10);
+    i_pMap like(BasicMap_handle_t) const;
+    i_key  like(BasicMap_key_t) options(*varsize) const;
+  end-pi;
 
-dcl-pi BasicMap_getSize
-       int(10);
-  i_pMap          const  like(BasicMap_handle_t );
-  i_key           const  like(BasicMap_key_t    )
-       options(*varsize);
-end-pi;
+  //  Return value
+  dcl-s size int(10) inz(-1);
 
-//  Return value
-dcl-s size            int(10) inz(-1);
+  //  Local fields
+  dcl-s x int(10) inz;
+  dcl-ds mapE likeds(mapE_t) inz;
 
-//  Local fields
-dcl-s x               int(10) inz;
-dcl-ds mapE likeds(mapE_t       ) inz;
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkMapHandle(i_pMap);
 
-checkMapHandle(i_pMap);
+  // Locate element by key in list
+  x = findMapE(i_pMap: i_key);
+  if x = -1;
+    return size;
+  endif;
 
-// Locate element by key in list
-x = findMapE(i_pMap: i_key);
-if x = -1;
-   return size;
-endif;
+  // Get map entry from underlaying list
+  if BasicList_get(hMap.pList: x: %addr(mapE): %size(mapE)) = *NULL;
+    return size;
+  endif;
 
-// Get map entry from underlaying list
-if BasicList_get(hMap.pList: x: %addr(mapE): %size(mapE)) = *NULL;
-   return size;
-endif;
+  size = mapE.size;
 
-size = mapE.size;
-
-return size;
+  return size;
 
 
-end-proc BasicMap_getSize;
+end-proc;
 
 //=========================================================================
 //  Returns the size of of the element that is addressed by a given index.
@@ -1059,36 +995,34 @@ end-proc BasicMap_getSize;
 //   size          - Returns the size of the element on success, else -1.
 //=========================================================================
 dcl-proc BasicMap_getSizeByIndex export;
+  dcl-pi *n int(10);
+    i_pMap  like(BasicMap_handle_t) const;
+    i_index int(10) const;
+  end-pi;
 
-dcl-pi BasicMap_getSizeByIndex
-       int(10);
-  i_pMap          const  like(BasicMap_handle_t );
-  i_index         int(10) const;
-end-pi;
+  //  Return value
+  dcl-s size int(10) inz(-1);
 
-//  Return value
-dcl-s size            int(10) inz(-1);
+  //  Local fields
+  dcl-ds mapE likeds(mapE_t) inz;
 
-//  Local fields
-dcl-ds mapE likeds(mapE_t       ) inz;
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkMapHandle(i_pMap);
 
-checkMapHandle(i_pMap);
+  // Get element from underlaying list
+  if BasicList_get(hMap.pList: i_index: %addr(mapE): %size(mapE))= *NULL;
+    return -1;
+  endif;
 
-// Get element from underlaying list
-if BasicList_get(hMap.pList: i_index: %addr(mapE): %size(mapE))= *NULL;
-   return -1;
-endif;
+  size = mapE.size;
 
-size = mapE.size;
-
-return size;
+  return size;
 
 
-end-proc BasicMap_getSizeByIndex;
+end-proc;
 
 //=========================================================================
 //  Returns the number of key-value mappings in this map.
@@ -1101,28 +1035,26 @@ end-proc BasicMap_getSizeByIndex;
 //                   success, else -1.
 //=========================================================================
 dcl-proc BasicMap_getNumE export;
+  dcl-pi *n int(10);
+    i_pMap like(BasicMap_handle_t) const;
+  end-pi;
 
-dcl-pi BasicMap_getNumE
-       int(10);
-  i_pMap          const  like(BasicMap_handle_t );
-end-pi;
+  //  Return value
+  dcl-s numE int(10) inz(-1);
 
-//  Return value
-dcl-s numE            int(10) inz(-1);
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkMapHandle(i_pMap);
 
-checkMapHandle(i_pMap);
+  // Return number of elements of underlaying list
+  numE = BasicList_getNumE(hMap.pList);
 
-// Return number of elements of underlaying list
-numE = BasicList_getNumE(hMap.pList);
-
-return numE;
+  return numE;
 
 
-end-proc BasicMap_getNumE;
+end-proc;
 
 //=========================================================================
 //  Returns the heap ID of a given BasicMap.
@@ -1134,28 +1066,26 @@ end-proc BasicMap_getNumE;
 //   heapID        - ID of the heap this BasicMap belongs to.
 //=========================================================================
 dcl-proc BasicMap_getHeapID export;
+  dcl-pi *n int(10);
+    i_pMap like(BasicMap_handle_t) const;
+  end-pi;
 
-dcl-pi BasicMap_getHeapID
-       int(10);
-  i_pMap          const  like(BasicMap_handle_t );
-end-pi;
+  //  Return value
+  dcl-s heapID int(10) inz;
 
-//  Return value
-dcl-s heapID          int(10) inz;
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkMapHandle(i_pMap);
 
-checkMapHandle(i_pMap);
+  // Return the heap ID of underlaying list
+  heapID = BasicList_getHeapID(hMap.pList);
 
-// Return the heap ID of underlaying list
-heapID = BasicList_getHeapID(hMap.pList);
-
-return heapID;
+  return heapID;
 
 
-end-proc BasicMap_getHeapID;
+end-proc;
 
 //=========================================================================
 //  Returns a list of all keys that are in a given map.
@@ -1168,61 +1098,58 @@ end-proc BasicMap_getHeapID;
 //   hList         - List, containing all keys of the map.
 //=========================================================================
 dcl-proc BasicMap_getKeys export;
+  dcl-pi *n like(BasicList_handle_t);
+    i_pMap     like(BasicMap_handle_t) const;
+    i_pSortFnc pointer(*proc) options(*nopass) const;
+  end-pi;
 
-dcl-pi BasicMap_getKeys
-       like(BasicList_handle_t);
-  i_pMap          const  like(BasicMap_handle_t );
-  i_pSortFnc      pointer(*proc) const
-       options(*nopass);
-end-pi;
+  //  Return value
+  dcl-s hList like(BasicList_handle_t) inz;
 
-//  Return value
-dcl-s hList           like(BasicList_handle_t ) inz;
+  //  Parameter positions
+  dcl-c p_pSortFnc 2;
 
-//  Parameter positions
-dcl-c p_pSortFnc 2;
+  //  Fields for optional parameters
+  dcl-s pSortFnc like(i_pSortFnc) inz;
 
-//  Fields for optional parameters
-dcl-s pSortFnc        like(i_pSortFnc  ) inz;
+  //  Helper fields
+  dcl-s x int(10) inz;
+  dcl-s key like(BasicMap_key_t) inz;
 
-//  Helper fields
-dcl-s x               int(10) inz;
-dcl-s key             like(BasicMap_key_t ) inz;
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkMapHandle(i_pMap);
 
-checkMapHandle(i_pMap);
+  // Get optional parameter values:
+  // ... pSortFnc
+  if (%parms() >= p_pSortFnc and %addr(i_pSortFnc) <> *NULL);
+    pSortFnc = i_pSortFnc;
+  else;
+    pSortFnc = *NULL;
+  endif;
 
-// Get optional parameter values:
-// ... pSortFnc
-if (%parms() >= p_pSortFnc and %addr(i_pSortFnc) <> *NULL);
-   pSortFnc = i_pSortFnc;
-else;
-   pSortFnc = *NULL;
-endif;
+  // Create a new BasicList
+  hList = BasicList_new('*BASICMAP_KEYS'
+                        : hMap.increment
+                        : hMap.heapID);
 
-// Create a new BasicList
-hList = BasicList_new('*BASICMAP_KEYS'
-                      : hMap.increment
-                      : hMap.heapID);
+  // Add map values to list
+  for x = 1 to BasicMap_getNumE(i_pMap);
+    key = BasicMap_getKeyByIndex(i_pMap: x);
+    BasicList_addString(hList: key);
+  endfor;
 
-// Add map values to list
-for x = 1 to BasicMap_getNumE(i_pMap);
-   key = BasicMap_getKeyByIndex(i_pMap: x);
-   BasicList_addString(hList: key);
-endfor;
+  // Sort list if the user passed a comparator
+  if (pSortFnc <> *NULL);
+    BasicList_sort(hList: pSortFnc);
+  endif;
 
-// Sort list if the user passed a comparator
-if (pSortFnc <> *NULL);
-   BasicList_sort(hList: pSortFnc);
-endif;
-
-return hList;
+  return hList;
 
 
-end-proc BasicMap_getKeys;
+end-proc;
 
 //=========================================================================
 //  Returns a list of all values that are in a given map.
@@ -1235,63 +1162,60 @@ end-proc BasicMap_getKeys;
 //   hList         - List, containing all values of the map.
 //=========================================================================
 dcl-proc BasicMap_getValues export;
+  dcl-pi *n like(BasicList_handle_t);
+    i_pMap     like(BasicMap_handle_t) const;
+    i_pSortFnc pointer(*proc) options(*nopass) const;
+  end-pi;
 
-dcl-pi BasicMap_getValues
-       like(BasicList_handle_t);
-  i_pMap          const  like(BasicMap_handle_t );
-  i_pSortFnc      pointer(*proc) const
-       options(*nopass);
-end-pi;
+  //  Return value
+  dcl-s hList like(BasicList_handle_t) inz;
 
-//  Return value
-dcl-s hList           like(BasicList_handle_t ) inz;
+  //  Parameter positions
+  dcl-c p_pSortFnc 2;
 
-//  Parameter positions
-dcl-c p_pSortFnc 2;
+  //  Fields for optional parameters
+  dcl-s pSortFnc like(i_pSortFnc) inz;
 
-//  Fields for optional parameters
-dcl-s pSortFnc        like(i_pSortFnc  ) inz;
+  //  Helper fields
+  dcl-s x int(10) inz;
+  dcl-s size int(10) inz;
+  dcl-s pData pointer inz;
 
-//  Helper fields
-dcl-s x               int(10) inz;
-dcl-s size            int(10) inz;
-dcl-s pData           pointer inz;
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkMapHandle(i_pMap);
 
-checkMapHandle(i_pMap);
+  // Get optional parameter values:
+  // ... pSortFnc
+  if (%parms() >= p_pSortFnc and %addr(i_pSortFnc) <> *NULL);
+    pSortFnc = i_pSortFnc;
+  else;
+    pSortFnc = *NULL;
+  endif;
 
-// Get optional parameter values:
-// ... pSortFnc
-if (%parms() >= p_pSortFnc and %addr(i_pSortFnc) <> *NULL);
-   pSortFnc = i_pSortFnc;
-else;
-   pSortFnc = *NULL;
-endif;
+  // Create a new BasicList
+  hList = BasicList_new('*BASICMAP_VALUES'
+                        : hMap.increment
+                        : hMap.heapID);
 
-// Create a new BasicList
-hList = BasicList_new('*BASICMAP_VALUES'
-                      : hMap.increment
-                      : hMap.heapID);
+  // Add map values to list
+  for x = 1 to BasicMap_getNumE(i_pMap);
+    pData = BasicMap_getValueByIndex(i_pMap: x);
+    size  = BasicMap_getSizeByIndex(i_pMap: x);
+    BasicList_add(hList: pData: size);
+  endfor;
 
-// Add map values to list
-for x = 1 to BasicMap_getNumE(i_pMap);
-   pData = BasicMap_getValueByIndex(i_pMap: x);
-   size  = BasicMap_getSizeByIndex(i_pMap: x);
-   BasicList_add(hList: pData: size);
-endfor;
+  // Sort list if the user passed a comparator
+  if (pSortFnc <> *NULL);
+    BasicList_sort(hList: pSortFnc);
+  endif;
 
-// Sort list if the user passed a comparator
-if (pSortFnc <> *NULL);
-   BasicList_sort(hList: pSortFnc);
-endif;
-
-return hList;
+  return hList;
 
 
-end-proc BasicMap_getValues;
+end-proc;
 
 //=========================================================================
 //  Removes all entries from a given map.
@@ -1303,48 +1227,46 @@ end-proc BasicMap_getValues;
 //   rc              Returns 0 success, else -1.
 //=========================================================================
 dcl-proc BasicMap_clear export;
+  dcl-pi *n int(10);
+    i_pMap like(BasicMap_handle_t) const;
+  end-pi;
 
-dcl-pi BasicMap_clear
-       int(10);
-  i_pMap          const  like(BasicMap_handle_t );
-end-pi;
+  //  Return value
+  dcl-s rc int(10) inz(-1);
 
-//  Return value
-dcl-s rc              int(10) inz(-1);
+  //  Helper fields
+  dcl-s x int(10) inz;
+  dcl-s numE int(10) inz;
+  dcl-s aPointer pointer inz;
+  dcl-ds mapE likeds(mapE_t) inz;
 
-//  Helper fields
-dcl-s x               int(10) inz;
-dcl-s numE            int(10) inz;
-dcl-s aPointer        pointer inz;
-dcl-ds mapE likeds(mapE_t       ) inz;
+  //  Debug:
+  dcl-s key like(BasicMap_key_t) based(mapE.pKey);
+  dcl-s data char(65535) based(mapE.pData);
 
-//  Debug:
-dcl-s key             like(BasicMap_key_t ) based(mapE.pKey);
-dcl-s data            char(65535) based(mapE.pData);
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkMapHandle(i_pMap);
 
-checkMapHandle(i_pMap);
+  // Remove elements from map.
+  numE = BasicList_getNumE(hMap.pList);
 
-// Remove elements from map.
-numE = BasicList_getNumE(hMap.pList);
+  dow numE > 0;
 
-dow numE > 0;
+    // Free memory of map entry
+    freeMapE(i_pMap: numE);
 
-   // Free memory of map entry
-   freeMapE(i_pMap: numE);
+    numE = BasicList_getNumE(hMap.pList);
+  enddo;
 
-   numE = BasicList_getNumE(hMap.pList);
-enddo;
+  rc = 0;
 
-rc = 0;
-
-return rc;
+  return rc;
 
 
-end-proc BasicMap_clear;
+end-proc;
 
 //=========================================================================
 //  Deletes a given BasicMap.
@@ -1356,81 +1278,79 @@ end-proc BasicMap_clear;
 //   rc              Returns 0 success, else -1.
 //=========================================================================
 dcl-proc BasicMap_delete export;
+  dcl-pi *n int(10);
+    io_pMap like(BasicMap_handle_t);
+  end-pi;
 
-dcl-pi BasicMap_delete
-       int(10);
-  io_pMap         like(BasicMap_handle_t );
-end-pi;
+  //  Return value
+  dcl-s rc int(10) inz(-1);
 
-//  Return value
-dcl-s rc              int(10) inz(-1);
+  //  Helper fields
+  dcl-s x int(10) inz;
 
-//  Helper fields
-dcl-s x               int(10) inz;
+  //  Memory Manager
+/copy QBASICS1,MEMMGR
 
-//  Memory Manager
-/COPY QBASICS1,MEMMGR
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(io_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(io_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkMapHandle(io_pMap);
 
-checkMapHandle(io_pMap);
+  dou 1=1;
 
-dou 1=1;
+    // Set memory manager
+    mm_memMgr = hMap.memMgr;
 
-   // Set memory manager
-   mm_memMgr = hMap.memMgr;
-
-   // Free KeySet handles.
-   for x = 1 to %elem(hMap.keySetRefList);
+    // Free KeySet handles.
+    for x = 1 to %elem(hMap.keySetRefList);
       if (hMap.keySetRefList(x) <> *NULL);
-         freeKeySetHandle(hMap.keySetRefList(x));
+        freeKeySetHandle(hMap.keySetRefList(x));
       endif;
-   endfor;
+    endfor;
 
-   // Remove elements from map.
-   rc = BasicMap_clear(io_pMap);
-   if rc <> 0;
+    // Remove elements from map.
+    rc = BasicMap_clear(io_pMap);
+    if rc <> 0;
       leave;
-   endif;
+    endif;
 
-   // Delete underlaying BasicList.
-   BasicList_delete(hMap.pList);
+    // Delete underlaying BasicList.
+    BasicList_delete(hMap.pList);
 
-   // Delete key set if present.
-   if (not BasicList_isNull(hMap.pKeySet));
+    // Delete key set if present.
+    if (not BasicList_isNull(hMap.pKeySet));
       BasicList_delete(hMap.pKeySet);
-   endif;
+    endif;
 
-   // Clear map handle
-   clear hMap;
-   hMap.intType       = 0;
-   hMap.intSize       = 0;
-   hMap.pList         = BasicList_null();
-   hMap.pKeySet       = BasicList_null();
-   for x = 1 to %elem(hMap.keySetRefList);
+    // Clear map handle
+    clear hMap;
+    hMap.intType       = 0;
+    hMap.intSize       = 0;
+    hMap.pList         = BasicList_null();
+    hMap.pKeySet       = BasicList_null();
+    for x = 1 to %elem(hMap.keySetRefList);
       p_assert(hMap.keySetRefList(x) = *NULL:
                'hMap.keySetRefList does not match +
                 expected value *NULL');
-   endfor;
-   p_assert(hMap.keySetNumRef = 0:
-            'hMap.keySetNumRef does not match expected value 0');
-   hMap.increment     = 0;
-   hMap.heapID        = 0;
-   clear hMap.memMgr;
+    endfor;
+    p_assert(hMap.keySetNumRef = 0:
+             'hMap.keySetNumRef does not match expected value 0');
+    hMap.increment     = 0;
+    hMap.heapID        = 0;
+    clear hMap.memMgr;
 
-   // Free memory of map handle
-   mm_free(io_pMap);
+    // Free memory of map handle
+    mm_free(io_pMap);
 
-   io_pMap = BasicMap_null();
+    io_pMap = BasicMap_null();
 
-enddo;
+  enddo;
 
-return rc;
+  return rc;
 
 
-end-proc BasicMap_delete;
+end-proc;
 
 //=========================================================================
 //  Returns a BasicMap NULL handle.
@@ -1442,21 +1362,19 @@ end-proc BasicMap_delete;
 //   pMap          - NULL handle of a BasicMap.
 //=========================================================================
 dcl-proc BasicMap_null export;
+  dcl-pi *n like(BasicMap_handle_t);
+  end-pi;
 
-dcl-pi BasicMap_null
-       like(BasicMap_handle_t );
-end-pi;
+  //  Return value
+  dcl-s pMap like(BasicMap_handle_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Return value
-dcl-s pMap            like(BasicMap_handle_t ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  pMap = *NULL;
 
-pMap = *NULL;
-
-return pMap;
+  return pMap;
 
 
-end-proc BasicMap_null;
+end-proc;
 
 //=========================================================================
 //  Checks a given BasicMap handle for a NULL value.
@@ -1468,29 +1386,27 @@ end-proc BasicMap_null;
 //   isNull        - Returns TRUE if the handle is null, else FALSE.
 //=========================================================================
 dcl-proc BasicMap_isNull export;
+  dcl-pi *n ind;
+    i_pMap like(BasicMap_handle_t) const;
+  end-pi;
 
-dcl-pi BasicMap_isNull
-       ind;
-  i_pMap          const  like(BasicMap_handle_t );
-end-pi;
+  //  Return value
+  dcl-s isNull ind inz(cTrue);
 
-//  Return value
-dcl-s isNull          ind inz(cTrue);
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (i_pMap = BasicMap_null());
+    isNull = cTrue;
+  else;
+    isNull = cFalse;
+  endif;
 
-if (i_pMap = BasicMap_null());
-   isNull = cTrue;
-else;
-   isNull = cFalse;
-endif;
-
-return isNull;
+  return isNull;
 
 
-end-proc BasicMap_isNull;
+end-proc;
 
 //=========================================================================
 //  Produces a list of keys from a given map.
@@ -1506,39 +1422,37 @@ end-proc BasicMap_isNull;
 //                   Use BasicKeySet_delete() to delete the list.
 //=========================================================================
 dcl-proc BasicMap_newKeySet export;
+  dcl-pi *n like(BasicKeySet_handle_t);
+    i_pMap like(BasicMap_handle_t) const;
+  end-pi;
 
-dcl-pi BasicMap_newKeySet
-       like(BasicKeySet_handle_t);
-  i_pMap          const  like(BasicMap_handle_t );
-end-pi;
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
+  //  Helper fields
+  dcl-s x int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s x               int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkMapHandle(i_pMap);
 
-checkMapHandle(i_pMap);
+  if (not BasicList_isNull(hMap.pKeySet));
+    return produceKeySetHandle(i_pMap);
+  endif;
 
-if (not BasicList_isNull(hMap.pKeySet));
-   return produceKeySetHandle(i_pMap);
-endif;
+  p_assert(hMap.keySetNumRef = 0
+           : 'Expected 0 in hMap.keySetNumRef');
 
-p_assert(hMap.keySetNumRef = 0
-         : 'Expected 0 in hMap.keySetNumRef');
+  hMap.pKeySet = BasicList_new(cTYPE_KEYSET: hMap.increment);
 
-hMap.pKeySet = BasicList_new(cTYPE_KEYSET: hMap.increment);
+  for x = 1 to BasicMap_getNumE(i_pMap);
+    BasicList_addString(hMap.pKeySet
+                        : BasicMap_getKeyByIndex(i_pMap: x));
+  endfor;
 
-for x = 1 to BasicMap_getNumE(i_pMap);
-   BasicList_addString(hMap.pKeySet
-                       : BasicMap_getKeyByIndex(i_pMap: x));
-endfor;
-
-return produceKeySetHandle(i_pMap);
+  return produceKeySetHandle(i_pMap);
 
 
-end-proc BasicMap_newKeySet;
+end-proc;
 
 //=========================================================================
 //  Returns the first entry of a given key set.
@@ -1551,35 +1465,31 @@ end-proc BasicMap_newKeySet;
 //   key           - Returns the key of a map entry on success, else ''.
 //=========================================================================
 dcl-proc BasicKeySet_getFirst export;
+  dcl-pi *n like(BasicMap_key_t);
+    i_pKeySet like(BasicKeySet_handle_t) const;
+  end-pi;
 
-dcl-pi BasicKeySet_getFirst
-       like(BasicMap_key_t    );
-  i_pKeySet       const  like(BasicKeySet_handle_t);
-end-pi;
+  //  KeySet handle
+  dcl-ds hKeySet likeds(hKeySet_t) based(i_pKeySet);
 
-//  KeySet handle
-dcl-ds hKeySet likeds(hKeySet_t  )
-based(i_pKeySet);
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(hKeySet.pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     )
-based(hKeySet.pMap);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkKeySetHandle(i_pKeySet);
 
-checkKeySetHandle(i_pKeySet);
+  checkMapHandle(hKeySet.pMap);
 
-checkMapHandle(hKeySet.pMap);
+  if (BasicList_isNull(hMap.pKeySet));
+    return '';
+  endif;
 
-if (BasicList_isNull(hMap.pKeySet));
-   return '';
-endif;
+  hKeySet.x = 0;
 
-hKeySet.x = 0;
-
-return BasicKeySet_getNext(i_pKeySet);
+  return BasicKeySet_getNext(i_pKeySet);
 
 
-end-proc BasicKeySet_getFirst;
+end-proc;
 
 //=========================================================================
 //  Returns the next entry of a given key set.
@@ -1592,48 +1502,44 @@ end-proc BasicKeySet_getFirst;
 //   key           - Returns the key of a map entry on success, else ''.
 //=========================================================================
 dcl-proc BasicKeySet_getNext export;
+  dcl-pi *n like(BasicMap_key_t);
+    i_pKeySet like(BasicKeySet_handle_t) const;
+  end-pi;
 
-dcl-pi BasicKeySet_getNext
-       like(BasicMap_key_t    );
-  i_pKeySet       const  like(BasicKeySet_handle_t);
-end-pi;
+  //  KeySet handle
+  dcl-ds hKeySet likeds(hKeySet_t) based(i_pKeySet);
 
-//  KeySet handle
-dcl-ds hKeySet likeds(hKeySet_t  )
-based(i_pKeySet);
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(hKeySet.pMap);
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     )
-based(hKeySet.pMap);
+  //  Helper fields
+  dcl-s numE int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s numE            int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkKeySetHandle(i_pKeySet);
 
-checkKeySetHandle(i_pKeySet);
+  checkMapHandle(hKeySet.pMap);
 
-checkMapHandle(hKeySet.pMap);
+  if (BasicList_isNull(hMap.pKeySet));
+    return '';
+  endif;
 
-if (BasicList_isNull(hMap.pKeySet));
-   return '';
-endif;
+  numE = BasicList_getNumE(hMap.pKeySet);
+  if (hKeySet.x >= numE);
+    return '';
+  endif;
 
-numE = BasicList_getNumE(hMap.pKeySet);
-if (hKeySet.x >= numE);
-   return '';
-endif;
-
-dow (hKeySet.x < numE);
-   hKeySet.x = hKeySet.x + 1;
-   if (not BasicList_isNullValue(hMap.pKeySet: hKeySet.x));
+  dow (hKeySet.x < numE);
+    hKeySet.x = hKeySet.x + 1;
+    if (not BasicList_isNullValue(hMap.pKeySet: hKeySet.x));
       return BasicList_getString(hMap.pKeySet: hKeySet.x);
-   endif;
-enddo;
+    endif;
+  enddo;
 
-return '';
+  return '';
 
 
-end-proc BasicKeySet_getNext;
+end-proc;
 
 //=========================================================================
 //  Deletes the key list associated to a given map.
@@ -1646,44 +1552,40 @@ end-proc BasicKeySet_getNext;
 //   rc            - Returns 0 on success, else -1.
 //=========================================================================
 dcl-proc BasicKeySet_delete export;
+  dcl-pi *n int(10);
+    io_pKeySet like(BasicKeySet_handle_t);
+  end-pi;
 
-dcl-pi BasicKeySet_delete
-       int(10);
-  io_pKeySet      like(BasicKeySet_handle_t);
-end-pi;
+  //  Return value
+  dcl-s rc int(10) inz(-1);
 
-//  Return value
-dcl-s rc              int(10) inz(-1);
+  //  KeySet handle
+  dcl-ds hKeySet likeds(hKeySet_t) based(io_pKeySet);
 
-//  KeySet handle
-dcl-ds hKeySet likeds(hKeySet_t  )
-based(io_pKeySet  );
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     )
-based(pMap        );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkKeySetHandle(io_pKeySet);
 
-checkKeySetHandle(io_pKeySet);
+  checkMapHandle(hKeySet.pMap);
 
-checkMapHandle(hKeySet.pMap);
+  pMap = hKeySet.pMap;
 
-pMap = hKeySet.pMap;
-
-if (not BasicList_isNull(hMap.pKeySet));
-   freeKeySetHandle(io_pKeySet);
-   if (hMap.keySetNumRef = 0);
+  if (not BasicList_isNull(hMap.pKeySet));
+    freeKeySetHandle(io_pKeySet);
+    if (hMap.keySetNumRef = 0);
       BasicList_delete(hMap.pKeySet);
       hMap.pKeySet = BasicList_null();
-   endif;
-endif;
+    endif;
+  endif;
 
-rc = 0;
+  rc = 0;
 
-return rc;
+  return rc;
 
 
-end-proc BasicKeySet_delete;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -1697,51 +1599,49 @@ end-proc BasicKeySet_delete;
 //                   *NULL.
 //=========================================================================
 dcl-proc produceKeySetHandle;
+  dcl-pi *n like(BasicKeySet_handle_t);
+    i_pMap like(BasicMap_handle_t) const;
+  end-pi;
 
-dcl-pi produceKeySetHandle
-       like(BasicKeySet_handle_t);
-  i_pMap          const  like(BasicMap_handle_t );
-end-pi;
+  //  Return value
+  dcl-s pKeySet like(BasicKeySet_handle_t);
 
-//  Return value
-dcl-s pKeySet         like(BasicKeySet_handle_t);
+  //  Helper fields
+  dcl-s x int(10) inz;
 
-//  Helper fields
-dcl-s x               int(10) inz;
+  //  Memory Manager
+/copy QBASICS1,MEMMGR
 
-//  Memory Manager
-/COPY QBASICS1,MEMMGR
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
+  //  KeySet handle
+  dcl-ds hKeySet likeds(hKeySet_t) based(pKeySet);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  KeySet handle
-dcl-ds hKeySet likeds(hKeySet_t  ) based(pKeySet);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  p_assert(hMap.keySetNumRef < %elem(hMap.keySetRefList):
+           'No more space for another KeySet');
 
-p_assert(hMap.keySetNumRef < %elem(hMap.keySetRefList):
-         'No more space for another KeySet');
+  // Set memory manager
+  mm_memMgr = hMap.memMgr;
 
-// Set memory manager
-mm_memMgr = hMap.memMgr;
+  pKeySet = mm_allocate(%size(hKeySet): hMap.heapID);
 
-pKeySet = mm_allocate(%size(hKeySet): hMap.heapID);
+  clear hKeySet;
+  hKeySet.intType = cHANDLE_TYPE_KEYSET;
+  hKeySet.intSize = %size(hKeySet);
+  hKeySet.x       = 0;
+  hKeySet.pMap    = i_pMap;
 
-clear hKeySet;
-hKeySet.intType = cHANDLE_TYPE_KEYSET;
-hKeySet.intSize = %size(hKeySet);
-hKeySet.x       = 0;
-hKeySet.pMap    = i_pMap;
+  x = %lookup(*NULL: hMap.keySetRefList);
+  hMap.keySetRefList(x) = pKeySet;
 
-x = %lookup(*NULL: hMap.keySetRefList);
-hMap.keySetRefList(x) = pKeySet;
+  hMap.keySetNumRef = hMap.keySetNumRef + 1;
 
-hMap.keySetNumRef = hMap.keySetNumRef + 1;
-
-return pKeySet;
+  return pKeySet;
 
 
-end-proc produceKeySetHandle;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -1754,44 +1654,41 @@ end-proc produceKeySetHandle;
 //   void
 //=========================================================================
 dcl-proc freeKeySetHandle;
+  dcl-pi *n;
+    io_pKeySet pointer;
+  end-pi;
 
-dcl-pi freeKeySetHandle;
-  io_pKeySet      pointer;
-end-pi;
+  //  Helper fields
+  dcl-s x int(10) inz;
 
-//  Helper fields
-dcl-s x               int(10) inz;
+  //  KeySet handle
+  dcl-ds hKeySet likeds(hKeySet_t) based(io_pKeySet);
 
-//  KeySet handle
-dcl-ds hKeySet likeds(hKeySet_t  )
-based(io_pKeySet  );
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(pMap);
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     )
-based(pMap        );
+  //  Memory Manager
+/copy QBASICS1,MEMMGR
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Memory Manager
-/COPY QBASICS1,MEMMGR
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  pMap = hKeyset.pMap;
 
-pMap = hKeyset.pMap;
+  // Set memory manager
+  mm_memMgr = hMap.memMgr;
 
-// Set memory manager
-mm_memMgr = hMap.memMgr;
+  x = %lookup(io_pKeySet: hMap.keySetRefList);
+  p_assert(x > 0:
+           'KeySet handle not found in list');
 
-x = %lookup(io_pKeySet: hMap.keySetRefList);
-p_assert(x > 0:
-         'KeySet handle not found in list');
+  mm_free(io_pKeySet);
 
-mm_free(io_pKeySet);
+  hMap.keySetRefList(x) = *NULL;
+  hMap.keySetNumRef     = hMap.keySetNumRef - 1;
 
-hMap.keySetRefList(x) = *NULL;
-hMap.keySetNumRef     = hMap.keySetNumRef - 1;
-
-return;
+  return;
 
 
-end-proc freeKeySetHandle;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -1805,38 +1702,36 @@ end-proc freeKeySetHandle;
 //   rc            - Returns 0 on success, else -1.
 //=========================================================================
 dcl-proc addKeySetEntry;
+  dcl-pi *n int(10);
+    i_pList like(BasicList_handle_t) const;
+    i_key   like(BasicMap_key_t) const;
+  end-pi;
 
-dcl-pi addKeySetEntry
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-  i_key           const  like(BasicMap_key_t    );
-end-pi;
+  //  Return value
+  dcl-s rc int(10) inz(-1);
 
-//  Return value
-dcl-s rc              int(10) inz(-1);
+  //  Helper fields
+  dcl-s x int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s x               int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (BasicList_isNull(i_pList));
+    rc = 0;
+    return rc;
+  endif;
 
-if (BasicList_isNull(i_pList));
-   rc = 0;
-   return rc;
-endif;
+  x = BasicList_findString(i_pList: i_key);
 
-x = BasicList_findString(i_pList: i_key);
+  p_assert(x = -1
+           : 'Key already in key set');
 
-p_assert(x = -1
-         : 'Key already in key set');
+  BasicList_addString(i_pList: i_key);
 
-BasicList_addString(i_pList: i_key);
+  rc = 0;
 
-rc = 0;
-
-return rc;
+  return rc;
 
 
-end-proc addKeySetEntry;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -1850,40 +1745,38 @@ end-proc addKeySetEntry;
 //   rc            - Returns 0 on success, else -1.
 //=========================================================================
 dcl-proc removeKeySetEntry;
+  dcl-pi *n int(10);
+    i_pList like(BasicList_handle_t) const;
+    i_key   like(BasicMap_key_t) const;
+  end-pi;
 
-dcl-pi removeKeySetEntry
-       int(10);
-  i_pList         const  like(BasicList_handle_t);
-  i_key           const  like(BasicMap_key_t    );
-end-pi;
+  //  Return value
+  dcl-s rc int(10) inz(-1);
 
-//  Return value
-dcl-s rc              int(10) inz(-1);
+  //  Helper fields
+  dcl-s x int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s x               int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (BasicList_isNull(i_pList));
+    rc = 0;
+    return rc;
+  endif;
 
-if (BasicList_isNull(i_pList));
-   rc = 0;
-   return rc;
-endif;
+  x = BasicList_findString(i_pList: i_key);
 
-x = BasicList_findString(i_pList: i_key);
+  p_assert(x > 0
+           : 'Key in key set not found');
 
-p_assert(x > 0
-         : 'Key in key set not found');
+  // Actually the entry is not removed but set to NULL in order
+  // to keep the positions of the list entries stable.
+  BasicList_set(i_pList: x: *NULL);
 
-// Actually the entry is not removed but set to NULL in order
-// to keep the positions of the list entries stable.
-BasicList_set(i_pList: x: *NULL);
+  rc = 0;
 
-rc = 0;
-
-return rc;
+  return rc;
 
 
-end-proc removeKeySetEntry;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -1897,61 +1790,59 @@ end-proc removeKeySetEntry;
 //   rc            - Returns 0 on success, else -1.
 //=========================================================================
 dcl-proc freeMapE;
+  dcl-pi *n int(10);
+    i_pMap  like(BasicMap_handle_t) const;
+    i_index int(10) const;
+  end-pi;
 
-dcl-pi freeMapE
-       int(10);
-  i_pMap          const  like(BasicMap_handle_t );
-  i_index         int(10) const;
-end-pi;
+  //  Return value
+  dcl-s rc int(10) inz(-1);
 
-//  Return value
-dcl-s rc              int(10) inz(-1);
+  //  Helper fields
+  dcl-s aPointer pointer inz;
+  dcl-s key like(BasicMap_key_t) based(mapE.pKey);
+  dcl-ds mapE likeds(mapE_t) inz;
 
-//  Helper fields
-dcl-s aPointer        pointer inz;
-dcl-s key             like(BasicMap_key_t ) based(mapE.pKey);
-dcl-ds mapE likeds(mapE_t       ) inz;
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
+  //  Memory Manager
+/copy QBASICS1,MEMMGR
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Memory Manager
-/COPY QBASICS1,MEMMGR
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Set memory manager
+  mm_memMgr = hMap.memMgr;
 
-// Set memory manager
-mm_memMgr = hMap.memMgr;
+  // Get map entry from underlaying list
+  aPointer = BasicList_get(hMap.pList: i_index
+                                     : %addr(mapE)
+                                     : %size(mapE) );
 
-// Get map entry from underlaying list
-aPointer = BasicList_get(hMap.pList: i_index
-                                   : %addr(mapE)
-                                   : %size(mapE) );
+  p_assert(aPointer <> *NULL
+           : 'BasicList_get() failed');
 
-p_assert(aPointer <> *NULL
-         : 'BasicList_get() failed');
+  // Remove entry from an associated key set
+  removeKeySetEntry(hMap.pKeySet: key);
 
-// Remove entry from an associated key set
-removeKeySetEntry(hMap.pKeySet: key);
+  // Free memory of map entry
+  mm_free(mapE.pKey);           // key
 
-// Free memory of map entry
-mm_free(mapE.pKey);           // key
+  if (mapE.pData <> *NULL);
+    mm_free(mapE.pData);       // data
+  endif;
 
-if (mapE.pData <> *NULL);
-   mm_free(mapE.pData);       // data
-endif;
+  clear mapE;
 
-clear mapE;
+  // Remove that map entry from the underlaying list
+  rc = BasicList_remove(hMap.pList: i_index);
 
-// Remove that map entry from the underlaying list
-rc = BasicList_remove(hMap.pList: i_index);
+  p_assert(rc <> -1
+           : 'BasicList_remove() failed');
 
-p_assert(rc <> -1
-         : 'BasicList_remove() failed');
-
-return rc;
+  return rc;
 
 
-end-proc freeMapE;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -1965,119 +1856,110 @@ end-proc freeMapE;
 //   isNull        - Returns TRUE if the handle is null, else FALSE.
 //=========================================================================
 dcl-proc findMapE;
+  dcl-pi *n int(10);
+    i_pMap like(BasicMap_handle_t) const;
+    i_key  like(BasicMap_key_t) options(*varsize) const;
+  end-pi;
 
-dcl-pi findMapE
-       int(10);
-  i_pMap          const  like(BasicMap_handle_t );
-  i_key           const  like(BasicMap_key_t    )
-       options(*varsize);
-end-pi;
+  //  Return value
+  dcl-s index int(10) inz(-1);
 
-//  Return value
-dcl-s index           int(10) inz(-1);
+  //  Helper fields
+  dcl-s currentE int(10) inz;
+  dcl-s lowerE int(10) inz;
+  dcl-s upperE int(10) inz;
+  dcl-s mapE_key like(BasicMap_key_t) based(mapE.pKey);
+  dcl-ds mapE likeds(mapE_t) based(pMapE);
 
-//  Helper fields
-dcl-s currentE        int(10) inz;
-dcl-s lowerE          int(10) inz;
-dcl-s upperE          int(10) inz;
-dcl-s mapE_key        like(BasicMap_key_t ) based(mapE.pKey);
-dcl-ds mapE likeds(mapE_t )
-based(pMapE   );
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  sortMap(i_pMap);
 
-sortMap(i_pMap);
+  lowerE   = 1;
+  upperE   = BasicList_getNumE(hMap.pList);
 
-lowerE   = 1;
-upperE   = BasicList_getNumE(hMap.pList);
+  dow (index = -1) and (lowerE <= upperE);
 
-dow (index = -1) and (lowerE <= upperE);
+    currentE = %int((lowerE + upperE) / 2);
 
-   currentE = %int((lowerE + upperE) / 2);
-
-   pMapE = BasicList_get(hMap.pList: currentE);
-   select;
-   when i_key < mapE_key;
+    pMapE = BasicList_get(hMap.pList: currentE);
+    select;
+    when i_key < mapE_key;
       upperE = currentE - 1;
-   when i_key > mapE_key;
+    when i_key > mapE_key;
       lowerE = currentE + 1;
-   other;
+    other;
       index = currentE;
-   endsl;
+    endsl;
 
-enddo;
+  enddo;
 
-return index;
+  return index;
 
 
-end-proc findMapE;
+end-proc;
 
 //=========================================================================
 //  *** private ***
 //  Sorts the map.
 //=========================================================================
 dcl-proc sortMap;
+  dcl-pi *n;
+    i_pMap like(BasicMap_handle_t) const;
+  end-pi;
 
-dcl-pi sortMap;
-  i_pMap          const  like(BasicMap_handle_t );
-end-pi;
+  //  Return value
+  dcl-s isSorted ind inz(cFalse);
 
-//  Return value
-dcl-s isSorted        ind inz(cFalse);
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  BasicList_sort(hMap.pList: %paddr('sortCallback'));
 
-BasicList_sort(hMap.pList: %paddr('sortCallback'));
-
-return;
+  return;
 
 
-end-proc sortMap;
+end-proc;
 
 //=========================================================================
 //  Procedure used by BasicList to sort this map.
 //=========================================================================
 dcl-proc sortCallback;
+  dcl-pi *n int(10);
+    i_pKeyData  pointer value;
+    i_keySize   int(10) value;
+    i_pElemData pointer value;
+    i_elemSize  int(10) value;
+  end-pi;
 
-dcl-pi sortCallback
-       int(10);
-  i_pKeyData      pointer value;
-  i_keySize       int(10) value;
-  i_pElemData     pointer value;
-  i_elemSize      int(10) value;
-end-pi;
+  //  Return value
+  dcl-s rc int(10) inz;
 
-//  Return value
-dcl-s rc              int(10) inz;
+  //  Helper fields
+  dcl-ds keyMapE likeds(mapE_t) based(i_pKeyData);
+  dcl-ds elemMapE likeds(mapE_t) based(i_pElemData);
+  dcl-s keyMapE_key like(BasicMap_key_t) based(keyMapE.pKey);
+  dcl-s elemMapE_key like(BasicMap_key_t) based(elemMapE.pKey);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-ds keyMapE likeds(mapE_t )
-based(i_pKeyData );
-dcl-ds elemMapE likeds(mapE_t )
-based(i_pElemData);
-dcl-s keyMapE_key     like(BasicMap_key_t ) based(keyMapE.pKey);
-dcl-s elemMapE_key    like(BasicMap_key_t ) based(elemMapE.pKey);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  select;
+  when %subst(keyMapE_key : 1: %len(keyMapE_key )) >
+       %subst(elemMapE_key: 1: %len(elemMapE_key));
+    rc = 1;
+  when %subst(keyMapE_key : 1: %len(keyMapE_key )) <
+       %subst(elemMapE_key: 1: %len(elemMapE_key));
+    rc = -1;
+  other;
+    rc = 0;
+  endsl;
 
-select;
-when %subst(keyMapE_key : 1: %len(keyMapE_key )) >
-     %subst(elemMapE_key: 1: %len(elemMapE_key));
-   rc = 1;
-when %subst(keyMapE_key : 1: %len(keyMapE_key )) <
-     %subst(elemMapE_key: 1: %len(elemMapE_key));
-   rc = -1;
-other;
-   rc = 0;
-endsl;
-
-return rc;
+  return rc;
 
 
-end-proc sortCallback;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -2085,31 +1967,30 @@ end-proc sortCallback;
 //  Returns TRUE for a valid map handle, else FALSE.
 //=========================================================================
 dcl-proc checkMapHandle;
+  dcl-pi *n;
+    i_pMap like(BasicMap_handle_t) const;
+  end-pi;
 
-dcl-pi checkMapHandle;
-  i_pMap          const  like(BasicMap_handle_t );
-end-pi;
+  //  Map handle
+  dcl-ds hMap likeds(hMap_t) based(i_pMap);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hMap likeds(hMap_t     ) based(i_pMap );
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (BasicMap_isNull(i_pMap));
+    signalError(cERROR_MAP_HANDLE_NULL: f_caller());
+  endif;
 
-if (BasicMap_isNull(i_pMap));
-   signalError(cERROR_MAP_HANDLE_NULL: f_caller());
-endif;
+  if (hMap.intType <> cHANDLE_TYPE_MAP);
+    signalError(cERROR_MAP_HANDLE_INVALID: f_caller());
+  endif;
 
-if (hMap.intType <> cHANDLE_TYPE_MAP);
-   signalError(cERROR_MAP_HANDLE_INVALID: f_caller());
-endif;
+  if (hMap.intSize <> cHANDLE_MAP_SIZE);
+    signalError(cERROR_MAP_HANDLE_INVALID: f_caller());
+  endif;
 
-if (hMap.intSize <> cHANDLE_MAP_SIZE);
-   signalError(cERROR_MAP_HANDLE_INVALID: f_caller());
-endif;
-
-return;
+  return;
 
 
-end-proc checkMapHandle;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -2117,54 +1998,51 @@ end-proc checkMapHandle;
 //  Returns TRUE for a valid map handle, else FALSE.
 //=========================================================================
 dcl-proc checkKeySetHandle;
+  dcl-pi *n;
+    i_pKeySet like(BasicKeySet_handle_t) const;
+  end-pi;
 
-dcl-pi checkKeySetHandle;
-  i_pKeySet       const  like(BasicKeySet_handle_t);
-end-pi;
+  //  Map handle
+  dcl-ds hKeySet likeds(hKeySet_t) based(i_pKeySet);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Map handle
-dcl-ds hKeySet likeds(hKeySet_t  ) based(i_pKeySet);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (i_pKeySet = *NULL);
+    signalError(cERROR_KEYSET_HANDLE_NULL: f_caller());
+  endif;
 
-if (i_pKeySet = *NULL);
-   signalError(cERROR_KEYSET_HANDLE_NULL: f_caller());
-endif;
+  if (hKeySet.intType <> cHANDLE_TYPE_KEYSET);
+    signalError(cERROR_KEYSET_HANDLE_INVALID: f_caller());
+  endif;
 
-if (hKeySet.intType <> cHANDLE_TYPE_KEYSET);
-   signalError(cERROR_KEYSET_HANDLE_INVALID: f_caller());
-endif;
+  if (hKeySet.intSize <> cHANDLE_KEYSET_SIZE);
+    signalError(cERROR_KEYSET_HANDLE_INVALID: f_caller());
+  endif;
 
-if (hKeySet.intSize <> cHANDLE_KEYSET_SIZE);
-   signalError(cERROR_KEYSET_HANDLE_INVALID: f_caller());
-endif;
-
-return;
+  return;
 
 
-end-proc checkKeySetHandle;
+end-proc;
 
 //=========================================================================
 //  *** private ***
 //  Sends an ESCAPE message to signal an error condition.
 //=========================================================================
 dcl-proc signalError;
+  dcl-pi *n;
+    i_text varchar(128) const;
+    i_proc varchar(256) const;
+  end-pi;
 
-dcl-pi signalError;
-  i_text          varchar(128) const;
-  i_proc          varchar(256) const;
-end-pi;
+  //  Helper fields
+  dcl-ds msg likeds(msg_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-ds msg likeds(msg_t ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  msg = f_newMsg('CPF9898'
+                 : 'BasicMap: ERROR - ' + i_text
+                 : cMsg_Escape: 'QCPFMSG': '*LIBL');
+  f_sndPgmMsg(msg: cMsg_Same: i_proc);
 
-msg = f_newMsg('CPF9898'
-               : 'BasicMap: ERROR - ' + i_text
-               : cMsg_Escape: 'QCPFMSG': '*LIBL');
-f_sndPgmMsg(msg: cMsg_Same: i_proc);
-
-return;
+  return;
 
 
-end-proc signalError;
-
+end-proc;

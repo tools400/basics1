@@ -1,22 +1,22 @@
-**FREE
-/IF NOT DEFINED(objd0100_t)
-/DEFINE objd0100_t
+**free
+/if NOT DEFINED(objd0100_t)
+/define objd0100_t
 //===============================================================*
 //  QUSROBJD API - OBJD0300                                      *
 //===============================================================*
 
-dcl-ds objd0100_t qualified           based(pDummy);
-  bytRet          int(10);
-  bytAvl          int(10);
-  name            char(10);
-  lib             char(10);
-  type            char(10);
-  rtnLib          char(10);
-  auxStgP         int(10);
-  owner           char(10);
-  domain          char(2);
-  crtDatTim       char(13);
-  chgDatTim       char(13);
+dcl-ds objd0100_t qualified based(pDummy);
+  bytRet    int(10);
+  bytAvl    int(10);
+  name      char(10);
+  lib       char(10);
+  type      char(10);
+  rtnLib    char(10);
+  auxStgP   int(10);
+  owner     char(10);
+  domain    char(2);
+  crtDatTim char(13);
+  chgDatTim char(13);
 end-ds;
 
-/ENDIF
+/endif

@@ -1,71 +1,61 @@
-**FREE
-/IF NOT DEFINED(Qp0lCvtPathToQSYSObjName)
-/DEFINE Qp0lCvtPathToQSYSObjName
+**free
+/if NOT DEFINED(Qp0lCvtPathToQSYSObjName)
+/define Qp0lCvtPathToQSYSObjName
 
 //  Qp0lCvtPathToQSYSObjName()--Resolve Integrated File System Path Name
 //                              into QSYS Object Name
-dcl-pr Qp0lCvtPathToQSYSObjName
-       int(10) extproc('Qp0lCvtPathToQSYSObjName');
-  i_path          const  likeds(Qlg_Path_Name_t);
-o_qsys_info     char(65535) options(*varsize);
-i_format        char(8) const;
-i_bytPrv        int(10) value;
-i_ccsid         int(10) value;
-io_errCode      char(65535) options(*varsize);
+dcl-pr Qp0lCvtPathToQSYSObjName int(10) extproc('Qp0lCvtPathToQSYSObjName');
+  i_path      likeds(Qlg_Path_Name_t) const;
+  o_qsys_info char(65535) options(*varsize);
+  i_format    char(8) const;
+  i_bytPrv    int(10) value;
+  i_ccsid     int(10) value;
+  io_errCode  char(65535) options(*varsize);
 end-pr;
 
 dcl-ds qsys0100_t qualified based(pDummy);
-  bytRet          int(10);
-  bytAvl          int(10);
-  ccsid           int(10);
-  lib_name        char(28);
-  lib_type        char(20);
-  obj_name        char(28);
-  obj_type        char(20);
-  mbr_name        char(28);
-  mbr_type        char(20);
-  asp_name        char(28);
+  bytRet   int(10);
+  bytAvl   int(10);
+  ccsid    int(10);
+  lib_name char(28);
+  lib_type char(20);
+  obj_name char(28);
+  obj_type char(20);
+  mbr_name char(28);
+  mbr_type char(20);
+  asp_name char(28);
 end-ds;
 
 /if not defined(Qlg_Path_Name)
 /define Qlg_Path_Name
-dcl-ds Qlg_Path_Name_t
-       qualified align         based(pDummy);
-  CCSID           int(10);
-  Country_ID      char(2);
-  Language_ID     char(3);
-  Reserved        char(3);
-  Path_Type       uns(10);
-  Path_Length     int(10);
-  Path_Name_Delimiter
-  char(2);
-  Reserved2       char(10);
-  Path_Name       char(256);
+dcl-ds Qlg_Path_Name_t qualified align based(pDummy);
+  CCSID               int(10);
+  Country_ID          char(2);
+  Language_ID         char(3);
+  Reserved            char(3);
+  Path_Type           uns(10);
+  Path_Length         int(10);
+  Path_Name_Delimiter char(2);
+  Reserved2           char(10);
+  Path_Name           char(256);
 end-ds;
 
-dcl-c QLG_PATH_JOB_CCSID
-      0;
-dcl-c QLG_PATH_JOB_COUNTRYID
-      x'0000';
-dcl-c QLG_PATH_JOB_LANGUAGEID
-      x'000000';
+dcl-c QLG_PATH_JOB_CCSID 0;
+dcl-c QLG_PATH_JOB_COUNTRYID x'0000';
+dcl-c QLG_PATH_JOB_LANGUAGEID x'000000';
 
 //  The Path_Name is a character string and the delimiter is one byte long.
-dcl-c QLG_CHAR_SINGLE
-      0;
+dcl-c QLG_CHAR_SINGLE 0;
 
 //  The Path_Name is a pointer and the delimiter is one byte long.
-dcl-c QLG_PTR_SINGLE
-      1;
+dcl-c QLG_PTR_SINGLE 1;
 
 //  The Path_Name is a character string and the delimiter is two bytes long.
-dcl-c QLG_CHAR_DOUBLE
-      2;
+dcl-c QLG_CHAR_DOUBLE 2;
 
 //  The Path_Name is a pointer and the delimiter is two bytes long.
-dcl-c QLG_PTR_DOUBLE
-      3;
+dcl-c QLG_PTR_DOUBLE 3;
 
 /endif
 
-/ENDIF
+/endif

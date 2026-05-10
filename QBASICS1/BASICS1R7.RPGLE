@@ -1,4 +1,4 @@
-**FREE
+**free
 //=====================================================================*
 //  BASICS1R7  - SrvPgm: Basic Routines - Mathematics                  *
 //=====================================================================*
@@ -51,25 +51,25 @@
 //                                                                     *
 //   >>END-PRE-COMPILER<<                                              *
 //=====================================================================*
-ctl-opt NOMAIN;
-ctl-opt BNDDIR('QC2LE');
+ctl-opt nomain;
+ctl-opt bnddir('QC2LE');
 //  Standard H-Specs
-/COPY QBASICS1,H_SPEC
-/COPY QBASICS1,COPYRIGHT
+/copy QBASICS1,H_SPEC
+/copy QBASICS1,COPYRIGHT
 //=====================================================================*
 
 // -----------------------------------------
 //  Exported functions
 // -----------------------------------------
-/COPY QBASICS1,PBASICS1R7
+/copy QBASICS1,PBASICS1R7
 
 // -----------------------------------------
 //  Reference fields
 // -----------------------------------------
-/COPY QBASICS1,BASICS1R0
+/copy QBASICS1,BASICS1R0
 
-/if not defined(*V5R3M0)                                                              //
-/COPY QBASICS1,MILIB
+/if not defined(*V5R3M0)
+/copy QBASICS1,MILIB
 /endif
 
 // -----------------------------------------
@@ -77,45 +77,40 @@ ctl-opt BNDDIR('QC2LE');
 // -----------------------------------------
 
 /if defined(C_COMPILER)
-dcl-pr c_crc32
-       uns(10) extproc('crc32');
-  crc             uns(10) value;
-  buf             pointer value;
-  len             uns(10) value;
+dcl-pr c_crc32 uns(10) extproc('crc32');
+  crc uns(10) value;
+  buf pointer value;
+  len uns(10) value;
 end-pr;
 
 /else
 dcl-pr lp_crc32Table;
-  io_crc32Table   uns(10) dim(256);
+  io_crc32Table uns(10) dim(256);
 end-pr;
 
 /endif
-/if not defined(*V5R2M0)                                                              //
+/if not defined(*V5R2M0)
 //  Returns the bit-wise ANDing of the arguments.
-dcl-pr lf_bitAND
-       uns(10);
-  i_arg1          uns(10) value;
-  i_arg2          uns(10) value;
+dcl-pr lf_bitAND uns(10);
+  i_arg1 uns(10) value;
+  i_arg2 uns(10) value;
 end-pr;
 
 //  Returns the bit-wise ORing of the arguments.
-dcl-pr lf_bitOR
-       uns(10);
-  i_arg1          uns(10) value;
-  i_arg2          uns(10) value;
+dcl-pr lf_bitOR uns(10);
+  i_arg1 uns(10) value;
+  i_arg2 uns(10) value;
 end-pr;
 
 //  Returns the bit-wise exclusive ORing of the arguments.
-dcl-pr lf_bitXOR
-       uns(10);
-  i_arg1          uns(10) value;
-  i_arg2          uns(10) value;
+dcl-pr lf_bitXOR uns(10);
+  i_arg1 uns(10) value;
+  i_arg2 uns(10) value;
 end-pr;
 
 //  Returns the bit-wise inverse of the bits of the argument.
-dcl-pr lf_bitNOT
-       uns(10);
-  i_arg           uns(10) value;
+dcl-pr lf_bitNOT uns(10);
+  i_arg uns(10) value;
 end-pr;
 
 /endif
@@ -140,41 +135,39 @@ end-pr;
 //=========================================================================
 
 dcl-proc f_isBitOn export;
+  dcl-pi *n ind;
+    i_testBit uns(10) value;
+    i_value   uns(10) value;
+  end-pi;
 
-dcl-pi f_isBitOn
-       ind;
-  i_testBit       uns(10) value;
-  i_value         uns(10) value;
-end-pi;
+  //  Return value
+  dcl-s isOn ind inz(cTrue);
 
-//  Return value
-dcl-s isOn            ind inz(cTrue);
+  //  Helper fields
+  dcl-s x int(3) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s x               int(3) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  p_assert(i_testBit > 0:
+           'i_testBit is out of range. It must be greater than 0');
 
-p_assert(i_testBit > 0:
-         'i_testBit is out of range. It must be greater than 0');
+  p_assert(i_value >= 0:
+           'i_value is out of range. It must be greater than/equal 0');
 
-p_assert(i_value >= 0:
-         'i_value is out of range. It must be greater than/equal 0');
+  isOn = cTrue;
 
-isOn = cTrue;
-
-for   x = (%size(i_value) * 8) - 1 downTo 0 ;
-   if   tstbts(%addr(i_testBit): x) <> 0;
+  for   x = (%size(i_value) * 8) - 1 downTo 0 ;
+    if   tstbts(%addr(i_testBit): x) <> 0;
       if   tstbts(%addr(i_value): x) = 0;
-         isOn = cFalse;
-         leave;
+        isOn = cFalse;
+        leave;
       endif;
-   endif;
-endfor;
+    endif;
+  endfor;
 
-return   isOn;
+  return   isOn;
 
 
-end-proc f_isBitOn;
+end-proc;
 
 //=========================================================================
 //  Computes the logarithm base 10 of a given value.
@@ -187,24 +180,22 @@ end-proc f_isBitOn;
 //=========================================================================
 
 dcl-proc f_log10 export;
+  dcl-pi *n float(8);
+    i_value float(8) value;
+  end-pi;
 
-dcl-pi f_log10
-       float(8);
-  i_value         float(8) value;
-end-pi;
+  //  Return value
+  dcl-s log float(8) inz;
 
-//  Return value
-dcl-s log             float(8) inz;
+  //  Helper fields
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  CEESDLG1(i_value: log);
 
-CEESDLG1(i_value: log);
-
-return   log;
+  return   log;
 
 
-end-proc f_log10;
+end-proc;
 
 //=========================================================================
 //  Computes the length of a RPG integer field from its buffer length
@@ -217,28 +208,26 @@ end-proc f_log10;
 //=========================================================================
 
 dcl-proc f_clcLengthOfRPGIntFieldFromBufSize export;
+  dcl-pi *n uns(5);
+    i_buffSize uns(5) value;
+  end-pi;
 
-dcl-pi f_clcLengthOfRPGIntFieldFromBufSize
-       uns(5);
-  i_buffSize      uns(5) value;
-end-pi;
+  //  Return value
+  dcl-s tempResult float(8) inz;
+  dcl-s rpgLength uns(5) inz;
 
-//  Return value
-dcl-s tempResult      float(8) inz;
-dcl-s rpgLength       uns(5) inz;
+  //  Helper fields
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  tempResult = f_log10(2 ** (8 * i_buffSize));
 
-tempResult = f_log10(2 ** (8 * i_buffSize));
+  // Always round up to the next unsigned integer
+  rpgLength  = %unsh(((tempResult * 10) + 5) / 10);
 
-// Always round up to the next unsigned integer
-rpgLength  = %unsh(((tempResult * 10) + 5) / 10);
-
-return   rpgLength;
+  return   rpgLength;
 
 
-end-proc f_clcLengthOfRPGIntFieldFromBufSize;
+end-proc;
 
 //=========================================================================
 //  Generates a Universal Unique Identifier (UUID).
@@ -265,64 +254,62 @@ end-proc f_clcLengthOfRPGIntFieldFromBufSize;
 //=========================================================================
 
 dcl-proc f_genUUID export;
+  dcl-pi *n likeds(uuid_t);
+    i_option uns(5) options(*nopass) value;
+  end-pi;
 
-dcl-pi f_genUUID
-       likeds(uuid_t  );
-i_option        uns(5) value  options(*nopass);
-end-pi;
+  //  Return value
+  dcl-ds uuid likeds(uuid_t) inz;
 
-//  Return value
-dcl-ds uuid likeds(uuid_t) inz;
+  //  Parameter positions
+  dcl-c p_option 1;
 
-//  Parameter positions
-dcl-c p_option const(1);
+  //  Fields for optional parameters
+  dcl-s option like(i_option) inz;
 
-//  Fields for optional parameters
-dcl-s option          like(i_option) inz;
+  //  Helper fields
+  dcl-s uuidHex char(16) inz;
+  dcl-s uuidString char(32) inz;
+  dcl-ds uuidTemplate likeds(uuid_template_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s uuidHex         char(16) inz;
-dcl-s uuidString      char(32) inz;
-dcl-ds uuidTemplate likeds(uuid_template_t) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Get optional parameters
+  if %parms >= p_option;
+    option = i_option;
+  else;
+    option = cUUID_HEX;
+  endif;
 
-// Get optional parameters
-if %parms >= p_option;
-   option = i_option;
-else;
-   option = cUUID_HEX;
-endif;
+  p_assert((option = cUUID_HEX) or (option = cUUID_STRING):
+           'i_option is not valid.');
 
-p_assert((option = cUUID_HEX) or (option = cUUID_STRING):
-         'i_option is not valid.');
+  // Generate UUID:
+  uuidTemplate.bytPrv   = %size(uuid_t);
+  uuidTemplate.bytAvl   = 0;
+  uuidTemplate.reserved = *ALLx'00';
+  uuidTemplate.uuid     = *ALLx'00';
+  genUUID(%addr(uuidTemplate));
 
-// Generate UUID:
-uuidTemplate.bytPrv   = %size(uuid_t);
-uuidTemplate.bytAvl   = 0;
-uuidTemplate.reserved = *ALLx'00';
-uuidTemplate.uuid     = *ALLx'00';
-genUUID(%addr(uuidTemplate));
-
-if uuidTemplate.bytAvl = 0;
-   uuid.value  = '';
-   uuid.length = 0;
-else;
-   if option = cUUID_HEX;
+  if uuidTemplate.bytAvl = 0;
+    uuid.value  = '';
+    uuid.length = 0;
+  else;
+    if option = cUUID_HEX;
       // Return UUID as hex value
       uuid.value  = uuidTemplate.uuid;
       uuid.length = %size(uuidTemplate.uuid);
-   else;
+    else;
       // Convert hexadecimal UUID to string
       uuid.value  = f_cvtBufferToHexString(%addr(uuidTemplate.uuid):
                                            %size(uuidTemplate.uuid));
       uuid.length = %size(uuidTemplate.uuid) * 2;
-   endif;
-endif;
+    endif;
+  endif;
 
-return   uuid;
+  return   uuid;
 
 
-end-proc f_genUUID;
+end-proc;
 
 //=========================================================================
 //  Generates a MD5 fingerprint (hash code).
@@ -355,151 +342,149 @@ end-proc f_genUUID;
 //=========================================================================
 
 dcl-proc f_genMD5 export;
+  dcl-pi *n likeds(md5_t);
+    i_pString pointer options(*string) const;
+    i_options uns(5) options(*nopass) const;
+    i_length  uns(10) options(*nopass) const;
+  end-pi;
 
-dcl-pi f_genMD5
-       likeds(md5_t   );
-i_pString       pointer const  options(*string);
-i_options       uns(5) const  options(*nopass);
-i_length        uns(10) const  options(*nopass);
-end-pi;
+  //  Return value
+  dcl-ds MD5 likeds(md5_t) inz;
 
-//  Return value
-dcl-ds MD5 likeds(md5_t  ) inz;
+  //  Parameter positions
+  dcl-c p_options 2;
+  dcl-c p_length 3;
 
-//  Parameter positions
-dcl-c p_options const(2);
-dcl-c p_length const(3);
+  //  Fields for optional parameters
+  dcl-s options like(i_options) inz;
+  dcl-s length like(i_length) inz;
 
-//  Fields for optional parameters
-dcl-s options         like(i_options) inz;
-dcl-s length          like(i_length ) inz;
+  //  Helper fields
+  dcl-s isOutputString ind inz(cFalse);
+  dcl-s hashContext char(160) static inz(*ALLx'00');
+  dcl-s ctrlsSeq like(controls.sequence) inz;
+  dcl-ds numOptions qualified;
+    sequence uns(5) inz;
+    output   uns(5) inz;
+  end-ds;
+  dcl-ds controls likeds(cipherCtrls_t) inz;
+  dcl-ds msg likeds(msg_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s isOutputString  ind inz(cFalse);
-dcl-s hashContext     char(160) static inz(*ALLx'00' );
-dcl-s ctrlsSeq        like(controls.sequence) inz;
-dcl-ds numOptions qualified;
-  sequence        uns(5) inz;
-  output          uns(5) inz;
-end-ds;
-dcl-ds controls likeds(cipherCtrls_t  ) inz;
-dcl-ds msg likeds(msg_t          ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Get optional parameters ...
+  // ... options
+  if %parms >= p_options;
+    options = i_options;
+  else;
+    options = cMD5_HEX + cMD5_ONLY;
+  endif;
 
-// Get optional parameters ...
-// ... options
-if %parms >= p_options;
-   options = i_options;
-else;
-   options = cMD5_HEX + cMD5_ONLY;
-endif;
+  // ... length
+  if %parms >= p_length;
+    length = i_length;
+  else;
+    length = strlen(i_pString);
+  endif;
 
-// ... length
-if %parms >= p_length;
-   length = i_length;
-else;
-   length = strlen(i_pString);
-endif;
+  // Check/get sequence options
+  numOptions.sequence = 0;
+  if f_isBitOn(cMD5_ONLY  : options);
+    numOptions.sequence = numOptions.sequence + 1;
+    options  = options - cMD5_ONLY;
+    ctrlsSeq = cCIPHER_ONLY;
+  endif;
+  if f_isBitOn(cMD5_FIRST : options);
+    numOptions.sequence = numOptions.sequence + 1;
+    options  = options - cMD5_FIRST;
+    ctrlsSeq = cCIPHER_FIRST;
+  endif;
+  if f_isBitOn(cMD5_MIDDLE: options);
+    numOptions.sequence = numOptions.sequence + 1;
+    options  = options - cMD5_MIDDLE;
+    ctrlsSeq = cCIPHER_MIDDLE;
+  endif;
+  if f_isBitOn(cMD5_FINAL : options);
+    numOptions.sequence = numOptions.sequence + 1;
+    options  = options - cMD5_FINAL;
+    ctrlsSeq = cCIPHER_FINAL;
+  endif;
 
-// Check/get sequence options
-numOptions.sequence = 0;
-if f_isBitOn(cMD5_ONLY  : options);
-   numOptions.sequence = numOptions.sequence + 1;
-   options  = options - cMD5_ONLY;
-   ctrlsSeq = cCIPHER_ONLY;
-endif;
-if f_isBitOn(cMD5_FIRST : options);
-   numOptions.sequence = numOptions.sequence + 1;
-   options  = options - cMD5_FIRST;
-   ctrlsSeq = cCIPHER_FIRST;
-endif;
-if f_isBitOn(cMD5_MIDDLE: options);
-   numOptions.sequence = numOptions.sequence + 1;
-   options  = options - cMD5_MIDDLE;
-   ctrlsSeq = cCIPHER_MIDDLE;
-endif;
-if f_isBitOn(cMD5_FINAL : options);
-   numOptions.sequence = numOptions.sequence + 1;
-   options  = options - cMD5_FINAL;
-   ctrlsSeq = cCIPHER_FINAL;
-endif;
+  select;
+  when  numOptions.sequence =  0;
+    ctrlsSeq = cCIPHER_ONLY;
+  when  numOptions.sequence <> 1;
+    msg = f_newMsg('CPF9898':
+                   'Invalid number of sequence options': cMsg_Escape);
+    f_sndPgmMsg(msg);
+  endsl;
 
-select;
-when  numOptions.sequence =  0;
-   ctrlsSeq = cCIPHER_ONLY;
-when  numOptions.sequence <> 1;
-   msg = f_newMsg('CPF9898':
-                  'Invalid number of sequence options': cMsg_Escape);
-   f_sndPgmMsg(msg);
-endsl;
+  // Check/get output options
+  numOptions.output = 0;
+  if f_isBitOn(cMD5_STRING: options);
+    numOptions.output = numOptions.output + 1;
+    options        = options - cMD5_STRING;
+    isOutputString = cTrue;
+  endif;
+  if f_isBitOn(cMD5_HEX: options);
+    numOptions.output = numOptions.output + 1;
+    options        = options - cMD5_HEX;
+    isOutputString = cFalse;
+  endif;
 
-// Check/get output options
-numOptions.output = 0;
-if f_isBitOn(cMD5_STRING: options);
-   numOptions.output = numOptions.output + 1;
-   options        = options - cMD5_STRING;
-   isOutputString = cTrue;
-endif;
-if f_isBitOn(cMD5_HEX: options);
-   numOptions.output = numOptions.output + 1;
-   options        = options - cMD5_HEX;
-   isOutputString = cFalse;
-endif;
+  if  numOptions.output <> 1;
+    msg = f_newMsg('CPF9898':
+                   'Invalid number of output options': cMsg_Escape);
+    f_sndPgmMsg(msg);
+  endif;
 
-if  numOptions.output <> 1;
-   msg = f_newMsg('CPF9898':
-                  'Invalid number of output options': cMsg_Escape);
-   f_sndPgmMsg(msg);
-endif;
+  if  options <> 0;
+    msg = f_newMsg('CPF9898':
+                   'Invalid option flags found': cMsg_Escape);
+    f_sndPgmMsg(msg);
+  endif;
 
-if  options <> 0;
-   msg = f_newMsg('CPF9898':
-                  'Invalid option flags found': cMsg_Escape);
-   f_sndPgmMsg(msg);
-endif;
+  // Initialize cipher function
+  if (ctrlsSeq = cCIPHER_ONLY) or (ctrlsSeq = cCIPHER_FIRST);
+    hashContext = *ALLx'00';
+  endif;
 
-// Initialize cipher function
-if (ctrlsSeq = cCIPHER_ONLY) or (ctrlsSeq = cCIPHER_FIRST);
-   hashContext = *ALLx'00';
-endif;
+  controls.function      = x'0005';
+  controls.hashAlg       = cCIPHER_MD5;   // Hex 00 = MD5
+  // Hex 01 = SHA-1
+  controls.sequence      = ctrlsSeq;      // Hex 00 = Only
+  // Hex 01 = First
+  // Hex 02 = Middle
+  // Hex 03 = Final
+  controls.dataLength    = length;
+  controls.output        = cCIPHER_HASH;  // Hex 00 =  Hash
+  // Hex 01 =  HMAC
+  controls.reserved_1    = *ALLx'00';
+  controls.hashContext   = %addr(hashContext);
+  controls.HMACKey       = *NULL;
+  controls.HMACKeyLength = 0;
+  controls.reserved_2    = *ALLx'00';
 
-controls.function      = x'0005';
-controls.hashAlg       = cCIPHER_MD5;   // Hex 00 = MD5
-// Hex 01 = SHA-1
-controls.sequence      = ctrlsSeq;      // Hex 00 = Only
-// Hex 01 = First
-// Hex 02 = Middle
-// Hex 03 = Final
-controls.dataLength    = length;
-controls.output        = cCIPHER_HASH;  // Hex 00 =  Hash
-// Hex 01 =  HMAC
-controls.reserved_1    = *ALLx'00';
-controls.hashContext   = %addr(hashContext);
-controls.HMACKey       = *NULL;
-controls.HMACKeyLength = 0;
-controls.reserved_2    = *ALLx'00';
+  // Generate MD5 hash code.
+  cipher(%addr(MD5.value): %addr(controls): i_pString);
 
-// Generate MD5 hash code.
-cipher(%addr(MD5.value): %addr(controls): i_pString);
-
-if (ctrlsSeq = cCIPHER_ONLY) or (ctrlsSeq = cCIPHER_FINAL);
-   if isOutputString;
+  if (ctrlsSeq = cCIPHER_ONLY) or (ctrlsSeq = cCIPHER_FINAL);
+    if isOutputString;
       // Convert hexadecimal MD5 to string
       MD5.value  = f_cvtBufferToHexString(%addr(MD5.value): 16);
       MD5.length = 32;
-   else;
+    else;
       // Return MD5 as hex value
       MD5.length = 16;
-   endif;
-else;
-   MD5.value  = '';
-   MD5.length = 0;
-endif;
+    endif;
+  else;
+    MD5.value  = '';
+    MD5.length = 0;
+  endif;
 
-return   MD5;
+  return   MD5;
 
 
-end-proc f_genMD5;
+end-proc;
 
 //=========================================================================
 //  Generates a SHA-1 fingerprint (hash code).
@@ -532,151 +517,149 @@ end-proc f_genMD5;
 //=========================================================================
 
 dcl-proc f_genSHA1 export;
+  dcl-pi *n likeds(sha1_t);
+    i_pString pointer options(*string) const;
+    i_options uns(5) options(*nopass) const;
+    i_length  uns(10) options(*nopass) const;
+  end-pi;
 
-dcl-pi f_genSHA1
-       likeds(sha1_t  );
-i_pString       pointer const  options(*string);
-i_options       uns(5) const  options(*nopass);
-i_length        uns(10) const  options(*nopass);
-end-pi;
+  //  Return value
+  dcl-ds SHA1 likeds(sha1_t) inz;
 
-//  Return value
-dcl-ds SHA1 likeds(sha1_t ) inz;
+  //  Parameter positions
+  dcl-c p_options 2;
+  dcl-c p_length 3;
 
-//  Parameter positions
-dcl-c p_options const(2);
-dcl-c p_length const(3);
+  //  Fields for optional parameters
+  dcl-s options like(i_options) inz;
+  dcl-s length like(i_length) inz;
 
-//  Fields for optional parameters
-dcl-s options         like(i_options) inz;
-dcl-s length          like(i_length ) inz;
+  //  Helper fields
+  dcl-s isOutputString ind inz(cFalse);
+  dcl-s hashContext char(160) static inz(*ALLx'00');
+  dcl-s ctrlsSeq like(controls.sequence) inz;
+  dcl-ds numOptions qualified;
+    sequence uns(5) inz;
+    output   uns(5) inz;
+  end-ds;
+  dcl-ds controls likeds(cipherCtrls_t) inz;
+  dcl-ds msg likeds(msg_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s isOutputString  ind inz(cFalse);
-dcl-s hashContext     char(160) static inz(*ALLx'00' );
-dcl-s ctrlsSeq        like(controls.sequence) inz;
-dcl-ds numOptions qualified;
-  sequence        uns(5) inz;
-  output          uns(5) inz;
-end-ds;
-dcl-ds controls likeds(cipherCtrls_t) inz;
-dcl-ds msg likeds(msg_t        ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Get optional parameters ...
+  // ... options
+  if %parms >= p_options;
+    options = i_options;
+  else;
+    options = cSHA1_HEX + cSHA1_ONLY;
+  endif;
 
-// Get optional parameters ...
-// ... options
-if %parms >= p_options;
-   options = i_options;
-else;
-   options = cSHA1_HEX + cSHA1_ONLY;
-endif;
+  // ... length
+  if %parms >= p_length;
+    length = i_length;
+  else;
+    length = strlen(i_pString);
+  endif;
 
-// ... length
-if %parms >= p_length;
-   length = i_length;
-else;
-   length = strlen(i_pString);
-endif;
+  // Check/get sequence options
+  numOptions.sequence = 0;
+  if f_isBitOn(cSHA1_ONLY  : options);
+    numOptions.sequence = numOptions.sequence + 1;
+    options  = options - cSHA1_ONLY;
+    ctrlsSeq = cCIPHER_ONLY;
+  endif;
+  if f_isBitOn(cSHA1_FIRST : options);
+    numOptions.sequence = numOptions.sequence + 1;
+    options  = options - cSHA1_FIRST;
+    ctrlsSeq = cCIPHER_FIRST;
+  endif;
+  if f_isBitOn(cSHA1_MIDDLE: options);
+    numOptions.sequence = numOptions.sequence + 1;
+    options  = options - cSHA1_MIDDLE;
+    ctrlsSeq = cCIPHER_MIDDLE;
+  endif;
+  if f_isBitOn(cSHA1_FINAL : options);
+    numOptions.sequence = numOptions.sequence + 1;
+    options  = options - cSHA1_FINAL;
+    ctrlsSeq = cCIPHER_FINAL;
+  endif;
 
-// Check/get sequence options
-numOptions.sequence = 0;
-if f_isBitOn(cSHA1_ONLY  : options);
-   numOptions.sequence = numOptions.sequence + 1;
-   options  = options - cSHA1_ONLY;
-   ctrlsSeq = cCIPHER_ONLY;
-endif;
-if f_isBitOn(cSHA1_FIRST : options);
-   numOptions.sequence = numOptions.sequence + 1;
-   options  = options - cSHA1_FIRST;
-   ctrlsSeq = cCIPHER_FIRST;
-endif;
-if f_isBitOn(cSHA1_MIDDLE: options);
-   numOptions.sequence = numOptions.sequence + 1;
-   options  = options - cSHA1_MIDDLE;
-   ctrlsSeq = cCIPHER_MIDDLE;
-endif;
-if f_isBitOn(cSHA1_FINAL : options);
-   numOptions.sequence = numOptions.sequence + 1;
-   options  = options - cSHA1_FINAL;
-   ctrlsSeq = cCIPHER_FINAL;
-endif;
+  select;
+  when  numOptions.sequence =  0;
+    ctrlsSeq = cCIPHER_ONLY;
+  when  numOptions.sequence <> 1;
+    msg = f_newMsg('CPF9898':
+                   'Invalid number of sequence options': cMsg_Escape);
+    f_sndPgmMsg(msg);
+  endsl;
 
-select;
-when  numOptions.sequence =  0;
-   ctrlsSeq = cCIPHER_ONLY;
-when  numOptions.sequence <> 1;
-   msg = f_newMsg('CPF9898':
-                  'Invalid number of sequence options': cMsg_Escape);
-   f_sndPgmMsg(msg);
-endsl;
+  // Check output options
+  numOptions.output = 0;
+  if f_isBitOn(cSHA1_STRING: options);
+    numOptions.output = numOptions.output + 1;
+    options        = options - cSHA1_STRING;
+    isOutputString = cTrue;
+  endif;
+  if f_isBitOn(cSHA1_HEX: options);
+    numOptions.output = numOptions.output + 1;
+    options        = options - cSHA1_HEX;
+    isOutputString = cFalse;
+  endif;
 
-// Check output options
-numOptions.output = 0;
-if f_isBitOn(cSHA1_STRING: options);
-   numOptions.output = numOptions.output + 1;
-   options        = options - cSHA1_STRING;
-   isOutputString = cTrue;
-endif;
-if f_isBitOn(cSHA1_HEX: options);
-   numOptions.output = numOptions.output + 1;
-   options        = options - cSHA1_HEX;
-   isOutputString = cFalse;
-endif;
+  if  numOptions.output <> 1;
+    msg = f_newMsg('CPF9898':
+                   'Invalid number of output options': cMsg_Escape);
+    f_sndPgmMsg(msg);
+  endif;
 
-if  numOptions.output <> 1;
-   msg = f_newMsg('CPF9898':
-                  'Invalid number of output options': cMsg_Escape);
-   f_sndPgmMsg(msg);
-endif;
+  if  options <> 0;
+    msg = f_newMsg('CPF9898':
+                   'Invalid option flags found': cMsg_Escape);
+    f_sndPgmMsg(msg);
+  endif;
 
-if  options <> 0;
-   msg = f_newMsg('CPF9898':
-                  'Invalid option flags found': cMsg_Escape);
-   f_sndPgmMsg(msg);
-endif;
+  // Initialize cipher function
+  if (ctrlsSeq = cCIPHER_ONLY) or (ctrlsSeq = cCIPHER_FIRST);
+    hashContext = *ALLx'00';
+  endif;
 
-// Initialize cipher function
-if (ctrlsSeq = cCIPHER_ONLY) or (ctrlsSeq = cCIPHER_FIRST);
-   hashContext = *ALLx'00';
-endif;
+  controls.function      = x'0005';
+  controls.hashAlg       = cCIPHER_SHA1;  // Hex 00 = MD5
+  // Hex 01 = SHA-1
+  controls.sequence      = ctrlsSeq;      // Hex 00 = Only
+  // Hex 01 = First
+  // Hex 02 = Middle
+  // Hex 03 = Final
+  controls.dataLength    = length;
+  controls.output        = cCIPHER_HASH;  // Hex 00 =  Hash
+  // Hex 01 =  HMAC
+  controls.reserved_1    = *ALLx'00';
+  controls.hashContext   = %addr(hashContext);
+  controls.HMACKey       = *NULL;
+  controls.HMACKeyLength = 0;
+  controls.reserved_2    = *ALLx'00';
 
-controls.function      = x'0005';
-controls.hashAlg       = cCIPHER_SHA1;  // Hex 00 = MD5
-// Hex 01 = SHA-1
-controls.sequence      = ctrlsSeq;      // Hex 00 = Only
-// Hex 01 = First
-// Hex 02 = Middle
-// Hex 03 = Final
-controls.dataLength    = length;
-controls.output        = cCIPHER_HASH;  // Hex 00 =  Hash
-// Hex 01 =  HMAC
-controls.reserved_1    = *ALLx'00';
-controls.hashContext   = %addr(hashContext);
-controls.HMACKey       = *NULL;
-controls.HMACKeyLength = 0;
-controls.reserved_2    = *ALLx'00';
+  // Generate SHA-1 hash code.
+  cipher(%addr(SHA1.value): %addr(controls): i_pString);
 
-// Generate SHA-1 hash code.
-cipher(%addr(SHA1.value): %addr(controls): i_pString);
-
-if (ctrlsSeq = cCIPHER_ONLY) or (ctrlsSeq = cCIPHER_FINAL);
-   if isOutputString;
+  if (ctrlsSeq = cCIPHER_ONLY) or (ctrlsSeq = cCIPHER_FINAL);
+    if isOutputString;
       // Convert hexadecimal SHA-1 to string
       SHA1.value  = f_cvtBufferToHexString(%addr(SHA1.value): 20);
       SHA1.length = 40;
-   else;
+    else;
       // Return SHA-1 as hex value
       SHA1.length = 20;
-   endif;
-else;
-   SHA1.value  = '';
-   SHA1.length = 0;
-endif;
+    endif;
+  else;
+    SHA1.value  = '';
+    SHA1.length = 0;
+  endif;
 
-return   SHA1;
+  return   SHA1;
 
 
-end-proc f_genSHA1;
+end-proc;
 
 //=========================================================================
 //  Calculates a CRC32 checksum for a given string buffer.
@@ -708,98 +691,96 @@ end-proc f_genSHA1;
 //=========================================================================
 
 dcl-proc f_genCRC32 export;
+  dcl-pi *n likeds(crc32_t);
+    i_pString pointer options(*string) const;
+    i_options uns(5) options(*nopass) const;
+    i_length  uns(10) options(*nopass) const;
+  end-pi;
 
-dcl-pi f_genCRC32
-       likeds(crc32_t );
-i_pString       pointer const  options(*string);
-i_options       uns(5) const  options(*nopass);
-i_length        uns(10) const  options(*nopass);
-end-pi;
+  //  Return value
+  dcl-ds CRC32 likeds(crc32_t) inz;
 
-//  Return value
-dcl-ds CRC32 likeds(crc32_t) inz;
+  //  Parameter positions
+  dcl-c p_options 2;
+  dcl-c p_length 3;
 
-//  Parameter positions
-dcl-c p_options const(2);
-dcl-c p_length const(3);
+  //  Fields for optional parameters
+  dcl-s options like(i_options) inz;
+  dcl-s length like(i_length) inz;
 
-//  Fields for optional parameters
-dcl-s options         like(i_options) inz;
-dcl-s length          like(i_length ) inz;
+  //  Helper fields
+  dcl-s ctrlsSeq int(10) inz;
+  dcl-s aBufChar uns(3) based(pABufChar);
+  dcl-s i uns(10) inz;
+  dcl-s iLookup uns(10) inz;
+  dcl-ds numOptions qualified;
+    sequence uns(5) inz;
+  end-ds;
+  dcl-ds msg likeds(msg_t) inz;
 
-//  Helper fields
-dcl-s ctrlsSeq        int(10) inz;
-dcl-s aBufChar        uns(3) based(pABufChar     );
-dcl-s i               uns(10) inz;
-dcl-s iLookup         uns(10) inz;
-dcl-ds numOptions qualified;
-  sequence        uns(5) inz;
-end-ds;
-dcl-ds msg likeds(msg_t        ) inz;
-
-//  Static helper fields
-dcl-ds    *n                          static;
+  //  Static helper fields
+  dcl-ds *n static;
 /if defined(C_COMPILER)
-  crc32Result  uns(10) inz;
+    crc32Result    uns(10) inz;
 /else
-  crc32Result  uns(10) inz;
+    crc32Result    uns(10) inz;
 /endif
 /if not defined(C_COMPILER)
-  crc32Result1_1          char(1) pos(1);
-  crc32Result1_3          char(3) pos(1);
-  crc32Result2_4          char(4) pos(2);
+    crc32Result1_1 char(1) pos(1);
+    crc32Result1_3 char(3) pos(1);
+    crc32Result2_4 char(4) pos(2);
 /endif
-end-ds;
+  end-ds;
 
 
 /if not defined(C_COMPILER)
-dcl-s isInit          ind inz(cFalse)                 static;
-dcl-s crc32Table      uns(10) inz static dim(256);
+  dcl-s isInit ind inz(cFalse) static;
+  dcl-s crc32Table uns(10) inz static dim(256);
 /endif
 /if not defined(*V5R3M0)
-dcl-s tmpResult       uns(10);
-dcl-s hex000000FF     uns(10) inz(x'FF');
+  dcl-s tmpResult uns(10);
+  dcl-s hex000000FF uns(10) inz(x'FF');
 /endif
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// Get optional parameters ...
-// ... options
-if %parms >= p_options;
-   options = i_options;
-else;
-   options = cCRC32_ONLY;
-endif;
+  // Get optional parameters ...
+  // ... options
+  if %parms >= p_options;
+    options = i_options;
+  else;
+    options = cCRC32_ONLY;
+  endif;
 
-// ... length
-if %parms >= p_length;
-   length = i_length;
-else;
-   length = strlen(i_pString);
-endif;
+  // ... length
+  if %parms >= p_length;
+    length = i_length;
+  else;
+    length = strlen(i_pString);
+  endif;
 
-// Check/get sequence options
-numOptions.sequence = 0;
+  // Check/get sequence options
+  numOptions.sequence = 0;
 /if defined(*V5R2M0)
-if %bitAnd(cCRC32_ONLY  : options) = cCRC32_ONLY;
-   numOptions.sequence = numOptions.sequence + 1;
-   options  = options - cCRC32_ONLY;
-   ctrlsSeq = cCIPHER_ONLY;
-endif;
-if %bitAnd(cCRC32_FIRST : options) = cCRC32_FIRST;
-   numOptions.sequence = numOptions.sequence + 1;
-   options  = options - cCRC32_FIRST;
-   ctrlsSeq = cCIPHER_FIRST;
-endif;
-if %bitAnd(cCRC32_MIDDLE: options) = cCRC32_MIDDLE;
-   numOptions.sequence = numOptions.sequence + 1;
-   options  = options - cCRC32_MIDDLE;
-   ctrlsSeq = cCIPHER_MIDDLE;
-endif;
-if %bitAnd(cCRC32_FINAL : options) = cCRC32_FINAL;
-   numOptions.sequence = numOptions.sequence + 1;
-   options  = options - cCRC32_FINAL;
-   ctrlsSeq = cCIPHER_FINAL;
-endif;
+  if %bitAnd(cCRC32_ONLY  : options) = cCRC32_ONLY;
+    numOptions.sequence = numOptions.sequence + 1;
+    options  = options - cCRC32_ONLY;
+    ctrlsSeq = cCIPHER_ONLY;
+  endif;
+  if %bitAnd(cCRC32_FIRST : options) = cCRC32_FIRST;
+    numOptions.sequence = numOptions.sequence + 1;
+    options  = options - cCRC32_FIRST;
+    ctrlsSeq = cCIPHER_FIRST;
+  endif;
+  if %bitAnd(cCRC32_MIDDLE: options) = cCRC32_MIDDLE;
+    numOptions.sequence = numOptions.sequence + 1;
+    options  = options - cCRC32_MIDDLE;
+    ctrlsSeq = cCIPHER_MIDDLE;
+  endif;
+  if %bitAnd(cCRC32_FINAL : options) = cCRC32_FINAL;
+    numOptions.sequence = numOptions.sequence + 1;
+    options  = options - cCRC32_FINAL;
+    ctrlsSeq = cCIPHER_FINAL;
+  endif;
 /else
 if lf_bitAnd(cCRC32_ONLY  : options) = cCRC32_ONLY;
    numOptions.sequence = numOptions.sequence + 1;
@@ -823,23 +804,23 @@ if lf_bitAnd(cCRC32_FINAL : options) = cCRC32_FINAL;
 endif;
 /endif
 
-select;
-when  numOptions.sequence =  0;
-   ctrlsSeq = cCIPHER_ONLY;
-when  numOptions.sequence <> 1;
-   msg = f_newMsg('CPF9898':
-                  'Invalid number of sequence options': cMsg_Escape);
-   f_sndPgmMsg(msg);
-endsl;
+  select;
+  when  numOptions.sequence =  0;
+    ctrlsSeq = cCIPHER_ONLY;
+  when  numOptions.sequence <> 1;
+    msg = f_newMsg('CPF9898':
+                   'Invalid number of sequence options': cMsg_Escape);
+    f_sndPgmMsg(msg);
+  endsl;
 
-if  options <> 0;
-   msg = f_newMsg('CPF9898':
-                  'Invalid option flags found': cMsg_Escape);
-   f_sndPgmMsg(msg);
-endif;
+  if  options <> 0;
+    msg = f_newMsg('CPF9898':
+                   'Invalid option flags found': cMsg_Escape);
+    f_sndPgmMsg(msg);
+  endif;
 
-// Initialize CRC32
-if (ctrlsSeq = cCIPHER_ONLY) or (ctrlsSeq = cCIPHER_FIRST);
+  // Initialize CRC32
+  if (ctrlsSeq = cCIPHER_ONLY) or (ctrlsSeq = cCIPHER_FIRST);
 /if not defined(C_COMPILER)
    crc32Result = x'FFFFFFFF';
    if not isInit;
@@ -847,13 +828,13 @@ if (ctrlsSeq = cCIPHER_ONLY) or (ctrlsSeq = cCIPHER_FIRST);
       isInit = cTrue;
    endif;
 /else
-   crc32Result = x'FFFFFFFF';
+    crc32Result = x'FFFFFFFF';
 /endif
-endif;
+  endif;
 
-// Compute CRC32 checksum
+  // Compute CRC32 checksum
 /if defined(C_COMPILER)
-crc32Result = c_crc32(crc32Result: i_pString: length);
+  crc32Result = c_crc32(crc32Result: i_pString: length);
 /elseif defined(*V5R2M0)
 for i = 0 to length - 1;
    pABufChar = i_pString + i;
@@ -865,7 +846,7 @@ endfor;
 /else
 for i = 0 to length - 1;
    pABufChar = i_pString + i;
-   // iLookup   = %bitxor(%bitand(crc32ResultU: x'FF'): aBufChar);
+  // iLookup   = %bitxor(%bitand(crc32ResultU: x'FF'): aBufChar);
    iLookup = 0;
    ANDSTR(%addr(tmpResult)  : %addr(crc32Result):
           %addr(hex000000FF): 4);
@@ -873,33 +854,33 @@ for i = 0 to length - 1;
           %addr(aBufChar): 1);
    crc32Result2_4 = crc32Result1_3;                         // nasty shift-right
    crc32Result1_1 = x'00';                                  // 8-bit
-   // crc32Result = %bitxor(crc32Result: crc32Table(iLookup + 1));
+  // crc32Result = %bitxor(crc32Result: crc32Table(iLookup + 1));
    tmpResult = crc32Table(iLookup + 1);
    XORSTR(%addr(crc32Result): %addr(crc32Result):
           %addr(tmpResult  ): 4);
 endfor;
 /endif
 
-// Set return value
-if (ctrlsSeq = cCIPHER_ONLY) or (ctrlsSeq = cCIPHER_FINAL);
+  // Set return value
+  if (ctrlsSeq = cCIPHER_ONLY) or (ctrlsSeq = cCIPHER_FINAL);
 /if defined(*V5R2M0)
-   crc32Result = %bitnot(crc32Result);
+    crc32Result = %bitnot(crc32Result);
 /else
    COMSTR(%addr(crc32Result): %addr(crc32Result): 4);
 /endif
-   // Convert hexadecimal CRC32 to string
-   CRC32.value = f_cvtBufferToHexString(%addr(crc32Result):
-                                        %size(crc32Result));
-   CRC32.length = 8;
-else;
-   CRC32.value  = '';
-   CRC32.length = 0;
-endif;
+    // Convert hexadecimal CRC32 to string
+    CRC32.value = f_cvtBufferToHexString(%addr(crc32Result):
+                                         %size(crc32Result));
+    CRC32.length = 8;
+  else;
+    CRC32.value  = '';
+    CRC32.length = 0;
+  endif;
 
-return   CRC32;
+  return   CRC32;
 
 
-end-proc f_genCRC32;
+end-proc;
 
 /if not defined(C_COMPILER)
 //=========================================================================
@@ -909,20 +890,19 @@ end-proc f_genCRC32;
 //=========================================================================
 
 dcl-proc lp_crc32Table;
+  dcl-pi *n;
+    io_crc32Table uns(10) dim(256);
+  end-pi;
 
-dcl-pi lp_crc32Table;
-  io_crc32Table   uns(10) dim(256);
-end-pi;
-
-//  Helper fields
-dcl-s i               int(10) inz;
-dcl-s j               int(10) inz;
-dcl-s dwCrc           uns(10) inz;
-dcl-ds *N;
-  dwPolynomial    uns(10);
-  dwPolynomialH   char(4) inz(x'EDB88320') pos(1);
-end-ds;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  dcl-s i int(10) inz;
+  dcl-s j int(10) inz;
+  dcl-s dwCrc uns(10) inz;
+  dcl-ds *n;
+    dwPolynomial  uns(10);
+    dwPolynomialH char(4) inz(x'EDB88320') pos(1);
+  end-ds;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 for i = 0 to 255;
    dwCrc = i;
@@ -953,7 +933,7 @@ endfor;
 return;
 
 
-end-proc lp_crc32Table;
+end-proc;
 
 /endif
 /if not defined(*V5R2M0)                                                              //
@@ -963,25 +943,23 @@ end-proc lp_crc32Table;
 //=========================================================================
 
 dcl-proc lf_bitAND;
+  dcl-pi *n uns(10);
+    i_arg1 uns(10) value;
+    i_arg2 uns(10) value;
+  end-pi;
 
-dcl-pi lf_bitAND
-       uns(10);
-  i_arg1          uns(10) value;
-  i_arg2          uns(10) value;
-end-pi;
+  //  Return value
+  dcl-s result uns(10);
 
-//  Return value
-dcl-s result          uns(10);
-
-//  Helper fields
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 ANDSTR(%addr(result): %addr(i_arg1): %addr(i_arg2): %len(result));
 
 return result;
 
 
-end-proc lf_bitAND;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -989,25 +967,23 @@ end-proc lf_bitAND;
 //=========================================================================
 
 dcl-proc lf_bitOR;
+  dcl-pi *n uns(10);
+    i_arg1 uns(10) value;
+    i_arg2 uns(10) value;
+  end-pi;
 
-dcl-pi lf_bitOR
-       uns(10);
-  i_arg1          uns(10) value;
-  i_arg2          uns(10) value;
-end-pi;
+  //  Return value
+  dcl-s result uns(10);
 
-//  Return value
-dcl-s result          uns(10);
-
-//  Helper fields
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 XORSTR(%addr(result): %addr(i_arg1): %addr(i_arg2): %len(result));
 
 return result;
 
 
-end-proc lf_bitOR;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -1015,25 +991,23 @@ end-proc lf_bitOR;
 //=========================================================================
 
 dcl-proc lf_bitXOR;
+  dcl-pi *n uns(10);
+    i_arg1 uns(10) value;
+    i_arg2 uns(10) value;
+  end-pi;
 
-dcl-pi lf_bitXOR
-       uns(10);
-  i_arg1          uns(10) value;
-  i_arg2          uns(10) value;
-end-pi;
+  //  Return value
+  dcl-s result uns(10);
 
-//  Return value
-dcl-s result          uns(10);
-
-//  Helper fields
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 XORSTR(%addr(result): %addr(i_arg1): %addr(i_arg2): %len(result));
 
 return result;
 
 
-end-proc lf_bitXOR;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -1041,23 +1015,21 @@ end-proc lf_bitXOR;
 //=========================================================================
 
 dcl-proc lf_bitNOT;
+  dcl-pi *n uns(10);
+    i_arg uns(10) value;
+  end-pi;
 
-dcl-pi lf_bitNOT
-       uns(10);
-  i_arg           uns(10) value;
-end-pi;
+  //  Return value
+  dcl-s result uns(10);
 
-//  Return value
-dcl-s result          uns(10);
-
-//  Helper fields
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 COMSTR(%addr(result): %addr(i_arg): %len(result));
 
 return result;
 
 
-end-proc lf_bitNOT;
+end-proc;
 
 /endif

@@ -1,4 +1,4 @@
-**FREE
+**free
 //===============================================================*
 //    CALL PGM(TEST_R3_12) PARM('SYSPROCS' 'QSYS2')              *
 //===============================================================*
@@ -25,11 +25,11 @@
 //                                                               *
 //   >>END-PRE-COMPILER<<                                        *
 //===============================================================*
-ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
-ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
-ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
-ctl-opt EXPROPTS(*RESDECPOS);
-ctl-opt EXTBININT(*YES);
+ctl-opt debug option(*srcstmt: *nodebugio);
+ctl-opt decedit('0,') datedit(*DMY.);
+ctl-opt datfmt(*iso) timfmt(*iso);
+ctl-opt expropts(*resdecpos);
+ctl-opt extbinint(*yes);
 //===============================================================*
 
 // ------------------------------------
@@ -39,7 +39,7 @@ ctl-opt EXTBININT(*YES);
 // ------------------------------------
 //  External Prototypes
 // ------------------------------------
-/COPY QBASICS1,PBASICS1
+/copy QBASICS1,PBASICS1
 
 // ------------------------------------
 //  Global Fields
@@ -53,31 +53,29 @@ ctl-opt EXTBININT(*YES);
 //  Prototypes
 // ------------------------------------
 
-dcl-pr PGM_ENTRY_POINT
-       extpgm('TEST_R3_12');
-  gi_name         char(10) const  options(*nopass);
-  gi_lib          char(10) const  options(*nopass);
+dcl-pr PGM_ENTRY_POINT extpgm('TEST_R3_12');
+  gi_name char(10) options(*nopass) const;
+  gi_lib  char(10) options(*nopass) const;
 end-pr;
 
 dcl-pr main;
-  i_name          char(10) const;
-  i_lib           char(10) const;
+  i_name char(10) const;
+  i_lib  char(10) const;
 end-pr;
 
 //===============================================================*
 //  Program Entry Point
 //===============================================================*
-
 dcl-pi PGM_ENTRY_POINT;
-  gi_name         char(10) const  options(*nopass);
-  gi_lib          char(10) const  options(*nopass);
+  gi_name char(10) options(*nopass) const;
+  gi_lib  char(10) options(*nopass) const;
 end-pi;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if (%parms() >= 2);
-   main(gi_name: gi_lib);
+  main(gi_name: gi_lib);
 else;
-   main('SYSPROCS': 'QSYS2');
+  main('SYSPROCS': 'QSYS2');
 endif;
 
 *inlr = *on;
@@ -89,38 +87,36 @@ return;
 //  Main procedure
 //===============================================================*
 dcl-proc main;
+  dcl-pi *n;
+    i_name char(10) const;
+    i_lib  char(10) const;
+  end-pi;
 
-dcl-pi main;
-  i_name          char(10) const;
-  i_lib           char(10) const;
-end-pi;
+  //  Helper fields
+  dcl-s objName char(21) inz;
+  dcl-ds qObj likeds(qObj_t) inz;
+  dcl-ds msg likeds(msg_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s objName         char(21) inz;
-dcl-ds qObj likeds(qObj_t) inz;
-dcl-ds msg likeds(msg_t ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  qObj.name = i_name;
+  qObj.lib  = i_lib;
+  objName = f_objname(qObj);
 
-qObj.name = i_name;
-qObj.lib  = i_lib;
-objName = f_objname(qObj);
+  p_assert(objName = %trimR(i_lib) + '/' + %trimR(i_name)
+           : 'Fehler in Funktion f_objName()');
 
-p_assert(objName = %trimR(i_lib) + '/' + %trimR(i_name)
-         : 'Fehler in Funktion f_objName()');
+  msg = f_newMsg(cMsg_ID_NONE: 'Qualified object name 1 is: ' + objName);
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-msg = f_newMsg(cMsg_ID_NONE: 'Qualified object name 1 is: ' + objName);
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+  objName = f_objname(i_name: i_lib);
 
-objName = f_objname(i_name: i_lib);
+  p_assert(objName = %trimR(i_lib) + '/' + %trimR(i_name)
+           : 'Fehler in Funktion f_objName()');
 
-p_assert(objName = %trimR(i_lib) + '/' + %trimR(i_name)
-         : 'Fehler in Funktion f_objName()');
+  msg = f_newMsg(cMsg_ID_NONE: 'Qualified object name 2 is: ' + objName);
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-msg = f_newMsg(cMsg_ID_NONE: 'Qualified object name 2 is: ' + objName);
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-
-return;
+  return;
 
 
 end-proc main;
-

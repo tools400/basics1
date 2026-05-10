@@ -1,4 +1,4 @@
-**FREE
+**free
 //===============================================================*
 //    CALL PGM(TEST_R3_04) PARM('CR+LF')                         *
 //===============================================================*
@@ -25,11 +25,11 @@
 //                                                               *
 //   >>END-PRE-COMPILER<<                                        *
 //===============================================================*
-ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
-ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
-ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
-ctl-opt EXPROPTS(*RESDECPOS);
-ctl-opt EXTBININT(*YES);
+ctl-opt debug option(*srcstmt: *nodebugio);
+ctl-opt decedit('0,') datedit(*DMY.);
+ctl-opt datfmt(*iso) timfmt(*iso);
+ctl-opt expropts(*resdecpos);
+ctl-opt extbinint(*yes);
 //===============================================================*
 
 // ------------------------------------
@@ -39,7 +39,7 @@ ctl-opt EXTBININT(*YES);
 // ------------------------------------
 //  External Prototypes
 // ------------------------------------
-/COPY QBASICS1,PBASICS1
+/copy QBASICS1,PBASICS1
 
 // ------------------------------------
 //  Global Fields
@@ -53,28 +53,26 @@ ctl-opt EXTBININT(*YES);
 //  Prototypes
 // ------------------------------------
 
-dcl-pr PGM_ENTRY_POINT
-       extpgm('TEST_R3_04');
-  gi_rplStr       char(32) const  options(*nopass);
+dcl-pr PGM_ENTRY_POINT extpgm('TEST_R3_04');
+  gi_rplStr char(32) options(*nopass) const;
 end-pr;
 
 dcl-pr main;
-  i_rplStr        char(32) const;
+  i_rplStr char(32) const;
 end-pr;
 
 //===============================================================*
 //  Program Entry Point
 //===============================================================*
-
 dcl-pi PGM_ENTRY_POINT;
-  gi_rplStr       char(32) const  options(*nopass);
+  gi_rplStr char(32) options(*nopass) const;
 end-pi;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if (%parms() >= %parmNum(gi_rplStr));
-   main(gi_rplStr);
+  main(gi_rplStr);
 else;
-   main('Hello World!');
+  main('Hello World!');
 endif;
 
 *inlr = *on;
@@ -86,28 +84,26 @@ return;
 //  Main procedure
 //===============================================================*
 dcl-proc main;
+  dcl-pi *n;
+    i_rplStr char(32) const;
+  end-pi;
 
-dcl-pi main;
-  i_rplStr        char(32) const;
-end-pi;
+  //  Helper fields
+  dcl-ds msg likeds(msg_t) inz;
+  dcl-s msgText varchar(1024) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-ds msg likeds(msg_t      ) inz;
-dcl-s msgText         varchar(1024) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Retrieve a message and replace &N with i_rplStr.
+  msg = f_newMsg('CAE0009');
+  msgText = f_rtvMsgHelpText(msg: cMsg_RtnCtrlChar_Yes: *omit);
 
-// Retrieve a message and replace &N with i_rplStr.
-msg = f_newMsg('CAE0009');
-msgText = f_rtvMsgHelpText(msg: cMsg_RtnCtrlChar_Yes: *omit);
+  msgText = f_replace('&N': %trimR(i_rplStr): msgText);
 
-msgText = f_replace('&N': %trimR(i_rplStr): msgText);
+  // Show the text with the replacements.
+  msg = f_newMsg(cMSG_ID_NONE: msgText);
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-// Show the text with the replacements.
-msg = f_newMsg(cMSG_ID_NONE: msgText);
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-
-return;
+  return;
 
 
 end-proc main;
-

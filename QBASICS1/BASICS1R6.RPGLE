@@ -1,4 +1,4 @@
-**FREE
+**free
 //=====================================================================*
 //  BASICS1R6  - SrvPgm: Basic Routines - Commands                     *
 //=====================================================================*
@@ -51,32 +51,31 @@
 //                                                                     *
 //   >>END-PRE-COMPILER<<                                              *
 //=====================================================================*
-ctl-opt NOMAIN;
+ctl-opt nomain;
 //  Standard H-Specs
-/COPY QBASICS1,H_SPEC
-/COPY QBASICS1,COPYRIGHT
+/copy QBASICS1,H_SPEC
+/copy QBASICS1,COPYRIGHT
 //=====================================================================*
 
 // -----------------------------------------
 //  Exported functions
 // -----------------------------------------
-/COPY QBASICS1,PBASICS1R6
+/copy QBASICS1,PBASICS1R6
 
 // -----------------------------------------
 //  Reference fields
 // -----------------------------------------
-/COPY QBASICS1,BASICS1R0
+/copy QBASICS1,BASICS1R0
 
 //  len(envVarBuf) = len(name(128)) + len(value(1024)) + len(null-byte(1))
-dcl-s envVarBuf_t     char(1153) based(pDummy);
+dcl-s envVarBuf_t char(1153) based(pDummy);
 
 // -----------------------------------------
 //  Private prototypes
 // -----------------------------------------
 
 //  Initialize Environment for Variables
-dcl-pr lf_initEnv
-       int(10);
+dcl-pr lf_initEnv int(10);
 end-pr;
 
 // -----------------------------------------
@@ -102,127 +101,124 @@ end-pr;
 //=========================================================================
 
 dcl-proc f_execute export;
+  dcl-pi *n ind opdesc;
+    i_cmd        char(16384) options(*varsize) const;
+    i_typeCmdPrc int(10) options(*nopass: *omit) const;
+    o_msg        likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_execute
-       ind opdesc;
-  i_cmd           char(16384) const  options(*varsize);
-  i_typeCmdPrc    int(10) const  options(*nopass: *omit);
-  o_msg           likeds(msg_t    )
-options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s isExecuted ind inz(cFalse);
 
-//  Return value
-dcl-s isExecuted      ind inz(cFalse);
+  //  Parameter positions
+  dcl-c p_cmd 1;
+  dcl-c p_typeCmdPrc 2;
+  dcl-c p_msg 3;
 
-//  Parameter positions
-dcl-c p_cmd const(1);
-dcl-c p_typeCmdPrc const(2);
-dcl-c p_msg const(3);
+  //  Optional parameter fields
+  dcl-s typeCmdPrc like(i_typeCmdPrc) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s typeCmdPrc      like(i_typeCmdPrc) inz;
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Helper fields CEEGSI
+  dcl-ds si_cmd likeds(strInf_t) inz;
 
-//  Helper fields CEEGSI
-dcl-ds si_cmd likeds(strInf_t  ) inz;
+  //  Helper fields QCAPCMD
+  dcl-ds optCtrlBlk qualified;
+    typeCmdPrc   int(10) inz(0); // QCMDEXC
+    DBCS_data    char(1) inz('0'); // ignore DBCS
+    prmtAction   char(1) inz('0'); // never prompt
+    cmdStrSyntax char(1) inz('0'); // AS/400 Syntax
+    msgRtvKey    char(4) inz(*blanks); // no msg key
+    res_01       char(9) inz(*ALLx'00');
+  end-ds;
 
-//  Helper fields QCAPCMD
-dcl-ds optCtrlBlk qualified;
-  typeCmdPrc      int(10) inz(0);                                        // QCMDEXC
-  DBCS_data       char(1) inz('0');                                      // ignore DBCS
-  prmtAction      char(1) inz('0');                                      // never prompt
-  cmdStrSyntax    char(1) inz('0');                                      // AS/400 Syntax
-  msgRtvKey       char(4) inz(*BLANKS);                                  // no msg key
-  res_01          char(9) inz(*ALLx'00');
-end-ds;
+  dcl-s chgCmd char(128) inz;
+  dcl-s chgCmdBytAvl int(10) inz;
 
-dcl-s chgCmd          char(128) inz;
-dcl-s chgCmdBytAvl    int(10) inz;
+  dcl-ds errCode likeds(errCode_t) inz;
 
-dcl-ds errCode likeds(errCode_t ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
+  //  Helper fields
+  dcl-ds rcvm0200 likeds(rcvm0200_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-ds rcvm0200 likeds(rcvm0200_t) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Retrieve string information of i_cmd
+  CEEGSI(p_cmd: si_cmd.datatype: si_cmd.curlen: si_cmd.maxlen: *omit);
 
-// Retrieve string information of i_cmd
-CEEGSI(p_cmd: si_cmd.datatype: si_cmd.curlen: si_cmd.maxlen: *omit);
+  // Process optional parameter values ...
+  // ... i_typeCmdPrc
+  if   %parms >= p_typeCmdPrc;
+    CEETSTA(isPresent: p_typeCmdPrc: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_typeCmdPrc
-if   %parms >= p_typeCmdPrc;
-   CEETSTA(isPresent: p_typeCmdPrc: *omit);
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    typeCmdPrc = i_typeCmdPrc;
+  else;
+    typeCmdPrc = cCMD_PRC_EXC_QCMDEXC;
+  endif;
 
-if   isPresent = 1;
-   typeCmdPrc = i_typeCmdPrc;
-else;
-   typeCmdPrc = cCMD_PRC_EXC_QCMDEXC;
-endif;
+  // Set options control block
+  reset   optCtrlBlk;
+  optCtrlBlk.typeCmdPrc = %bitand(typeCmdPrc: x'0000FFFF');
 
-// Set options control block
-reset   optCtrlBlk;
-optCtrlBlk.typeCmdPrc = %bitand(typeCmdPrc: x'0000FFFF');
+  // Set prompter action
+  select;
+  when (f_isBitOn(cCMD_PRC_PROMPT_HELP: typeCmdPrc));
+    optCtrlBlk.prmtAction = '3';
 
-// Set prompter action
-select;
-when (f_isBitOn(cCMD_PRC_PROMPT_HELP: typeCmdPrc));
-   optCtrlBlk.prmtAction = '3';
+  when (f_isBitOn(cCMD_PRC_PROMPT_ON_REQUEST: typeCmdPrc));
+    optCtrlBlk.prmtAction = '2';
 
-when (f_isBitOn(cCMD_PRC_PROMPT_ON_REQUEST: typeCmdPrc));
-   optCtrlBlk.prmtAction = '2';
+  when (f_isBitOn(cCMD_PRC_PROMPT_ALWAYS: typeCmdPrc));
+    optCtrlBlk.prmtAction = '1';
 
-when (f_isBitOn(cCMD_PRC_PROMPT_ALWAYS: typeCmdPrc));
-   optCtrlBlk.prmtAction = '1';
+  other;
+    optCtrlBlk.prmtAction = '0';
 
-other;
-   optCtrlBlk.prmtAction = '0';
+  endsl;
 
-endsl;
+  // Execute the command
+  p_rmvPgmMsg(cMsg_Rmv_All);
 
-// Execute the command
-p_rmvPgmMsg(cMsg_Rmv_All);
+  monitor;
+    errCode = f_newApiErrCode(cFalse);
+    QCAPCMD(%subst(i_cmd: 1: si_cmd.curlen) :
+            si_cmd.curlen                   :
+            optCtrlBlk                      :
+            %size(optCtrlBlk)               :
+            'CPOP0100'                      :
+            chgCmd                          :
+            0                               :
+            chgCmdBytAvl                    :
+            errCode                         );
+    msg = f_newMsg(cMSG_ID_OK);
+    isExecuted = cTrue;
+  on-error;
+    rcvm0200 = f_rcvPgmMsg(cMsg_Any);
+    msg = f_cvtRcvMsgToMsg(rcvm0200: cMsg_Escape);
+    isExecuted = cFalse;
+  endmon;
 
-monitor;
-   errCode = f_newApiErrCode(cFalse);
-   QCAPCMD(%subst(i_cmd: 1: si_cmd.curlen) :
-           si_cmd.curlen                   :
-           optCtrlBlk                      :
-           %size(optCtrlBlk)               :
-           'CPOP0100'                      :
-           chgCmd                          :
-           0                               :
-           chgCmdBytAvl                    :
-           errCode                         );
-   msg = f_newMsg(cMSG_ID_OK);
-   isExecuted = cTrue;
-on-error;
-   rcvm0200 = f_rcvPgmMsg(cMsg_Any);
-   msg = f_cvtRcvMsgToMsg(rcvm0200: cMsg_Escape);
-   isExecuted = cFalse;
-endmon;
-
-// Process optional/omissible message parameter
-if   %parms >= p_msg;
-   CEETSTA(isPresent: p_msg: *omit);
-   if   isPresent = 1;
+  // Process optional/omissible message parameter
+  if   %parms >= p_msg;
+    CEETSTA(isPresent: p_msg: *omit);
+    if   isPresent = 1;
       o_msg = msg;
-   endif;
-else;
-   if   msg.ID <> cMSG_ID_OK;
+    endif;
+  else;
+    if   msg.ID <> cMSG_ID_OK;
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return   isExecuted;
+  return   isExecuted;
 
 
-end-proc f_execute;
+end-proc;
 
 //=========================================================================
 //  Gets an environment variable.
@@ -235,31 +231,29 @@ end-proc f_execute;
 //=========================================================================
 
 dcl-proc f_getEnvVar export;
+  dcl-pi *n varchar(1024);
+    i_pEnvVar pointer options(*string) const;
+  end-pi;
 
-dcl-pi f_getEnvVar
-       varchar(1024);
-  i_pEnvVar       pointer const  options(*string);
-end-pi;
+  //  Return value
+  dcl-s value varchar(1024) inz;
 
-//  Return value
-dcl-s value           varchar(1024) inz;
+  //  Helper fields
+  dcl-s pValue pointer inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s pValue          pointer inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  pValue = getenv(i_pEnvVar);
 
-pValue = getenv(i_pEnvVar);
+  if   pValue <> *NULL;
+    value = %str(pValue);
+  else;
+    value = '';
+  endif;
 
-if   pValue <> *NULL;
-   value = %str(pValue);
-else;
-   value = '';
-endif;
-
-return   value;
+  return   value;
 
 
-end-proc f_getEnvVar;
+end-proc;
 
 //=========================================================================
 //  Sets an environment variable.
@@ -274,34 +268,32 @@ end-proc f_getEnvVar;
 //=========================================================================
 
 dcl-proc f_setEnvVar export;
+  dcl-pi *n ind;
+    i_envVar like(envVar_t.name) const;
+    i_value  like(envVar_t.value) const;
+  end-pi;
 
-dcl-pi f_setEnvVar
-       ind;
-  i_envVar        const  like(envVar_t.name );
-  i_value         const  like(envVar_t.value);
-end-pi;
+  //  Return value
+  dcl-s isSet ind inz(cFalse);
 
-//  Return value
-dcl-s isSet           ind inz(cFalse);
+  //  Helper fields
+  dcl-s envVarBuf like(envVarBuf_t) inz;
+  dcl-s rc int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s envVarBuf       like(envVarBuf_t) inz;
-dcl-s rc              int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  envVarBuf = i_envVar + '=' + i_value + x'00';
+  rc = putenv(%addr(envVarBuf));
 
-envVarBuf = i_envVar + '=' + i_value + x'00';
-rc = putenv(%addr(envVarBuf));
+  if   rc = 0;
+    isSet = cTrue;
+  else;
+    isSet = cFalse;
+  endif;
 
-if   rc = 0;
-   isSet = cTrue;
-else;
-   isSet = cFalse;
-endif;
-
-return   isSet;
+  return   isSet;
 
 
-end-proc f_setEnvVar;
+end-proc;
 
 //=========================================================================
 //  Deletes a given environment variable.
@@ -314,31 +306,29 @@ end-proc f_setEnvVar;
 //=========================================================================
 
 dcl-proc f_delEnvVar export;
+  dcl-pi *n ind;
+    i_pEnvVar pointer options(*string) const;
+  end-pi;
 
-dcl-pi f_delEnvVar
-       ind;
-  i_pEnvVar       pointer const  options(*string);
-end-pi;
+  //  Return value
+  dcl-s isDeleted ind inz(cFalse);
 
-//  Return value
-dcl-s isDeleted       ind inz(cFalse);
+  //  Helper fields
+  dcl-s rc int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s rc              int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  rc = Qp0zDltEnv(i_pEnvVar);
 
-rc = Qp0zDltEnv(i_pEnvVar);
+  if   rc = 0;
+    isDeleted = cTrue;
+  else;
+    isDeleted = cFalse;
+  endif;
 
-if   rc = 0;
-   isDeleted = cTrue;
-else;
-   isDeleted = cFalse;
-endif;
-
-return   isDeleted;
+  return   isDeleted;
 
 
-end-proc f_delEnvVar;
+end-proc;
 
 //=========================================================================
 //  Gets the number of environment variables.
@@ -351,32 +341,30 @@ end-proc f_delEnvVar;
 //=========================================================================
 
 dcl-proc f_getNumEnvVar export;
+  dcl-pi *n int(10);
+  end-pi;
 
-dcl-pi f_getNumEnvVar
-       int(10);
-end-pi;
+  //  Return value
+  dcl-s numEnvVar int(10) inz;
 
-//  Return value
-dcl-s numEnvVar       int(10) inz;
+  //  Helper fields
+  dcl-s ppEnvVar pointer based(pEnvVar);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s ppEnvVar        pointer based(pEnvVar);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-if lf_initEnv() = 0;
-   pEnvVar = ENVIRON;
-   dow ppEnvVar <> *NULL;
+  if lf_initEnv() = 0;
+    pEnvVar = ENVIRON;
+    dow ppEnvVar <> *NULL;
       numEnvVar = numEnvVar + 1;
       pEnvVar   = pEnvVar + %size(pEnvVar);
-   enddo;
-else;
-   numEnvVar = -1;
-endif;
+    enddo;
+  else;
+    numEnvVar = -1;
+  endif;
 
-return   numEnvVar;
+  return   numEnvVar;
 
 
-end-proc f_getNumEnvVar;
+end-proc;
 
 //=========================================================================
 //  Gets an environment variable by its index.
@@ -391,54 +379,52 @@ end-proc f_getNumEnvVar;
 //=========================================================================
 
 dcl-proc f_getEnvVarByIndex export;
+  dcl-pi *n likeds(envVar_t);
+    i_index int(10) const;
+  end-pi;
 
-dcl-pi f_getEnvVarByIndex
-       likeds(envVar_t );
-i_index         int(10) const;
-end-pi;
+  //  Return value
+  dcl-ds envVar likeds(envVar_t) inz;
 
-//  Return value
-dcl-ds envVar likeds(envVar_t ) inz;
+  //  Helper fields
+  dcl-s index like(i_index) inz;
+  dcl-s ppEnvVar pointer based(pEnvVar);
+  dcl-s length int(10) inz;
 
-//  Helper fields
-dcl-s index           like(i_index    ) inz;
-dcl-s ppEnvVar        pointer based(pEnvVar);
-dcl-s length          int(10) inz;
+  //  len(envVarBuf) = len(name(128)) + len(value(1024)) + len(null-byte(1))
+  dcl-s envVarBuf like(envVarBuf_t) inz;
+  dcl-s x int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  len(envVarBuf) = len(name(128)) + len(value(1024)) + len(null-byte(1))
-dcl-s envVarBuf       like(envVarBuf_t) inz;
-dcl-s x               int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-if lf_initEnv() = 0;
-   pEnvVar = ENVIRON;
-   index = 0;
-   dow ppEnvVar <> *NULL and index < i_index;
+  if lf_initEnv() = 0;
+    pEnvVar = ENVIRON;
+    index = 0;
+    dow ppEnvVar <> *NULL and index < i_index;
       index = index + 1;
       if index < i_index;
-         pEnvVar   = pEnvVar + %size(pEnvVar);
+        pEnvVar   = pEnvVar + %size(pEnvVar);
       endif;
-   enddo;
-   clear envVar;
-   if index = i_index;
+    enddo;
+    clear envVar;
+    if index = i_index;
       length = strlen(ppEnvVar);
       envVarBuf = %str(ppEnvVar);
       x = %scan('=': envVarBuf);
       if x > 1;
-         envVar.name = %subst(envVarBuf: 1: x-1);
-         if x < %len(envVarBuf);
-            envVar.value = %subst(envVarBuf: x+1: length - x);
-         else;
-            envVar.value = '';
-         endif;
+        envVar.name = %subst(envVarBuf: 1: x-1);
+        if x < %len(envVarBuf);
+          envVar.value = %subst(envVarBuf: x+1: length - x);
+        else;
+          envVar.value = '';
+        endif;
       endif;
-   endif;
-endif;
+    endif;
+  endif;
 
-return   envVar;
+  return   envVar;
 
 
-end-proc f_getEnvVarByIndex;
+end-proc;
 
 //=========================================================================
 //  Waits for the specified number of seconds.
@@ -451,23 +437,22 @@ end-proc f_getEnvVarByIndex;
 //=========================================================================
 
 dcl-proc p_wait export;
+  dcl-pi *n;
+    i_seconds int(10) const;
+  end-pi;
 
-dcl-pi p_wait;
-  i_seconds       int(10) const;
-end-pi;
+  //  Helper fields
+  dcl-s mi_time char(8) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s mi_time         char(8) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  mitime(mi_time: 0: 0: i_seconds: 0);
 
-mitime(mi_time: 0: 0: i_seconds: 0);
+  waittime(mi_time: cWAIT_NORMAL + cWAIT_SIGNALS);
 
-waittime(mi_time: cWAIT_NORMAL + cWAIT_SIGNALS);
-
-return;
+  return;
 
 
-end-proc p_wait;
+end-proc;
 
 //=========================================================================
 //  *** PRIVATE ***
@@ -475,29 +460,26 @@ end-proc p_wait;
 //=========================================================================
 
 dcl-proc lf_initEnv;
+  dcl-pi *n int(10);
+  end-pi;
 
-dcl-pi lf_initEnv
-       int(10);
-end-pi;
+  //  Return value
+  dcl-s rc int(10) inz;
 
-//  Return value
-dcl-s rc              int(10) inz;
+  //  Helper fields
+  dcl-s isInit ind inz(cFalse) static;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s isInit          ind inz(cFalse) static;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-if not isInit;
-   rc = Qp0zInitEnv();
-   if rc = 0;
+  if not isInit;
+    rc = Qp0zInitEnv();
+    if rc = 0;
       isInit = cTrue;
-   endif;
-else;
-   rc = 0;
-endif;
+    endif;
+  else;
+    rc = 0;
+  endif;
 
-return   rc;
+  return   rc;
 
 
-end-proc lf_initEnv;
-
+end-proc;

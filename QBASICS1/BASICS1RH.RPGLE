@@ -1,4 +1,4 @@
-**FREE
+**free
 //=====================================================================*
 //  BASICS1RH  - SrvPgm: Basic Routines - MemoryBufferRdrWtr           *
 //=====================================================================*
@@ -40,34 +40,34 @@
 //                                                                     *
 //   >>END-PRE-COMPILER<<                                              *
 //=====================================================================*
-ctl-opt NOMAIN BNDDIR('QSNAPI');
+ctl-opt nomain bnddir('QSNAPI');
 //  Standard H-Specs
-/COPY QBASICS1,H_SPEC
-/COPY QBASICS1,COPYRIGHT
+/copy QBASICS1,H_SPEC
+/copy QBASICS1,COPYRIGHT
 //=====================================================================*
 
 // -----------------------------------------
 //  Exported functions
 // -----------------------------------------
-/COPY QBASICS1,PBASICS1RH
+/copy QBASICS1,PBASICS1RH
 
 // -----------------------------------------
 //  Reference fields
 // -----------------------------------------
-/COPY QBASICS1,BASICS1R0
+/copy QBASICS1,BASICS1R0
 
-dcl-ds reader_t qualified               based(pDummy);
-  fd              int(10);
-  offset          int(10);
-  size            int(10);
-  pData           pointer;
+dcl-ds reader_t qualified based(pDummy);
+  fd     int(10);
+  offset int(10);
+  size   int(10);
+  pData  pointer;
 end-ds;
 
-dcl-ds writer_t qualified               based(pDummy);
-  fd              int(10);
-  offset          int(10);
-  size            int(10);
-  pData           pointer;
+dcl-ds writer_t qualified based(pDummy);
+  fd     int(10);
+  offset int(10);
+  size   int(10);
+  pData  pointer;
 end-ds;
 
 // -----------------------------------------
@@ -77,18 +77,16 @@ end-ds;
 // -----------------------------------------
 //  Imported prototypes
 // -----------------------------------------
-/COPY QBASICS1,CLIB                          C Runtime Library
+/copy QBASICS1,CLIB                          C Runtime Library
 
-/COPY QBASICS1,PBASICS1R2                    API Error Handling
-/COPY QBASICS1,PBASICS1R8                    Handle/Memory
+/copy QBASICS1,PBASICS1R2                    API Error Handling
+/copy QBASICS1,PBASICS1R8                    Handle/Memory
 
 // -----------------------------------------
 //  Global constants
 // -----------------------------------------
-dcl-c HANDLE_TYPE_WRITER
-      '*MEMORY_WRITER';
-dcl-c HANDLE_TYPE_READER
-      '*MEMORY_READER';
+dcl-c HANDLE_TYPE_WRITER '*MEMORY_WRITER';
+dcl-c HANDLE_TYPE_READER '*MEMORY_READER';
 
 // -----------------------------------------
 //  Global fields
@@ -105,36 +103,34 @@ dcl-c HANDLE_TYPE_READER
 //   fd            - Buffer descriptor on success, else -1.
 //=========================================================================
 dcl-proc MemoryWriter_new export;
+  dcl-pi *n like(memWtr_handle_t);
+    i_pBuffer pointer value;
+    i_maxSize like(size_t) value;
+  end-pi;
 
-dcl-pi MemoryWriter_new
-       like(memWtr_handle_t);
-  i_pBuffer       pointer value;
-  i_maxSize       value  like(size_t         );
-end-pi;
+  //  Return value
+  dcl-s fd int(10) inz(RC_ERROR);
 
-//  Return value
-dcl-s fd              int(10) inz(RC_ERROR);
+  //  Local fields
 
-//  Local fields
+  //  Handle
+  dcl-ds hWriter likeds(writer_t) based(pHWriter);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Handle
-dcl-ds hWriter likeds(writer_t ) based(pHWriter);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  fd = HANDLE_new(HANDLE_TYPE_WRITER: %size(hWriter));
 
-fd = HANDLE_new(HANDLE_TYPE_WRITER: %size(hWriter));
+  pHWriter = HANDLE_getPointer(fd);
 
-pHWriter = HANDLE_getPointer(fd);
+  clear hWriter;
+  hWriter.fd     = fd;
+  hWriter.offset = 0;
+  hWriter.size   = i_maxSize;
+  hWriter.pData  = i_pBuffer;
 
-clear hWriter;
-hWriter.fd     = fd;
-hWriter.offset = 0;
-hWriter.size   = i_maxSize;
-hWriter.pData  = i_pBuffer;
-
-return fd;
+  return fd;
 
 
-end-proc MemoryWriter_new;
+end-proc;
 
 //=========================================================================
 //  Write to a given memory buffer descriptor.
@@ -149,52 +145,50 @@ end-proc MemoryWriter_new;
 //                   success, else -1.
 //=========================================================================
 dcl-proc MemoryWriter_write export;
+  dcl-pi *n like(ssize_t);
+    i_fd      like(memWtr_handle_t) value;
+    i_pBuffer pointer value;
+    i_buflen  like(size_t) value;
+  end-pi;
 
-dcl-pi MemoryWriter_write
-       like(ssize_t        );
-  i_fd            value  like(memWtr_handle_t);
-  i_pBuffer       pointer value;
-  i_buflen        value  like(size_t         );
-end-pi;
+  //  Return value
+  dcl-s rc like(ssize_t) inz(RC_ERROR);
 
-//  Return value
-dcl-s rc              like(ssize_t ) inz(RC_ERROR);
+  //  Local fields
+  dcl-s size like(rc) inz;
+  dcl-s pDest pointer inz;
 
-//  Local fields
-dcl-s size            like(rc      ) inz;
-dcl-s pDest           pointer inz;
+  //  Handle
+  dcl-ds hWriter likeds(writer_t) based(pHWriter);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Handle
-dcl-ds hWriter likeds(writer_t ) based(pHWriter);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (not HANDLE_isTypeOf(i_fd: HANDLE_TYPE_WRITER));
+    f_setErrno(EBADF_C);
+    return RC_ERROR;
+  endif;
 
-if (not HANDLE_isTypeOf(i_fd: HANDLE_TYPE_WRITER));
-   f_setErrno(EBADF_C);
-   return RC_ERROR;
-endif;
+  pHWriter = HANDLE_getPointer(i_fd);
 
-pHWriter = HANDLE_getPointer(i_fd);
+  if (hWriter.offset + i_buflen > hWriter.size);
+    f_setErrno(ENOBUFS_C);
+    return RC_ERROR;
+  endif;
 
-if (hWriter.offset + i_buflen > hWriter.size);
-   f_setErrno(ENOBUFS_C);
-   return RC_ERROR;
-endif;
+  size = i_buflen;
+  pDest = memcpy(hWriter.pData + hWriter.offset: i_pBuffer: size);
+  if (pDest <> hWriter.pData + hWriter.offset);
+    f_setErrno(ENOBUFS_C);
+    return RC_ERROR;
+  endif;
 
-size = i_buflen;
-pDest = memcpy(hWriter.pData + hWriter.offset: i_pBuffer: size);
-if (pDest <> hWriter.pData + hWriter.offset);
-   f_setErrno(ENOBUFS_C);
-   return RC_ERROR;
-endif;
+  hWriter.offset = hWriter.offset + size;
 
-hWriter.offset = hWriter.offset + size;
+  rc = size;
 
-rc = size;
-
-return rc;
+  return rc;
 
 
-end-proc MemoryWriter_write;
+end-proc;
 
 //=========================================================================
 //  Deletes a given memory buffer writer.
@@ -206,32 +200,31 @@ end-proc MemoryWriter_write;
 //   void
 //=========================================================================
 dcl-proc MemoryWriter_delete export;
+  dcl-pi *n;
+    io_fd like(memWtr_handle_t);
+  end-pi;
 
-dcl-pi MemoryWriter_delete;
-  io_fd           like(memWtr_handle_t);
-end-pi;
+  //  Local fields
 
-//  Local fields
+  //  Handle
+  dcl-ds hWriter likeds(writer_t) based(pHWriter);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Handle
-dcl-ds hWriter likeds(writer_t ) based(pHWriter);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (not HANDLE_isTypeOf(io_fd: HANDLE_TYPE_WRITER));
+    f_setErrno(EBADF_C);
+    return;
+  endif;
 
-if (not HANDLE_isTypeOf(io_fd: HANDLE_TYPE_WRITER));
-   f_setErrno(EBADF_C);
-   return;
-endif;
+  pHWriter = HANDLE_getPointer(io_fd);
 
-pHWriter = HANDLE_getPointer(io_fd);
+  clear hWriter;
 
-clear hWriter;
+  HANDLE_delete(io_fd);
 
-HANDLE_delete(io_fd);
-
-return;
+  return;
 
 
-end-proc MemoryWriter_delete;
+end-proc;
 
 //=========================================================================
 //  Returns the 'write' procedure of a MemoryWriter.
@@ -244,16 +237,14 @@ end-proc MemoryWriter_delete;
 //                   of a MemoryWriter.
 //=========================================================================
 dcl-proc MemoryWriter_writeProc export;
+  dcl-pi *n pointer(*proc);
+  end-pi;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-dcl-pi MemoryWriter_writeProc
-       pointer(*proc);
-end-pi;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-return %paddr('BASICS1RH_MemoryWriter_write');
+  return %paddr('BASICS1RH_MemoryWriter_write');
 
 
-end-proc MemoryWriter_writeProc;
+end-proc;
 
 //=========================================================================
 //  Creates a memory buffer reader.
@@ -266,36 +257,34 @@ end-proc MemoryWriter_writeProc;
 //   fd            - Buffer descriptor on success, else -1.
 //=========================================================================
 dcl-proc MemoryReader_new export;
+  dcl-pi *n like(memRdr_handle_t);
+    i_pBuffer pointer value;
+    i_size    like(size_t) value;
+  end-pi;
 
-dcl-pi MemoryReader_new
-       like(memRdr_handle_t);
-  i_pBuffer       pointer value;
-  i_size          value  like(size_t         );
-end-pi;
+  //  Return value
+  dcl-s fd int(10) inz(RC_ERROR);
 
-//  Return value
-dcl-s fd              int(10) inz(RC_ERROR);
+  //  Local fields
 
-//  Local fields
+  //  Handle
+  dcl-ds hReader likeds(reader_t) based(pHReader);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Handle
-dcl-ds hReader likeds(reader_t ) based(pHReader);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  fd = HANDLE_new(HANDLE_TYPE_READER: %size(hReader));
 
-fd = HANDLE_new(HANDLE_TYPE_READER: %size(hReader));
+  pHReader = HANDLE_getPointer(fd);
 
-pHReader = HANDLE_getPointer(fd);
+  clear hReader;
+  hReader.fd     = fd;
+  hReader.offset = 0;
+  hReader.size   = i_size;
+  hReader.pData  = i_pBuffer;
 
-clear hReader;
-hReader.fd     = fd;
-hReader.offset = 0;
-hReader.size   = i_size;
-hReader.pData  = i_pBuffer;
-
-return fd;
+  return fd;
 
 
-end-proc MemoryReader_new;
+end-proc;
 
 //=========================================================================
 //  Reads from a given memory buffer descriptor.
@@ -311,51 +300,49 @@ end-proc MemoryReader_new;
 //                   success, else -1.
 //=========================================================================
 dcl-proc MemoryReader_read export;
+  dcl-pi *n like(ssize_t);
+    i_fd      like(memRdr_handle_t) value;
+    i_pBuffer pointer value;
+    i_nByte   like(size_t) value;
+  end-pi;
 
-dcl-pi MemoryReader_read
-       like(ssize_t        );
-  i_fd            value  like(memRdr_handle_t);
-  i_pBuffer       pointer value;
-  i_nByte         value  like(size_t         );
-end-pi;
+  //  Return value
+  dcl-s rc like(ssize_t) inz(RC_ERROR);
 
-//  Return value
-dcl-s rc              like(ssize_t ) inz(RC_ERROR);
+  //  Local fields
+  dcl-s size like(rc) inz;
+  dcl-s pDest pointer inz;
 
-//  Local fields
-dcl-s size            like(rc      ) inz;
-dcl-s pDest           pointer inz;
+  //  Handle
+  dcl-ds hReader likeds(reader_t) based(pHReader);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Handle
-dcl-ds hReader likeds(reader_t ) based(pHReader);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (not HANDLE_isTypeOf(i_fd: HANDLE_TYPE_READER));
+    f_setErrno(EBADF_C);
+    return RC_ERROR;
+  endif;
 
-if (not HANDLE_isTypeOf(i_fd: HANDLE_TYPE_READER));
-   f_setErrno(EBADF_C);
-   return RC_ERROR;
-endif;
+  pHReader = HANDLE_getPointer(i_fd);
 
-pHReader = HANDLE_getPointer(i_fd);
+  if (hReader.offset + i_nByte > hReader.size);
+    size = hReader.size - hReader.offset;
+  else;
+    size = i_nByte;
+  endif;
 
-if (hReader.offset + i_nByte > hReader.size);
-   size = hReader.size - hReader.offset;
-else;
-   size = i_nByte;
-endif;
+  pDest = memcpy(i_pBuffer: hReader.pData + hReader.offset: size);
+  if (pDest <> i_pBuffer);
+    return RC_ERROR;
+  endif;
 
-pDest = memcpy(i_pBuffer: hReader.pData + hReader.offset: size);
-if (pDest <> i_pBuffer);
-   return RC_ERROR;
-endif;
+  hReader.offset = hReader.offset + size;
 
-hReader.offset = hReader.offset + size;
+  rc = size;
 
-rc = size;
-
-return rc;
+  return rc;
 
 
-end-proc MemoryReader_read;
+end-proc;
 
 //=========================================================================
 //  Deletes a given memory buffer reader.
@@ -367,32 +354,31 @@ end-proc MemoryReader_read;
 //   void
 //=========================================================================
 dcl-proc MemoryReader_delete export;
+  dcl-pi *n;
+    io_fd like(memRdr_handle_t);
+  end-pi;
 
-dcl-pi MemoryReader_delete;
-  io_fd           like(memRdr_handle_t);
-end-pi;
+  //  Local fields
 
-//  Local fields
+  //  Handle
+  dcl-ds hReader likeds(reader_t) based(pHReader);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Handle
-dcl-ds hReader likeds(reader_t ) based(pHReader);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (not HANDLE_isTypeOf(io_fd: HANDLE_TYPE_READER));
+    f_setErrno(EBADF_C);
+    return;
+  endif;
 
-if (not HANDLE_isTypeOf(io_fd: HANDLE_TYPE_READER));
-   f_setErrno(EBADF_C);
-   return;
-endif;
+  pHReader = HANDLE_getPointer(io_fd);
 
-pHReader = HANDLE_getPointer(io_fd);
+  clear hReader;
 
-clear hReader;
+  HANDLE_delete(io_fd);
 
-HANDLE_delete(io_fd);
-
-return;
+  return;
 
 
-end-proc MemoryReader_delete;
+end-proc;
 
 //=========================================================================
 //  Returns the 'read' procedure of a MemoryReader.
@@ -405,14 +391,11 @@ end-proc MemoryReader_delete;
 //                   of a MemoryReader.
 //=========================================================================
 dcl-proc MemoryReader_readProc export;
+  dcl-pi *n pointer(*proc);
+  end-pi;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-dcl-pi MemoryReader_readProc
-       pointer(*proc);
-end-pi;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-return %paddr('BASICS1RH_MemoryReader_read');
+  return %paddr('BASICS1RH_MemoryReader_read');
 
 
-end-proc MemoryReader_readProc;
-
+end-proc;

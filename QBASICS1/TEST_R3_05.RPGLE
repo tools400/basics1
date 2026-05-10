@@ -1,4 +1,4 @@
-**FREE
+**free
 //===============================================================*
 //    CALL PGM(TEST_R3_05) PARM('Hello World! ')           *
 //===============================================================*
@@ -25,11 +25,11 @@
 //                                                               *
 //   >>END-PRE-COMPILER<<                                        *
 //===============================================================*
-ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
-ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
-ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
-ctl-opt EXPROPTS(*RESDECPOS);
-ctl-opt EXTBININT(*YES);
+ctl-opt debug option(*srcstmt: *nodebugio);
+ctl-opt decedit('0,') datedit(*DMY.);
+ctl-opt datfmt(*iso) timfmt(*iso);
+ctl-opt expropts(*resdecpos);
+ctl-opt extbinint(*yes);
 //===============================================================*
 
 // ------------------------------------
@@ -39,7 +39,7 @@ ctl-opt EXTBININT(*YES);
 // ------------------------------------
 //  External Prototypes
 // ------------------------------------
-/COPY QBASICS1,PBASICS1
+/copy QBASICS1,PBASICS1
 
 // ------------------------------------
 //  Global Fields
@@ -53,28 +53,26 @@ ctl-opt EXTBININT(*YES);
 //  Prototypes
 // ------------------------------------
 
-dcl-pr PGM_ENTRY_POINT
-       extpgm('TEST_R3_05');
-  gi_string       char(32) const  options(*nopass);
+dcl-pr PGM_ENTRY_POINT extpgm('TEST_R3_05');
+  gi_string char(32) options(*nopass) const;
 end-pr;
 
 dcl-pr main;
-  i_string        char(32) const;
+  i_string char(32) const;
 end-pr;
 
 //===============================================================*
 //  Program Entry Point
 //===============================================================*
-
 dcl-pi PGM_ENTRY_POINT;
-  gi_string       char(32) const  options(*nopass);
+  gi_string char(32) options(*nopass) const;
 end-pi;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if (%parms() >= %parmNum(gi_string));
-   main(gi_string);
+  main(gi_string);
 else;
-   main('Hello World!');
+  main('Hello World!');
 endif;
 
 *inlr = *on;
@@ -86,31 +84,29 @@ return;
 //  Main procedure
 //===============================================================*
 dcl-proc main;
+  dcl-pi *n;
+    i_string char(32) const;
+  end-pi;
 
-dcl-pi main;
-  i_string        char(32) const;
-end-pi;
+  //  Helper fields
+  dcl-s string varchar(32) inz;
+  dcl-ds msg likeds(msg_t) inz;
+  dcl-s msgText varchar(1024) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s string          varchar(32) inz;
-dcl-ds msg likeds(msg_t      ) inz;
-dcl-s msgText         varchar(1024) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Convert i_string to lower case.
+  msg = f_newMsg('CPF9897': 'Lower string is: ' + f_lcase(i_string));
 
-// Convert i_string to lower case.
-msg = f_newMsg('CPF9897': 'Lower string is: ' + f_lcase(i_string));
+  // Show converted string
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-// Show converted string
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+  // Convert i_string to upper case.
+  msg = f_newMsg('CPF9897': 'Upper string is: ' + f_ucase(i_string));
 
-// Convert i_string to upper case.
-msg = f_newMsg('CPF9897': 'Upper string is: ' + f_ucase(i_string));
+  // Show converted string
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-// Show converted string
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-
-return;
+  return;
 
 
 end-proc main;
-

@@ -1,4 +1,4 @@
-**FREE
+**free
 //=====================================================================*
 //  BASICS1R2  - SrvPgm: Basic Routines - API Error Handling           *
 //=====================================================================*
@@ -54,22 +54,22 @@
 //                                                                     *
 //   >>END-PRE-COMPILER<<                                              *
 //=====================================================================*
-ctl-opt NOMAIN;
-ctl-opt BNDDIR('QC2LE');
+ctl-opt nomain;
+ctl-opt bnddir('QC2LE');
 //  Standard H-Specs
-/COPY QBASICS1,H_SPEC
-/COPY QBASICS1,COPYRIGHT
+/copy QBASICS1,H_SPEC
+/copy QBASICS1,COPYRIGHT
 //=====================================================================*
 
 // -----------------------------------------
 //  Exported functions
 // -----------------------------------------
-/COPY QBASICS1,PBASICS1R2
+/copy QBASICS1,PBASICS1R2
 
 // -----------------------------------------
 //  Reference fields
 // -----------------------------------------
-/COPY QBASICS1,BASICS1R0
+/copy QBASICS1,BASICS1R0
 
 // -----------------------------------------
 //  Private prototypes
@@ -91,42 +91,40 @@ ctl-opt BNDDIR('QC2LE');
 //   errCode       - The new API error code.
 //=========================================================================
 dcl-proc f_newApiErrCode export;
+  dcl-pi *n likeds(errCode_t);
+    i_monMsg ind options(*nopass) const;
+  end-pi;
 
-dcl-pi f_newApiErrCode
-       likeds(errCode_t );
-i_monMsg        ind const  options(*nopass);
-end-pi;
+  //  Return value
+  dcl-ds errCode likeds(errCode_t) inz;
 
-//  Return value
-dcl-ds errCode likeds(errCode_t ) inz;
+  //  Parameter positions
+  dcl-c p_monMsg 1;
 
-//  Parameter positions
-dcl-c p_monMsg const(1);
+  //  Optional parameter fields
+  dcl-s monMsg like(i_monMsg) inz;
+  //-------------------------------------------------------------------*
 
-//  Optional parameter fields
-dcl-s monMsg          like(i_monMsg    ) inz;
-//-------------------------------------------------------------------*
+  // Process optional parameter values ...
+  // ... monitor messages
+  if   %parms >= p_monMsg;
+    monMsg = i_monMsg;
+  else;
+    monMsg = cFalse;
+  endif;
 
-// Process optional parameter values ...
-// ... monitor messages
-if   %parms >= p_monMsg;
-   monMsg = i_monMsg;
-else;
-   monMsg = cFalse;
-endif;
+  // Produce API error code ...
+  clear   errCode;
+  if   monMsg = cTrue;
+    errCode.bytPrv = %size(errCode);
+  else;
+    errCode.bytPrv = 0;
+  endif;
 
-// Produce API error code ...
-clear   errCode;
-if   monMsg = cTrue;
-   errCode.bytPrv = %size(errCode);
-else;
-   errCode.bytPrv = 0;
-endif;
-
-return   errCode;
+  return   errCode;
 
 
-end-proc f_newApiErrCode;
+end-proc;
 
 //=========================================================================
 //  Is API error?
@@ -138,26 +136,24 @@ end-proc f_newApiErrCode;
 //   isError       - Returns cTrue in case of an API error.
 //=========================================================================
 dcl-proc f_isApiError export;
+  dcl-pi *n ind;
+    i_errCode likeds(errCode_t) const;
+  end-pi;
 
-dcl-pi f_isApiError
-       ind;
-  i_errCode       const  likeds(errCode_t );
-end-pi;
+  //  Return value
+  dcl-s isError ind inz;
+  //-------------------------------------------------------------------*
 
-//  Return value
-dcl-s isError         ind inz;
-//-------------------------------------------------------------------*
+  if   i_errCode.bytAvl > 0;
+    isError = cTrue;
+  else;
+    isError = cFalse;
+  endif;
 
-if   i_errCode.bytAvl > 0;
-   isError = cTrue;
-else;
-   isError = cFalse;
-endif;
-
-return   isError;
+  return   isError;
 
 
-end-proc f_isApiError;
+end-proc;
 
 //=========================================================================
 //  Converts an API error code to a messsage.
@@ -169,38 +165,36 @@ end-proc f_isApiError;
 //   msg           - The error message.
 //=========================================================================
 dcl-proc f_cvtApiErrCodeToMsg export;
+  dcl-pi *n like(msg_t);
+    i_errCode likeds(errCode_t) const;
+  end-pi;
 
-dcl-pi f_cvtApiErrCodeToMsg
-       like(msg_t     );
-  i_errCode       const  likeds(errCode_t );
-end-pi;
+  //  Return value
+  dcl-ds msg likeds(msg_t) inz;
 
-//  Return value
-dcl-ds msg likeds(msg_t     ) inz;
+  //  Helper fields
+  dcl-ds tmpMsg likeds(msg_t) inz;
+  dcl-ds rcvm0200 likeds(rcvm0200_t) inz;
+  //-------------------------------------------------------------------*
 
-//  Helper fields
-dcl-ds tmpMsg likeds(msg_t     ) inz;
-dcl-ds rcvm0200 likeds(rcvm0200_t) inz;
-//-------------------------------------------------------------------*
-
-if   i_errCode.bytAvl = 0;
-   msg = f_newMsg(cMSG_ID_OK);
-else;
-   msg = f_newMsg(i_errCode.excID: i_errCode.excDta: cMsg_Escape:
-                  'QCPFMSG' : '*LIBL');
-   // Try to get the user error message from the previous
-   // call stack entry
-   rcvm0200 = f_rcvPgmMsg(cMsg_Any: *omit: cMsg_Act_Same: 0: cMsg_Prv);
-   tmpMsg = f_cvtRcvMsgToMsg(rcvm0200: cMsg_Escape);
-   if (i_errCode.excID = tmpMsg.ID);
+  if   i_errCode.bytAvl = 0;
+    msg = f_newMsg(cMSG_ID_OK);
+  else;
+    msg = f_newMsg(i_errCode.excID: i_errCode.excDta: cMsg_Escape:
+                   'QCPFMSG' : '*LIBL');
+    // Try to get the user error message from the previous
+    // call stack entry
+    rcvm0200 = f_rcvPgmMsg(cMsg_Any: *omit: cMsg_Act_Same: 0: cMsg_Prv);
+    tmpMsg = f_cvtRcvMsgToMsg(rcvm0200: cMsg_Escape);
+    if (i_errCode.excID = tmpMsg.ID);
       msg = tmpMsg;
-   endif;
-endif;
+    endif;
+  endif;
 
-return   msg;
+  return   msg;
 
 
-end-proc f_cvtApiErrCodeToMsg;
+end-proc;
 
 //=========================================================================
 //  Returns the C runtime error number.
@@ -212,26 +206,24 @@ end-proc f_cvtApiErrCodeToMsg;
 //   errno         - The C runtime error number.
 //=========================================================================
 dcl-proc f_errno export;
+  dcl-pi *n int(10);
+  end-pi;
 
-dcl-pi f_errno
-       int(10);
-end-pi;
+  //  Return value
+  dcl-s errorNo int(10) inz;
 
-//  Return value
-dcl-s errorNo         int(10) inz;
+  //  Local fields
+  dcl-s runTimeError int(10) based(pRunTimeError);
+  //-------------------------------------------------------------------*
 
-//  Local fields
-dcl-s runTimeError    int(10) based(pRunTimeError);
-//-------------------------------------------------------------------*
+  pRunTimeError = errno();
 
-pRunTimeError = errno();
+  errorNo = runTimeError;
 
-errorNo = runTimeError;
-
-return   errorNo;
+  return   errorNo;
 
 
-end-proc f_errno;
+end-proc;
 
 //=========================================================================
 //  Sets the C runtime error number to ZERO (no error).
@@ -243,17 +235,16 @@ end-proc f_errno;
 //   void
 //=========================================================================
 dcl-proc f_clrErrno export;
+  dcl-pi *n;
+  end-pi;
+  //-------------------------------------------------------------------*
 
-dcl-pi f_clrErrno;
-end-pi;
-//-------------------------------------------------------------------*
+  f_setErrno(0);
 
-f_setErrno(0);
-
-return;
+  return;
 
 
-end-proc f_clrErrno;
+end-proc;
 
 //=========================================================================
 //  Sets the C runtime error number to a given error code.
@@ -265,22 +256,21 @@ end-proc f_clrErrno;
 //   void
 //=========================================================================
 dcl-proc f_setErrno export;
+  dcl-pi *n;
+    i_errno int(10) const;
+  end-pi;
 
-dcl-pi f_setErrno;
-  i_errno         int(10) const;
-end-pi;
+  //  Local fields
+  dcl-s runTimeError int(10) based(pRunTimeError);
+  //-------------------------------------------------------------------*
 
-//  Local fields
-dcl-s runTimeError    int(10) based(pRunTimeError);
-//-------------------------------------------------------------------*
+  pRunTimeError = errno();
+  runTimeError = i_errno;
 
-pRunTimeError = errno();
-runTimeError = i_errno;
-
-return;
+  return;
 
 
-end-proc f_setErrno;
+end-proc;
 
 //=========================================================================
 //  Returns the message text of a C runtime error number.
@@ -293,30 +283,28 @@ end-proc f_setErrno;
 //   errText       - The message text of the error number.
 //=========================================================================
 dcl-proc f_strerror export;
+  dcl-pi *n varchar(128);
+    i_errno int(10) const;
+  end-pi;
 
-dcl-pi f_strerror
-       varchar(128);
-  i_errno         int(10) const;
-end-pi;
+  //  Return value
+  dcl-s errText varchar(128) inz;
 
-//  Return value
-dcl-s errText         varchar(128) inz;
+  //  Local fields
+  dcl-s pErrText pointer inz;
+  //-------------------------------------------------------------------*
 
-//  Local fields
-dcl-s pErrText        pointer inz;
-//-------------------------------------------------------------------*
+  pErrText = strerror(i_errno);
+  if   pErrText = *NULL;
+    errText = '';
+  else;
+    errText = %str(pErrText);
+  endif;
 
-pErrText = strerror(i_errno);
-if   pErrText = *NULL;
-   errText = '';
-else;
-   errText = %str(pErrText);
-endif;
-
-return   errText;
+  return   errText;
 
 
-end-proc f_strerror;
+end-proc;
 
 //=========================================================================
 //  Converts a C runtime error number to a message.
@@ -329,60 +317,57 @@ end-proc f_strerror;
 //   msg           - The error message.
 //=========================================================================
 dcl-proc f_cvtErrnoToMsg export;
+  dcl-pi *n like(msg_t);
+    i_errno int(10) const;
+  end-pi;
 
-dcl-pi f_cvtErrnoToMsg
-       like(msg_t     );
-  i_errno         int(10) const;
-end-pi;
+  //  Return value
+  dcl-ds msg likeds(msg_t) inz;
 
-//  Return value
-dcl-ds msg likeds(msg_t     ) inz;
-
-//  Local fields
+  //  Local fields
 /if not defined(*V5R3M0)
-dcl-ds msgID qualified;
-  prefix          char(3);
-  nbr             zoned(4);
-end-ds;
+  dcl-ds msgID qualified;
+    prefix char(3);
+    nbr    zoned(4);
+  end-ds;
 /endif
 
-dcl-ds qMsgF likeds(qObj_t    ) inz;
-dcl-ds msgInf qualified;
-  bytRet          int(10) inz;
-  bytAvl          int(10) inz;
-end-ds;
-dcl-ds errCode likeds(errCode_t ) inz;
-//-------------------------------------------------------------------*
+  dcl-ds qMsgF likeds(qObj_t) inz;
+  dcl-ds msgInf qualified;
+    bytRet int(10) inz;
+    bytAvl int(10) inz;
+  end-ds;
+  dcl-ds errCode likeds(errCode_t) inz;
+  //-------------------------------------------------------------------*
 
-if   i_errno = 0;
-   msg = f_newMsg(cMSG_ID_OK);
-else;
+  if   i_errno = 0;
+    msg = f_newMsg(cMSG_ID_OK);
+  else;
 /if not defined(*V5R3M0)
    msgID.prefix = 'C2M';
    msgID.nbr    = i_errno;
    msg.ID = msgID;
 /else
-   msg.ID.prefix = 'C2M';
-   msg.ID.nbr    = i_errno;
+    msg.ID.prefix = 'C2M';
+    msg.ID.nbr    = i_errno;
 /endif
-   qMsgF.name = 'QC2MSGF';
-   qMsgF.lib  = '*LIBL';
-   errCode = f_newApiErrCode(cTrue);
-   QMHRTVM(msgInf: %size(msgInf): 'RTVM0100': msg.ID: qMsgF:
-           '': 0: '*NO': '*NO': errCode);
-   if not f_isApiError(errCode);
+    qMsgF.name = 'QC2MSGF';
+    qMsgF.lib  = '*LIBL';
+    errCode = f_newApiErrCode(cTrue);
+    QMHRTVM(msgInf: %size(msgInf): 'RTVM0100': msg.ID: qMsgF:
+            '': 0: '*NO': '*NO': errCode);
+    if not f_isApiError(errCode);
       msg   = f_newMsg(msg.ID
                        : ''
                        : cMsg_Escape: 'QC2MSGF': '*LIBL');
-   else;
+    else;
       msg   = f_newMsg('CPF9898'
                        : %char(i_errno) + ': ' + f_strerror(i_errno)
                        : cMsg_Escape: 'QCPFMSG': '*LIBL');
-   endif;
-endif;
+    endif;
+  endif;
 
-return   msg;
+  return   msg;
 
 
-end-proc f_cvtErrnoToMsg;
-
+end-proc;

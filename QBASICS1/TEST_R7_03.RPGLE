@@ -1,4 +1,4 @@
-**FREE
+**free
 //===============================================================*
 //    CALL PGM(TEST_R7_03)                                       *
 //===============================================================*
@@ -25,11 +25,11 @@
 //                                                               *
 //   >>END-PRE-COMPILER<<                                        *
 //===============================================================*
-ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
-ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
-ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
-ctl-opt EXPROPTS(*RESDECPOS);
-ctl-opt EXTBININT(*YES);
+ctl-opt debug option(*srcstmt: *nodebugio);
+ctl-opt decedit('0,') datedit(*DMY.);
+ctl-opt datfmt(*iso) timfmt(*iso);
+ctl-opt expropts(*resdecpos);
+ctl-opt extbinint(*yes);
 //===============================================================*
 
 // ------------------------------------
@@ -39,7 +39,7 @@ ctl-opt EXTBININT(*YES);
 // ------------------------------------
 //  External Prototypes
 // ------------------------------------
-/COPY QBASICS1,PBASICS1
+/copy QBASICS1,PBASICS1
 
 // ------------------------------------
 //  Global Fields
@@ -53,8 +53,7 @@ ctl-opt EXTBININT(*YES);
 //  Prototypes
 // ------------------------------------
 
-dcl-pr PGM_ENTRY_POINT
-       extpgm('TEST_R7_03');
+dcl-pr PGM_ENTRY_POINT extpgm('TEST_R7_03');
 end-pr;
 
 dcl-pr main;
@@ -63,7 +62,6 @@ end-pr;
 //===============================================================*
 //  Program Entry Point
 //===============================================================*
-
 dcl-pi PGM_ENTRY_POINT;
 end-pi;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -79,36 +77,34 @@ return;
 //  Main procedure
 //===============================================================*
 dcl-proc main;
+  dcl-pi *n;
+  end-pi;
 
-dcl-pi main;
-end-pi;
+  //  Helper fields
+  dcl-ds uuidAsHex likeds(uuid_t) inz;
+  dcl-ds uuidAsString likeds(uuid_t) inz;
+  dcl-ds msg likeds(msg_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-ds uuidAsHex likeds(uuid_t    ) inz;
-dcl-ds uuidAsString likeds(uuid_t    ) inz;
-dcl-ds msg likeds(msg_t     ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Generate a hexadecimal UUID.
+  // Note: Parameter 'cUUID_HEX' is
+  //       are optional. Default is 'cUUID_HEX'.
+  uuidAsHex = f_genUUID(cUUID_HEX);
 
-// Generate a hexadecimal UUID.
-// Note: Parameter 'cUUID_HEX' is
-//       are optional. Default is 'cUUID_HEX'.
-uuidAsHex = f_genUUID(cUUID_HEX);
+  msg = f_newMsg(cMSG_ID_NONE:
+                 'UUID as ' + %char(uuidAsHex.length) +
+                 '-byte hex value: ' + uuidAsHex.value);
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-msg = f_newMsg(cMSG_ID_NONE:
-               'UUID as ' + %char(uuidAsHex.length) +
-               '-byte hex value: ' + uuidAsHex.value);
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+  // Generate a string UUID.
+  uuidAsString = f_genUUID(cUUID_STRING);
 
-// Generate a string UUID.
-uuidAsString = f_genUUID(cUUID_STRING);
+  msg = f_newMsg(cMSG_ID_NONE:
+                 'UUID as ' + %char(uuidAsString.length) +
+                 '-byte string value: ' + uuidAsString.value);
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-msg = f_newMsg(cMSG_ID_NONE:
-               'UUID as ' + %char(uuidAsString.length) +
-               '-byte string value: ' + uuidAsString.value);
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-
-return;
+  return;
 
 
 end-proc main;
-

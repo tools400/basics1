@@ -1,4 +1,4 @@
-**FREE
+**free
 //=====================================================================*
 //  BASICS1R5  - SrvPgm: Basic Routines - Objects                      *
 //=====================================================================*
@@ -55,50 +55,46 @@
 //                                                                     *
 //   >>END-PRE-COMPILER<<                                              *
 //=====================================================================*
-ctl-opt NOMAIN;
+ctl-opt nomain;
 //  Standard H-Specs
-/COPY QBASICS1,H_SPEC
-/COPY QBASICS1,COPYRIGHT
+/copy QBASICS1,H_SPEC
+/copy QBASICS1,COPYRIGHT
 //=====================================================================*
 
 // -----------------------------------------
 //  Exported functions
 // -----------------------------------------
-/COPY QBASICS1,PBASICS1R5
+/copy QBASICS1,PBASICS1R5
 
 // -----------------------------------------
 //  Reference fields
 // -----------------------------------------
-/COPY QBASICS1,BASICS1R0
+/copy QBASICS1,BASICS1R0
 
 // -----------------------------------------
 //  Imported prototypes
 // -----------------------------------------
-/COPY QBASICS1,QUSRSPC                       User Space APIs
-/COPY QBASICS1,CEELIB                        CEE APIs
-/COPY QBASICS1,QP0LCVTPAT                    Qp0lCvtPathToQSYSObjName()--Resolve Path
+/copy QBASICS1,QUSRSPC                       User Space APIs
+/copy QBASICS1,CEELIB                        CEE APIs
+/copy QBASICS1,QP0LCVTPAT                    Qp0lCvtPathToQSYSObjName()--Resolve Path
 
 // -----------------------------------------
 //  Private prototypes
 // -----------------------------------------
 
 //  Retrieves the attributes of a given user space.
-dcl-pr rtvUsrSpcAttr
-       likeds(spca0100_t );
-i_usrSpc        char(10) const;
-i_lib           char(10) const  options(*nopass: *omit);
-o_msg           likeds(msg_t    )
-     options(*nopass: *omit);
+dcl-pr rtvUsrSpcAttr likeds(spca0100_t);
+  i_usrSpc char(10) const;
+  i_lib    char(10) options(*nopass: *omit) const;
+  o_msg    likeds(msg_t) options(*nopass: *omit);
 end-pr;
 
 //  Changes an attribute of a given user space.
-dcl-pr chgUsrSpcAttr
-       ind;
-  i_usrSpc        char(10) const;
-  i_lib           char(10) const  options(*omit);
-  i_attr          char(128) const;
-  o_msg           likeds(msg_t    )
-options(*nopass: *omit);
+dcl-pr chgUsrSpcAttr ind;
+  i_usrSpc char(10) const;
+  i_lib    char(10) options(*omit) const;
+  i_attr   char(128) const;
+  o_msg    likeds(msg_t) options(*nopass: *omit);
 end-pr;
 
 // -----------------------------------------
@@ -126,76 +122,74 @@ end-pr;
 //=========================================================================
 
 dcl-proc f_exist export;
+  dcl-pi *n ind;
+    i_obj  char(10) const;
+    i_lib  char(10) options(*omit) const;
+    i_type char(10) const;
+    i_mbr  char(10) options(*nopass) const;
+  end-pi;
 
-dcl-pi f_exist
-       ind;
-  i_obj           char(10) const;
-  i_lib           char(10) const  options(*omit);
-  i_type          char(10) const;
-  i_mbr           char(10) const  options(*nopass);
-end-pi;
+  //  Return value
+  dcl-s doesExist ind inz(cFalse);
 
-//  Return value
-dcl-s doesExist       ind inz(cFalse);
+  //  Parameter positions
+  dcl-c p_lib 2;
+  dcl-c p_mbr 4;
 
-//  Parameter positions
-dcl-c p_lib const(2);
-dcl-c p_mbr const(4);
+  //  Optional parameter fields
+  dcl-s lib like(i_lib) inz;
+  dcl-s mbr like(i_mbr) inz;
 
-//  Optional parameter fields
-dcl-s lib             like(i_lib       ) inz;
-dcl-s mbr             like(i_mbr       ) inz;
+  //  Local fields
+  dcl-ds objd0100 likeds(objd0100_t) inz;
+  dcl-ds mbrd0100 likeds(mbrd0100_t) inz;
+  dcl-ds msg likeds(msg_t) inz;
 
-//  Local fields
-dcl-ds objd0100 likeds(objd0100_t) inz;
-dcl-ds mbrd0100 likeds(mbrd0100_t) inz;
-dcl-ds msg likeds(msg_t     ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Process optional parameter values ...
+  // ... i_lib
+  if   %parms >= p_lib;
+    CEETSTA(isPresent: p_lib: *omit);                                                //R
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_lib
-if   %parms >= p_lib;
-   CEETSTA(isPresent: p_lib: *omit);                                                //R
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    lib = i_lib;
+  else;
+    lib = '*LIBL';
+  endif;
 
-if   isPresent = 1;
-   lib = i_lib;
-else;
-   lib = '*LIBL';
-endif;
+  // ... i_mbr
+  if   %parms >= p_mbr;
+    mbr = i_mbr;
+  else;
+    mbr = '*NONE';
+  endif;
 
-// ... i_mbr
-if   %parms >= p_mbr;
-   mbr = i_mbr;
-else;
-   mbr = '*NONE';
-endif;
+  // Retrieve the object description
+  objd0100 = f_rtvObjD(i_obj: lib: i_type: 'OBJD0100': msg);
 
-// Retrieve the object description
-objd0100 = f_rtvObjD(i_obj: lib: i_type: 'OBJD0100': msg);
+  // Retrieve member description if object is a file
+  // and a member name was given
+  if   (msg.ID = cMSG_ID_OK) and (mbr <> '*NONE');
+    mbrd0100 = f_rtvMbrD(i_obj: lib: i_mbr: 'MBRD0100': msg);
+  endif;
 
-// Retrieve member description if object is a file
-// and a member name was given
-if   (msg.ID = cMSG_ID_OK) and (mbr <> '*NONE');
-   mbrd0100 = f_rtvMbrD(i_obj: lib: i_mbr: 'MBRD0100': msg);
-endif;
+  // Set return value
+  if   msg.ID = cMSG_ID_OK;
+    doesExist = cTrue;
+  else;
+    doesExist = cFalse;
+  endif;
 
-// Set return value
-if   msg.ID = cMSG_ID_OK;
-   doesExist = cTrue;
-else;
-   doesExist = cFalse;
-endif;
-
-return   doesExist;
+  return   doesExist;
 
 
-end-proc f_exist;
+end-proc;
 
 //=========================================================================
 //  Retrieve object description.
@@ -214,100 +208,97 @@ end-proc f_exist;
 //=========================================================================
 
 dcl-proc f_rtvObjD export;
+  dcl-pi *n char(1024);
+    i_obj    char(10) const;
+    i_lib    char(10) options(*omit) const;
+    i_type   char(10) const;
+    i_format char(8) options(*nopass: *omit) const;
+    o_msg    likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_rtvObjD
-       char(1024);
-  i_obj           char(10) const;
-  i_lib           char(10) const  options(*omit);
-  i_type          char(10) const;
-  i_format        char(8) const  options(*nopass: *omit);
-  o_msg           likeds(msg_t    )
-options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-ds objD len(1024) inz qualified;
+    bytRet int(10);
+    bytAvl int(10) overlay(bytRet);
+  end-ds;
 
-//  Return value
-dcl-ds objD len(1024) inz    qualified;
-  bytRet          int(10);
-  bytAvl          int(10) overlay(bytRet);
-end-ds;
+  //  Parameter positions
+  dcl-c p_lib 2;
+  dcl-c p_format 4;
+  dcl-c p_msg 5;
 
-//  Parameter positions
-dcl-c p_lib const(2);
-dcl-c p_format const(4);
-dcl-c p_msg const(5);
+  //  Optional parameter fields
+  dcl-s lib like(i_lib) inz;
+  dcl-s format like(i_format) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s lib             like(i_lib       ) inz;
-dcl-s format          like(i_format    ) inz;
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Local fields
+  dcl-ds qObj likeds(qObj_t) inz;
+  dcl-ds errCode likeds(errCode_t) inz;
 
-//  Local fields
-dcl-ds qObj likeds(qObj_t    ) inz;
-dcl-ds errCode likeds(errCode_t ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Process optional parameter values ...
+  // ... i_lib
+  if   %parms >= p_lib;
+    CEETSTA(isPresent: p_lib: *omit);                                                //R
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_lib
-if   %parms >= p_lib;
-   CEETSTA(isPresent: p_lib: *omit);                                                //R
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    lib = i_lib;
+  else;
+    lib = '*LIBL';
+  endif;
 
-if   isPresent = 1;
-   lib = i_lib;
-else;
-   lib = '*LIBL';
-endif;
+  // ... i_format
+  if   %parms >= p_lib;
+    CEETSTA(isPresent: p_format: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... i_format
-if   %parms >= p_lib;
-   CEETSTA(isPresent: p_format: *omit);
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    format = i_format;
+  else;
+    format = 'OBJD0100';
+  endif;
 
-if   isPresent = 1;
-   format = i_format;
-else;
-   format = 'OBJD0100';
-endif;
+  // Call the retrieve object description API
+  qObj.name = i_obj;
+  qObj.lib  = i_lib;
+  errCode   = f_newApiErrCode(cTrue);
+  QUSROBJD(objD: %size(objD): format: qObj: i_type: errCode);
 
-// Call the retrieve object description API
-qObj.name = i_obj;
-qObj.lib  = i_lib;
-errCode   = f_newApiErrCode(cTrue);
-QUSROBJD(objD: %size(objD): format: qObj: i_type: errCode);
+  // Set message value
+  msg = f_cvtApiErrCodeToMsg(errCode);
 
-// Set message value
-msg = f_cvtApiErrCodeToMsg(errCode);
+  // Check length of receiver variable
+  if   not f_isApiError(errCode);
+    p_assert(objD.bytRet <= objD.bytAvl:
+             'Length of receiver variable objD is +
+              to small to hold result');
+  endif;
 
-// Check length of receiver variable
-if   not f_isApiError(errCode);
-   p_assert(objD.bytRet <= objD.bytAvl:
-            'Length of receiver variable objD is +
-             to small to hold result');
-endif;
-
-// Process optional/omissible message parameter
-if   %parms >= p_msg;
-   CEETSTA(isPresent: p_msg: *omit);
-   if   isPresent = 1;
+  // Process optional/omissible message parameter
+  if   %parms >= p_msg;
+    CEETSTA(isPresent: p_msg: *omit);
+    if   isPresent = 1;
       o_msg = msg;
-   endif;
-else;
-   if   msg.ID <> cMSG_ID_OK;
+    endif;
+  else;
+    if   msg.ID <> cMSG_ID_OK;
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return   objD;
+  return   objD;
 
 
-end-proc f_rtvObjD;
+end-proc;
 
 //=========================================================================
 //  Retrieve member description.
@@ -326,100 +317,97 @@ end-proc f_rtvObjD;
 //=========================================================================
 
 dcl-proc f_rtvMbrD export;
+  dcl-pi *n char(1024);
+    i_file   char(10) const;
+    i_lib    char(10) options(*omit) const;
+    i_mbr    char(10) const;
+    i_format char(8) options(*nopass: *omit) const;
+    o_msg    likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_rtvMbrD
-       char(1024);
-  i_file          char(10) const;
-  i_lib           char(10) const  options(*omit);
-  i_mbr           char(10) const;
-  i_format        char(8) const  options(*nopass: *omit);
-  o_msg           likeds(msg_t    )
-options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-ds mbrD len(1024) inz qualified;
+    bytRet int(10);
+    bytAvl int(10) overlay(bytRet);
+  end-ds;
 
-//  Return value
-dcl-ds mbrD len(1024) inz    qualified;
-  bytRet          int(10);
-  bytAvl          int(10) overlay(bytRet);
-end-ds;
+  //  Parameter positions
+  dcl-c p_lib 2;
+  dcl-c p_format 4;
+  dcl-c p_msg 5;
 
-//  Parameter positions
-dcl-c p_lib const(2);
-dcl-c p_format const(4);
-dcl-c p_msg const(5);
+  //  Optional parameter fields
+  dcl-s lib like(i_lib) inz;
+  dcl-s format like(i_format) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s lib             like(i_lib       ) inz;
-dcl-s format          like(i_format    ) inz;
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Local fields
+  dcl-ds qFile likeds(qObj_t) inz;
+  dcl-ds errCode likeds(errCode_t) inz;
 
-//  Local fields
-dcl-ds qFile likeds(qObj_t    ) inz;
-dcl-ds errCode likeds(errCode_t ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Process optional parameter values ...
+  // ... i_lib
+  if   %parms >= p_lib;
+    CEETSTA(isPresent: p_lib: *omit);                                                //R
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_lib
-if   %parms >= p_lib;
-   CEETSTA(isPresent: p_lib: *omit);                                                //R
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    lib = i_lib;
+  else;
+    lib = '*LIBL';
+  endif;
 
-if   isPresent = 1;
-   lib = i_lib;
-else;
-   lib = '*LIBL';
-endif;
+  // ... i_format
+  if   %parms >= p_lib;
+    CEETSTA(isPresent: p_format: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... i_format
-if   %parms >= p_lib;
-   CEETSTA(isPresent: p_format: *omit);
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    format = i_format;
+  else;
+    format = 'OBJD0100';
+  endif;
 
-if   isPresent = 1;
-   format = i_format;
-else;
-   format = 'OBJD0100';
-endif;
+  // Call the retrieve object description API
+  qFile.name = i_file;
+  qFile.lib  = i_lib;
+  errCode   = f_newApiErrCode(cTrue);
+  QUSRMBRD(mbrD: %size(mbrD): format: qFile: i_mbr: '0': errCode);
 
-// Call the retrieve object description API
-qFile.name = i_file;
-qFile.lib  = i_lib;
-errCode   = f_newApiErrCode(cTrue);
-QUSRMBRD(mbrD: %size(mbrD): format: qFile: i_mbr: '0': errCode);
+  // Set message value
+  msg = f_cvtApiErrCodeToMsg(errCode);
 
-// Set message value
-msg = f_cvtApiErrCodeToMsg(errCode);
+  // Check length of receiver variable
+  if   not f_isApiError(errCode);
+    p_assert(mbrD.bytRet <= mbrD.bytAvl:
+             'Length of receiver variable mbrD is +
+              to small to hold result');
+  endif;
 
-// Check length of receiver variable
-if   not f_isApiError(errCode);
-   p_assert(mbrD.bytRet <= mbrD.bytAvl:
-            'Length of receiver variable mbrD is +
-             to small to hold result');
-endif;
-
-// Process optional/omissible message parameter
-if   %parms >= p_msg;
-   CEETSTA(isPresent: p_msg: *omit);
-   if   isPresent = 1;
+  // Process optional/omissible message parameter
+  if   %parms >= p_msg;
+    CEETSTA(isPresent: p_msg: *omit);
+    if   isPresent = 1;
       o_msg = msg;
-   endif;
-else;
-   if   msg.ID <> cMSG_ID_OK;
+    endif;
+  else;
+    if   msg.ID <> cMSG_ID_OK;
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return   mbrD;
+  return   mbrD;
 
 
-end-proc f_rtvMbrD;
+end-proc;
 
 //=========================================================================
 //  Produces a temporary object name.
@@ -432,32 +420,30 @@ end-proc f_rtvMbrD;
 //=========================================================================
 
 dcl-proc f_getTmpName export;
+  dcl-pi *n like(qObj_t);
+  end-pi;
 
-dcl-pi f_getTmpName
-       like(qObj_t     );
-end-pi;
+  //  Return value
+  dcl-ds qTmpObj likeds(qObj_t) inz;
 
-//  Return value
-dcl-ds qTmpObj likeds(qObj_t    ) inz;
+  //  Local fields
+  dcl-s pTmpNam pointer inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Local fields
-dcl-s pTmpNam         pointer inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Produce temporary object name
+  pTmpNam = tmpnam(*NULL);
 
-// Produce temporary object name
-pTmpNam = tmpnam(*NULL);
+  if   pTmpNam <> *NULL;
+    qTmpObj.lib  = %str(strtok(pTmpNam: '/'));
+    qTmpObj.name = %str(strtok(*NULL  : '/'));
+  else;
+    clear   qTmpObj;
+  endif;
 
-if   pTmpNam <> *NULL;
-   qTmpObj.lib  = %str(strtok(pTmpNam: '/'));
-   qTmpObj.name = %str(strtok(*NULL  : '/'));
-else;
-   clear   qTmpObj;
-endif;
-
-return   qTmpObj;
+  return   qTmpObj;
 
 
-end-proc f_getTmpName;
+end-proc;
 
 //=========================================================================
 //  Produces a unique object name.  (experimental)
@@ -471,84 +457,81 @@ end-proc f_getTmpName;
 //=========================================================================
 
 dcl-proc f_getUniqueName export;
+  dcl-pi *n like(qObj_t);
+    i_type char(10) const;
+    i_lib  char(10) const;
+  end-pi;
 
-dcl-pi f_getUniqueName
-       like(qObj_t     );
-  i_type          char(10) const;
-  i_lib           char(10) const;
-end-pi;
+  //  Return value
+  dcl-ds qUnqObj likeds(qObj_t) inz;
 
-//  Return value
-dcl-ds qUnqObj likeds(qObj_t    ) inz;
+  //  Helper fields
+  dcl-s tmStmp timestamp inz;
+  dcl-s date date inz;
+  dcl-s time time inz;
+  dcl-s timeout timestamp inz;
+  dcl-s x int(10) inz;
+  dcl-ds name qualified;
+    longNbr zoned(14);
+    julDate zoned(5) overlay(longNbr: *next);
+    time    zoned(6) overlay(longNbr: *next);
+    mSec    zoned(3) overlay(longNbr: *next);
+  end-ds;
 
-//  Helper fields
-dcl-s tmStmp          timestamp inz;
-dcl-s date            date inz;
-dcl-s time            time inz;
-dcl-s timeout         timestamp inz;
-dcl-s x               int(10) inz;
-dcl-ds name qualified;
-  longNbr         zoned(14);
-  julDate         zoned(5) overlay(longNbr: *next);
-  time            zoned(6) overlay(longNbr: *next);
-  mSec            zoned(3) overlay(longNbr: *next);
-end-ds;
+  dcl-ds *n;
+    chars inz('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
+    char  char(1) dim(36) overlay(chars: *next);
+  end-ds;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-dcl-ds *N;
-  chars           inz('ABCDEFGHIJKLMNOPQRSTUVWXYZ+
-     0123456789');
-  char            char(1) dim(36) overlay(chars: *next);
-end-ds;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Initialize return value
+  clear   qUnqObj;
 
-// Initialize return value
-clear   qUnqObj;
+  // Produce unique object name (max. 1 minute):
+  timeout = %timestamp() + %minutes(1);
 
-// Produce unique object name (max. 1 minute):
-timeout = %timestamp() + %minutes(1);
+  dou   (qUnqObj.name <> '') or (%timestamp >= timeOut);
 
-dou   (qUnqObj.name <> '') or (%timestamp >= timeOut);
+    // Produce unique object name from:
+    // Julian date + Time + mSeconds
+    tmStmp = %timestamp();
+    time   = %time(tmStmp);
+    date   = %date(tmStmp);
 
-   // Produce unique object name from:
-   // Julian date + Time + mSeconds
-   tmStmp = %timestamp();
-   time   = %time(tmStmp);
-   date   = %date(tmStmp);
+    name.julDate = %dec(f_val(
+                        %char(date: *JUL0)): %size(name.julDate): 0);
+    name.time    = %dec(f_val(
+                        %char(time: *HMS0)): %size(name.time)   : 0);
+    name.mSec    = %subdt(tmStmp: *MSECONDS) / 1000;
 
-   name.julDate = %dec(f_val(
-                       %char(date: *JUL0)): %size(name.julDate): 0);
-   name.time    = %dec(f_val(
-                       %char(time: *HMS0)): %size(name.time)   : 0);
-   name.mSec    = %subdt(tmStmp: *MSECONDS) / 1000;
+    // Set library name
+    qUnqObj.lib = i_lib;
 
-   // Set library name
-   qUnqObj.lib = i_lib;
-
-   // Encode object name to base 36
-   %subst(qUnqObj.name: 1: 1) = 'Z';
-   x = 2;
-   dou   name.longNbr = 0;
+    // Encode object name to base 36
+    %subst(qUnqObj.name: 1: 1) = 'Z';
+    x = 2;
+    dou   name.longNbr = 0;
       %subst(qUnqObj.name: x: 1) = char(%rem(name.longNbr: 36) + 1);
       name.longNbr = name.longNbr / 36;
       x = x + 1;
-   enddo;
+    enddo;
 
-   // Check, if object exists
-   if   f_exist(qUnqObj.name: qUnqObj.lib: i_type);
+    // Check, if object exists
+    if   f_exist(qUnqObj.name: qUnqObj.lib: i_type);
       // Create new name if object exists
       clear   qUnqObj;
-   endif;
+    endif;
 
-enddo;
+  enddo;
 
-p_assert(qUnqObj.name <> '':
-         'Unique object name of type ' + %trim(i_type) +
-         ' could not be produced'                      );
+  p_assert(qUnqObj.name <> '':
+           'Unique object name of type ' + %trim(i_type) +
+           ' could not be produced'                      );
 
-return   qUnqObj;
+  return   qUnqObj;
 
 
-end-proc f_getUniqueName;
+end-proc;
 
 //=========================================================================
 //  Creates a user space.
@@ -571,131 +554,128 @@ end-proc f_getUniqueName;
 //=========================================================================
 
 dcl-proc f_crtUsrSpc export;
+  dcl-pi *n ind;
+    i_usrSpc  char(10) const;
+    i_lib     char(10) const;
+    i_text    char(50) options(*omit: *nopass) const;
+    i_size    uns(10) options(*omit: *nopass) const;
+    i_extAtr  char(10) options(*omit: *nopass) const;
+    i_pubAuth char(10) options(*omit: *nopass) const;
+    o_msg     likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_crtUsrSpc
-       ind;
-  i_usrSpc        char(10) const;
-  i_lib           char(10) const;
-  i_text          char(50) const  options(*omit: *nopass);
-  i_size          uns(10) const  options(*omit: *nopass);
-  i_extAtr        char(10) const  options(*omit: *nopass);
-  i_pubAuth       char(10) const  options(*omit: *nopass);
-  o_msg           likeds(msg_t    )
-options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s isCreated ind inz(cFalse);
 
-//  Return value
-dcl-s isCreated       ind inz(cFalse);
+  //  Parameter positions
+  dcl-c p_text 3;
+  dcl-c p_size 4;
+  dcl-c p_extAtr 5;
+  dcl-c p_pubAuth 6;
+  dcl-c p_msg 7;
 
-//  Parameter positions
-dcl-c p_text const(3);
-dcl-c p_size const(4);
-dcl-c p_extAtr const(5);
-dcl-c p_pubAuth const(6);
-dcl-c p_msg const(7);
+  //  Optional parameter fields
+  dcl-s text like(i_text) inz;
+  dcl-s size like(i_size) inz;
+  dcl-s extAtr like(i_extAtr) inz;
+  dcl-s pubAuth like(i_pubAuth) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s text            like(i_text      ) inz;
-dcl-s size            like(i_size      ) inz;
-dcl-s extAtr          like(i_extAtr    ) inz;
-dcl-s pubAuth         like(i_pubAuth   ) inz;
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Local fields
+  dcl-ds qUsrSpc likeds(qObj_t) inz;
+  dcl-ds errCode likeds(errCode_t) inz;
 
-//  Local fields
-dcl-ds qUsrSpc likeds(qObj_t    ) inz;
-dcl-ds errCode likeds(errCode_t ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Initialize return value
+  isCreated = cFalse;
 
-// Initialize return value
-isCreated = cFalse;
+  // Process optional parameter values ...
+  // ... i_text
+  if   %parms >= p_text;
+    CEETSTA(isPresent: p_text: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_text
-if   %parms >= p_text;
-   CEETSTA(isPresent: p_text: *omit);
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    text = i_text;
+  else;
+    text = '';
+  endif;
 
-if   isPresent = 1;
-   text = i_text;
-else;
-   text = '';
-endif;
+  // ... i_size
+  if   %parms >= p_size;
+    CEETSTA(isPresent: p_size: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... i_size
-if   %parms >= p_size;
-   CEETSTA(isPresent: p_size: *omit);
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    size = i_size;
+  else;
+    size = 64 * 1024;
+  endif;
 
-if   isPresent = 1;
-   size = i_size;
-else;
-   size = 64 * 1024;
-endif;
+  // ... i_extAtr
+  if   %parms >= p_extAtr;
+    CEETSTA(isPresent: p_extAtr: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... i_extAtr
-if   %parms >= p_extAtr;
-   CEETSTA(isPresent: p_extAtr: *omit);
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    extAtr = i_extAtr;
+  else;
+    extAtr = '';
+  endif;
 
-if   isPresent = 1;
-   extAtr = i_extAtr;
-else;
-   extAtr = '';
-endif;
+  // ... i_pubAuth
+  if   %parms >= p_pubAuth;
+    CEETSTA(isPresent: p_pubAuth: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... i_pubAuth
-if   %parms >= p_pubAuth;
-   CEETSTA(isPresent: p_pubAuth: *omit);
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    pubAuth = i_pubAuth;
+  else;
+    pubAuth = '*USE';
+  endif;
 
-if   isPresent = 1;
-   pubAuth = i_pubAuth;
-else;
-   pubAuth = '*USE';
-endif;
+  // Create user space
+  qUsrSpc.name = i_usrSpc;
+  qUsrSpc.lib  = i_lib;
+  errCode      = f_newApiErrCode(cTrue);
+  QUSCRTUS(qUsrSpc: extAtr: size: x'00': pubAuth: text: '*NO': errCode);
 
-// Create user space
-qUsrSpc.name = i_usrSpc;
-qUsrSpc.lib  = i_lib;
-errCode      = f_newApiErrCode(cTrue);
-QUSCRTUS(qUsrSpc: extAtr: size: x'00': pubAuth: text: '*NO': errCode);
+  // Set return value
+  if   f_isApiError(errCode);
+    isCreated = cFalse;
+    msg       = f_cvtApiErrCodeToMsg(errCode);
+  else;
+    isCreated = cTrue;
+    msg       = f_newMsg(cMSG_ID_OK);
+  endif;
 
-// Set return value
-if   f_isApiError(errCode);
-   isCreated = cFalse;
-   msg       = f_cvtApiErrCodeToMsg(errCode);
-else;
-   isCreated = cTrue;
-   msg       = f_newMsg(cMSG_ID_OK);
-endif;
-
-// Process optional/omissible message parameter
-if   %parms >= p_msg;
-   CEETSTA(isPresent: p_msg: *omit);
-   if   isPresent = 1;
+  // Process optional/omissible message parameter
+  if   %parms >= p_msg;
+    CEETSTA(isPresent: p_msg: *omit);
+    if   isPresent = 1;
       o_msg = msg;
-   endif;
-else;
-   if   msg.ID <> cMSG_ID_OK;
+    endif;
+  else;
+    if   msg.ID <> cMSG_ID_OK;
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return   isCreated;
+  return   isCreated;
 
 
-end-proc f_crtUsrSpc;
+end-proc;
 
 //=========================================================================
 //  Retrieves a pointer to the content of a user space.
@@ -712,81 +692,78 @@ end-proc f_crtUsrSpc;
 //=========================================================================
 
 dcl-proc f_rtvUsrSpcPtr export;
+  dcl-pi *n pointer;
+    i_usrSpc char(10) const;
+    i_lib    char(10) options(*nopass: *omit) const;
+    o_msg    likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_rtvUsrSpcPtr
-       pointer;
-  i_usrSpc        char(10) const;
-  i_lib           char(10) const  options(*nopass: *omit);
-  o_msg           likeds(msg_t    )
-options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s pUsrSpc pointer inz;
 
-//  Return value
-dcl-s pUsrSpc         pointer inz;
+  //  Parameter positions
+  dcl-c p_lib 2;
+  dcl-c p_msg 3;
 
-//  Parameter positions
-dcl-c p_lib const(2);
-dcl-c p_msg const(3);
+  //  Optional parameter fields
+  dcl-s lib like(i_lib) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s lib             like(i_lib       ) inz;
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Local fields
+  dcl-ds qUsrSpc likeds(qObj_t) inz;
+  dcl-ds errCode likeds(errCode_t) inz;
 
-//  Local fields
-dcl-ds qUsrSpc likeds(qObj_t    ) inz;
-dcl-ds errCode likeds(errCode_t ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Initialize return value
+  pUsrSpc = *NULL;
 
-// Initialize return value
-pUsrSpc = *NULL;
+  // Process optional parameter values ...
+  // ... i_lib
+  if   %parms >= p_lib;
+    CEETSTA(isPresent: p_lib: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_lib
-if   %parms >= p_lib;
-   CEETSTA(isPresent: p_lib: *omit);
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    lib = i_lib;
+  else;
+    lib = '*LIBL';
+  endif;
 
-if   isPresent = 1;
-   lib = i_lib;
-else;
-   lib = '*LIBL';
-endif;
+  // Retrive pointer to content of user space
+  qUsrSpc.name = i_usrSpc;
+  qUsrSpc.lib  = i_lib;
+  errCode      = f_newApiErrCode(cTrue);
+  QUSPTRUS(qUsrSpc: pUsrSpc: errCode);
 
-// Retrive pointer to content of user space
-qUsrSpc.name = i_usrSpc;
-qUsrSpc.lib  = i_lib;
-errCode      = f_newApiErrCode(cTrue);
-QUSPTRUS(qUsrSpc: pUsrSpc: errCode);
+  // Set return value
+  if   f_isApiError(errCode);
+    pUsrSpc = *NULL;
+    msg     = f_cvtApiErrCodeToMsg(errCode);
+  else;
+    msg     = f_newMsg(cMSG_ID_OK);
+  endif;
 
-// Set return value
-if   f_isApiError(errCode);
-   pUsrSpc = *NULL;
-   msg     = f_cvtApiErrCodeToMsg(errCode);
-else;
-   msg     = f_newMsg(cMSG_ID_OK);
-endif;
-
-// Process optional/omissible message parameter
-if   %parms >= p_msg;
-   CEETSTA(isPresent: p_msg: *omit);
-   if   isPresent = 1;
+  // Process optional/omissible message parameter
+  if   %parms >= p_msg;
+    CEETSTA(isPresent: p_msg: *omit);
+    if   isPresent = 1;
       o_msg = msg;
-   endif;
-else;
-   if   msg.ID <> cMSG_ID_OK;
+    endif;
+  else;
+    if   msg.ID <> cMSG_ID_OK;
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return   pUsrSpc;
+  return   pUsrSpc;
 
 
-end-proc f_rtvUsrSpcPtr;
+end-proc;
 
 //=========================================================================
 //  Returns the current size of a given user space.
@@ -803,76 +780,73 @@ end-proc f_rtvUsrSpcPtr;
 //=========================================================================
 
 dcl-proc f_getUsrSpcSize export;
+  dcl-pi *n int(10);
+    i_usrSpc char(10) const;
+    i_lib    char(10) options(*nopass: *omit) const;
+    o_msg    likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_getUsrSpcSize
-       int(10);
-  i_usrSpc        char(10) const;
-  i_lib           char(10) const  options(*nopass: *omit);
-  o_msg           likeds(msg_t    )
-options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s size int(10) inz(-1);
 
-//  Return value
-dcl-s size            int(10) inz(-1);
+  //  Parameter positions
+  dcl-c p_lib 2;
+  dcl-c p_msg 3;
 
-//  Parameter positions
-dcl-c p_lib const(2);
-dcl-c p_msg const(3);
+  //  Optional parameter fields
+  dcl-s lib like(i_lib) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s lib             like(i_lib       ) inz;
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Helper fields
+  dcl-ds spca0100 likeds(SPCA0100_t) inz;
 
-//  Helper fields
-dcl-ds spca0100 likeds(SPCA0100_t) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Initialize return value
+  size = -1;
 
-// Initialize return value
-size = -1;
+  // Process optional parameter values ...
+  // ... i_lib
+  if   %parms >= p_lib;
+    CEETSTA(isPresent: p_lib: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_lib
-if   %parms >= p_lib;
-   CEETSTA(isPresent: p_lib: *omit);
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    lib = i_lib;
+  else;
+    lib = '*LIBL';
+  endif;
 
-if   isPresent = 1;
-   lib = i_lib;
-else;
-   lib = '*LIBL';
-endif;
+  // Retrieve user space attributes
+  spca0100 = rtvUsrSpcAttr(i_usrSpc: lib: msg);
 
-// Retrieve user space attributes
-spca0100 = rtvUsrSpcAttr(i_usrSpc: lib: msg);
+  // Set return value
+  if (msg.ID <> cMSG_ID_OK);
+    size = -1;
+  else;
+    size = spca0100.size;
+  endif;
 
-// Set return value
-if (msg.ID <> cMSG_ID_OK);
-   size = -1;
-else;
-   size = spca0100.size;
-endif;
-
-// Process optional/omissible message parameter
-if (%parms() >= p_msg);
-   CEETSTA(isPresent: p_msg: *omit);
-   if (isPresent = 1);
+  // Process optional/omissible message parameter
+  if (%parms() >= p_msg);
+    CEETSTA(isPresent: p_msg: *omit);
+    if (isPresent = 1);
       o_msg = msg;
-   endif;
-else;
-   if (msg.ID <> cMSG_ID_OK);
+    endif;
+  else;
+    if (msg.ID <> cMSG_ID_OK);
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return size;
+  return size;
 
 
-end-proc f_getUsrSpcSize;
+end-proc;
 
 //=========================================================================
 //  Returns cTrue if the user space is extended automatically by the
@@ -890,80 +864,77 @@ end-proc f_getUsrSpcSize;
 //=========================================================================
 
 dcl-proc f_getUsrSpcAutoExt export;
+  dcl-pi *n ind;
+    i_usrSpc char(10) const;
+    i_lib    char(10) options(*nopass: *omit) const;
+    o_msg    likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_getUsrSpcAutoExt
-       ind;
-  i_usrSpc        char(10) const;
-  i_lib           char(10) const  options(*nopass: *omit);
-  o_msg           likeds(msg_t    )
-options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s isAutoExt ind inz(cFalse);
 
-//  Return value
-dcl-s isAutoExt       ind inz(cFalse);
+  //  Parameter positions
+  dcl-c p_lib 2;
+  dcl-c p_msg 3;
 
-//  Parameter positions
-dcl-c p_lib const(2);
-dcl-c p_msg const(3);
+  //  Optional parameter fields
+  dcl-s lib like(i_lib) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s lib             like(i_lib       ) inz;
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Helper fields
+  dcl-ds spca0100 likeds(SPCA0100_t) inz;
 
-//  Helper fields
-dcl-ds spca0100 likeds(SPCA0100_t) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Initialize return value
+  isAutoExt = cFalse;
 
-// Initialize return value
-isAutoExt = cFalse;
+  // Process optional parameter values ...
+  // ... i_lib
+  if (%parms() >= p_lib);
+    CEETSTA(isPresent: p_lib: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_lib
-if (%parms() >= p_lib);
-   CEETSTA(isPresent: p_lib: *omit);
-else;
-   isPresent = 0;
-endif;
+  if (isPresent = 1);
+    lib = i_lib;
+  else;
+    lib = '*LIBL';
+  endif;
 
-if (isPresent = 1);
-   lib = i_lib;
-else;
-   lib = '*LIBL';
-endif;
+  // Retrieve user space attributes
+  spca0100 = rtvUsrSpcAttr(i_usrSpc: lib: msg);
 
-// Retrieve user space attributes
-spca0100 = rtvUsrSpcAttr(i_usrSpc: lib: msg);
-
-// Set return value
-if (msg.ID <> cMSG_ID_OK);
-   isAutoExt = cFalse;
-else;
-   if (spca0100.autoExtend = '0');
+  // Set return value
+  if (msg.ID <> cMSG_ID_OK);
+    isAutoExt = cFalse;
+  else;
+    if (spca0100.autoExtend = '0');
       isAutoExt = cFalse;
-   else;
+    else;
       isAutoExt = cTrue;
-   endif;
-endif;
+    endif;
+  endif;
 
-// Process optional/omissible message parameter
-if (%parms() >= p_msg);
-   CEETSTA(isPresent: p_msg: *omit);
-   if (isPresent = 1);
+  // Process optional/omissible message parameter
+  if (%parms() >= p_msg);
+    CEETSTA(isPresent: p_msg: *omit);
+    if (isPresent = 1);
       o_msg = msg;
-   endif;
-else;
-   if (msg.ID <> cMSG_ID_OK);
+    endif;
+  else;
+    if (msg.ID <> cMSG_ID_OK);
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return isAutoExt;
+  return isAutoExt;
 
 
-end-proc f_getUsrSpcAutoExt;
+end-proc;
 
 //=========================================================================
 //  Returns the initial value of a given user space.
@@ -979,76 +950,73 @@ end-proc f_getUsrSpcAutoExt;
 //=========================================================================
 
 dcl-proc f_getUsrSpcInitValue export;
+  dcl-pi *n varchar(1);
+    i_usrSpc char(10) const;
+    i_lib    char(10) options(*nopass: *omit) const;
+    o_msg    likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_getUsrSpcInitValue
-       varchar(1);
-  i_usrSpc        char(10) const;
-  i_lib           char(10) const  options(*nopass: *omit);
-  o_msg           likeds(msg_t    )
-options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s initValue char(1) inz;
 
-//  Return value
-dcl-s initValue       char(1) inz;
+  //  Parameter positions
+  dcl-c p_lib 2;
+  dcl-c p_msg 3;
 
-//  Parameter positions
-dcl-c p_lib const(2);
-dcl-c p_msg const(3);
+  //  Optional parameter fields
+  dcl-s lib like(i_lib) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s lib             like(i_lib       ) inz;
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Helper fields
+  dcl-ds spca0100 likeds(SPCA0100_t) inz;
 
-//  Helper fields
-dcl-ds spca0100 likeds(SPCA0100_t) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Initialize return value
+  initValue = '';
 
-// Initialize return value
-initValue = '';
+  // Process optional parameter values ...
+  // ... i_lib
+  if (%parms() >= p_lib);
+    CEETSTA(isPresent: p_lib: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_lib
-if (%parms() >= p_lib);
-   CEETSTA(isPresent: p_lib: *omit);
-else;
-   isPresent = 0;
-endif;
+  if (isPresent = 1);
+    lib = i_lib;
+  else;
+    lib = '*LIBL';
+  endif;
 
-if (isPresent = 1);
-   lib = i_lib;
-else;
-   lib = '*LIBL';
-endif;
+  // Retrieve user space attributes
+  spca0100 = rtvUsrSpcAttr(i_usrSpc: lib: msg);
 
-// Retrieve user space attributes
-spca0100 = rtvUsrSpcAttr(i_usrSpc: lib: msg);
+  // Set return value
+  if (msg.ID <> cMSG_ID_OK);
+    initValue = '';
+  else;
+    initValue = spca0100.initValue;
+  endif;
 
-// Set return value
-if (msg.ID <> cMSG_ID_OK);
-   initValue = '';
-else;
-   initValue = spca0100.initValue;
-endif;
-
-// Process optional/omissible message parameter
-if (%parms() >= p_msg);
-   CEETSTA(isPresent: p_msg: *omit);
-   if (isPresent = 1);
+  // Process optional/omissible message parameter
+  if (%parms() >= p_msg);
+    CEETSTA(isPresent: p_msg: *omit);
+    if (isPresent = 1);
       o_msg = msg;
-   endif;
-else;
-   if (msg.ID <> cMSG_ID_OK);
+    endif;
+  else;
+    if (msg.ID <> cMSG_ID_OK);
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return initValue;
+  return initValue;
 
 
-end-proc f_getUsrSpcInitValue;
+end-proc;
 
 //=========================================================================
 //  Changes the size of a given user space.
@@ -1065,76 +1033,73 @@ end-proc f_getUsrSpcInitValue;
 //=========================================================================
 
 dcl-proc f_chgUsrSpcSize export;
+  dcl-pi *n int(10);
+    i_usrSpc char(10) const;
+    i_lib    char(10) options(*omit) const;
+    i_size   int(10) const;
+    o_msg    likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_chgUsrSpcSize
-       int(10);
-  i_usrSpc        char(10) const;
-  i_lib           char(10) const  options(*omit);
-  i_size          int(10) const;
-  o_msg           likeds(msg_t    )
-options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s size int(10) inz(-1);
 
-//  Return value
-dcl-s size            int(10) inz(-1);
+  //  Parameter positions
+  dcl-c p_lib 2;
+  dcl-c p_msg 4;
 
-//  Parameter positions
-dcl-c p_lib const(2);
-dcl-c p_msg const(4);
+  //  Optional parameter fields
+  dcl-s lib like(i_lib) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s lib             like(i_lib       ) inz;
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
+  //  Helper fields QUSCUSAT: size attribute
+  dcl-ds sizeAttr likeds(QUSRSPC_attr_size_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields QUSCUSAT: size attribute
-dcl-ds sizeAttr likeds(QUSRSPC_attr_size_t) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Initialize return value
+  size = -1;
 
-// Initialize return value
-size = -1;
+  // Process optional parameter values ...
+  // ... i_lib
+  if (%parms() >= p_lib);
+    CEETSTA(isPresent: p_lib: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_lib
-if (%parms() >= p_lib);
-   CEETSTA(isPresent: p_lib: *omit);
-else;
-   isPresent = 0;
-endif;
+  if (isPresent = 1);
+    lib = i_lib;
+  else;
+    lib = '*LIBL';
+  endif;
 
-if (isPresent = 1);
-   lib = i_lib;
-else;
-   lib = '*LIBL';
-endif;
+  // Change the size attribute of the given user space
+  sizeAttr.key     = QUSRSPC_ATTR_SIZE;
+  sizeAttr.dataLen = %size(sizeAttr.size);
+  sizeAttr.size    = i_size;
 
-// Change the size attribute of the given user space
-sizeAttr.key     = QUSRSPC_ATTR_SIZE;
-sizeAttr.dataLen = %size(sizeAttr.size);
-sizeAttr.size    = i_size;
+  chgUsrSpcAttr(i_usrSpc: lib: sizeAttr: msg);
 
-chgUsrSpcAttr(i_usrSpc: lib: sizeAttr: msg);
+  size = f_getUsrSpcSize(i_usrSpc: lib: *omit);
 
-size = f_getUsrSpcSize(i_usrSpc: lib: *omit);
-
-// Process optional/omissible message parameter
-if (%parms() >= p_msg);
-   CEETSTA(isPresent: p_msg: *omit);
-   if (isPresent = 1);
+  // Process optional/omissible message parameter
+  if (%parms() >= p_msg);
+    CEETSTA(isPresent: p_msg: *omit);
+    if (isPresent = 1);
       o_msg = msg;
-   endif;
-else;
-   if (msg.ID <> cMSG_ID_OK);
+    endif;
+  else;
+    if (msg.ID <> cMSG_ID_OK);
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return size;
+  return size;
 
 
-end-proc f_chgUsrSpcSize;
+end-proc;
 
 //=========================================================================
 //  Changes the automatic extendibility of a given user space.
@@ -1154,80 +1119,77 @@ end-proc f_chgUsrSpcSize;
 //=========================================================================
 
 dcl-proc f_chgUsrSpcAutoExt export;
+  dcl-pi *n ind;
+    i_usrSpc    char(10) const;
+    i_lib       char(10) options(*omit) const;
+    i_isAutoExt ind const;
+    o_msg       likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_chgUsrSpcAutoExt
-       ind;
-  i_usrSpc        char(10) const;
-  i_lib           char(10) const  options(*omit);
-  i_isAutoExt     ind const;
-  o_msg           likeds(msg_t    )
-options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s isAutoExt ind inz(cFalse);
 
-//  Return value
-dcl-s isAutoExt       ind inz(cFalse);
+  //  Parameter positions
+  dcl-c p_lib 2;
+  dcl-c p_msg 4;
 
-//  Parameter positions
-dcl-c p_lib const(2);
-dcl-c p_msg const(4);
+  //  Optional parameter fields
+  dcl-s lib like(i_lib) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s lib             like(i_lib       ) inz;
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
+  //  Helper fields QUSCUSAT: automatic extendibility
+  dcl-ds autoExtAttr likeds(QUSRSPC_auto_extend_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields QUSCUSAT: automatic extendibility
-dcl-ds autoExtAttr likeds(QUSRSPC_auto_extend_t) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Initialize return value
+  isAutoExt = cFalse;
 
-// Initialize return value
-isAutoExt = cFalse;
+  // Process optional parameter values ...
+  // ... i_lib
+  if (%parms() >= p_lib);
+    CEETSTA(isPresent: p_lib: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_lib
-if (%parms() >= p_lib);
-   CEETSTA(isPresent: p_lib: *omit);
-else;
-   isPresent = 0;
-endif;
+  if (isPresent = 1);
+    lib = i_lib;
+  else;
+    lib = '*LIBL';
+  endif;
 
-if (isPresent = 1);
-   lib = i_lib;
-else;
-   lib = '*LIBL';
-endif;
+  // Change the automatic extendibility of the given user space
+  autoExtAttr.key     = QUSRSPC_ATTR_AUTO_EXTEND;
+  autoExtAttr.dataLen = %size(autoExtAttr.autoExtend);
+  if (i_isAutoExt);
+    autoExtAttr.autoExtend = '1';
+  else;
+    autoExtAttr.autoExtend = '0';
+  endif;
 
-// Change the automatic extendibility of the given user space
-autoExtAttr.key     = QUSRSPC_ATTR_AUTO_EXTEND;
-autoExtAttr.dataLen = %size(autoExtAttr.autoExtend);
-if (i_isAutoExt);
-   autoExtAttr.autoExtend = '1';
-else;
-   autoExtAttr.autoExtend = '0';
-endif;
+  chgUsrSpcAttr(i_usrSpc: lib: autoExtAttr: msg);
 
-chgUsrSpcAttr(i_usrSpc: lib: autoExtAttr: msg);
+  isAutoExt = f_getUsrSpcAutoExt(i_usrSpc: lib: *omit);
 
-isAutoExt = f_getUsrSpcAutoExt(i_usrSpc: lib: *omit);
-
-// Process optional/omissible message parameter
-if (%parms() >= p_msg);
-   CEETSTA(isPresent: p_msg: *omit);
-   if (isPresent = 1);
+  // Process optional/omissible message parameter
+  if (%parms() >= p_msg);
+    CEETSTA(isPresent: p_msg: *omit);
+    if (isPresent = 1);
       o_msg = msg;
-   endif;
-else;
-   if (msg.ID <> cMSG_ID_OK);
+    endif;
+  else;
+    if (msg.ID <> cMSG_ID_OK);
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return isAutoExt;
+  return isAutoExt;
 
 
-end-proc f_chgUsrSpcAutoExt;
+end-proc;
 
 //=========================================================================
 //  Changes the initial value of a given user space.
@@ -1245,76 +1207,73 @@ end-proc f_chgUsrSpcAutoExt;
 //=========================================================================
 
 dcl-proc f_chgUsrSpcInitValue export;
+  dcl-pi *n varchar(1);
+    i_usrSpc    char(10) const;
+    i_lib       char(10) options(*omit) const;
+    i_initValue char(1) const;
+    o_msg       likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_chgUsrSpcInitValue
-       varchar(1);
-  i_usrSpc        char(10) const;
-  i_lib           char(10) const  options(*omit);
-  i_initValue     char(1) const;
-  o_msg           likeds(msg_t    )
-options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s initValue varchar(1) inz;
 
-//  Return value
-dcl-s initValue       varchar(1) inz;
+  //  Parameter positions
+  dcl-c p_lib 2;
+  dcl-c p_msg 4;
 
-//  Parameter positions
-dcl-c p_lib const(2);
-dcl-c p_msg const(4);
+  //  Optional parameter fields
+  dcl-s lib like(i_lib) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s lib             like(i_lib       ) inz;
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
+  //  Helper fields QUSCUSAT: initial value
+  dcl-ds initValueAttr likeds(QUSRSPC_initial_value_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields QUSCUSAT: initial value
-dcl-ds initValueAttr likeds(QUSRSPC_initial_value_t) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Initialize return value
+  initValue = '';
 
-// Initialize return value
-initValue = '';
+  // Process optional parameter values ...
+  // ... i_lib
+  if (%parms() >= p_lib);
+    CEETSTA(isPresent: p_lib: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_lib
-if (%parms() >= p_lib);
-   CEETSTA(isPresent: p_lib: *omit);
-else;
-   isPresent = 0;
-endif;
+  if (isPresent = 1);
+    lib = i_lib;
+  else;
+    lib = '*LIBL';
+  endif;
 
-if (isPresent = 1);
-   lib = i_lib;
-else;
-   lib = '*LIBL';
-endif;
+  // Change the initial value of the given user space
+  initValueAttr.key     = QUSRSPC_ATTR_INITIAL_VALUE;
+  initValueAttr.dataLen = %size(initValueAttr.value);
+  initValueAttr.value   = i_initValue;
 
-// Change the initial value of the given user space
-initValueAttr.key     = QUSRSPC_ATTR_INITIAL_VALUE;
-initValueAttr.dataLen = %size(initValueAttr.value);
-initValueAttr.value   = i_initValue;
+  chgUsrSpcAttr(i_usrSpc: lib: initValueAttr: msg);
 
-chgUsrSpcAttr(i_usrSpc: lib: initValueAttr: msg);
+  initValue = f_getUsrSpcInitValue(i_usrSpc: lib: *omit);
 
-initValue = f_getUsrSpcInitValue(i_usrSpc: lib: *omit);
-
-// Process optional/omissible message parameter
-if (%parms() >= p_msg);
-   CEETSTA(isPresent: p_msg: *omit);
-   if (isPresent = 1);
+  // Process optional/omissible message parameter
+  if (%parms() >= p_msg);
+    CEETSTA(isPresent: p_msg: *omit);
+    if (isPresent = 1);
       o_msg = msg;
-   endif;
-else;
-   if (msg.ID <> cMSG_ID_OK);
+    endif;
+  else;
+    if (msg.ID <> cMSG_ID_OK);
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return initValue;
+  return initValue;
 
 
-end-proc f_chgUsrSpcInitValue;
+end-proc;
 
 //=========================================================================
 //  Deletes a given user space.
@@ -1330,82 +1289,79 @@ end-proc f_chgUsrSpcInitValue;
 //=========================================================================
 
 dcl-proc f_dltUsrSpc export;
+  dcl-pi *n ind;
+    i_usrSpc char(10) const;
+    i_lib    char(10) options(*nopass: *omit) const;
+    o_msg    likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_dltUsrSpc
-       ind;
-  i_usrSpc        char(10) const;
-  i_lib           char(10) const  options(*nopass: *omit);
-  o_msg           likeds(msg_t    )
-options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s isDeleted ind inz(cFalse);
 
-//  Return value
-dcl-s isDeleted       ind inz(cFalse);
+  //  Parameter positions
+  dcl-c p_lib 2;
+  dcl-c p_msg 3;
 
-//  Parameter positions
-dcl-c p_lib const(2);
-dcl-c p_msg const(3);
+  //  Optional parameter fields
+  dcl-s lib like(i_lib) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s lib             like(i_lib       ) inz;
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Local fields
+  dcl-ds qUsrSpc likeds(qObj_t) inz;
+  dcl-ds errCode likeds(errCode_t) inz;
 
-//  Local fields
-dcl-ds qUsrSpc likeds(qObj_t    ) inz;
-dcl-ds errCode likeds(errCode_t ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Initialize return value
+  isDeleted = cFalse;
 
-// Initialize return value
-isDeleted = cFalse;
+  // Process optional parameter values ...
+  // ... i_lib
+  if   %parms >= p_lib;
+    CEETSTA(isPresent: p_lib: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_lib
-if   %parms >= p_lib;
-   CEETSTA(isPresent: p_lib: *omit);
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    lib = i_lib;
+  else;
+    lib = '*LIBL';
+  endif;
 
-if   isPresent = 1;
-   lib = i_lib;
-else;
-   lib = '*LIBL';
-endif;
+  // Delete user space
+  qUsrSpc.name = i_usrSpc;
+  qUsrSpc.lib  = i_lib;
+  errCode      = f_newApiErrCode(cTrue);
+  QUSDLTUS(qUsrSpc: errCode);
 
-// Delete user space
-qUsrSpc.name = i_usrSpc;
-qUsrSpc.lib  = i_lib;
-errCode      = f_newApiErrCode(cTrue);
-QUSDLTUS(qUsrSpc: errCode);
+  // Set return value
+  if   f_isApiError(errCode);
+    isDeleted = cFalse;
+    msg       = f_cvtApiErrCodeToMsg(errCode);
+  else;
+    isDeleted = cTrue;
+    msg       = f_newMsg(cMSG_ID_OK);
+  endif;
 
-// Set return value
-if   f_isApiError(errCode);
-   isDeleted = cFalse;
-   msg       = f_cvtApiErrCodeToMsg(errCode);
-else;
-   isDeleted = cTrue;
-   msg       = f_newMsg(cMSG_ID_OK);
-endif;
-
-// Process optional/omissible message parameter
-if   %parms >= p_msg;
-   CEETSTA(isPresent: p_msg: *omit);
-   if   isPresent = 1;
+  // Process optional/omissible message parameter
+  if   %parms >= p_msg;
+    CEETSTA(isPresent: p_msg: *omit);
+    if   isPresent = 1;
       o_msg = msg;
-   endif;
-else;
-   if   msg.ID <> cMSG_ID_OK;
+    endif;
+  else;
+    if   msg.ID <> cMSG_ID_OK;
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return   isDeleted;
+  return   isDeleted;
 
 
-end-proc f_dltUsrSpc;
+end-proc;
 
 //=========================================================================
 //  Activates a service program.
@@ -1423,102 +1379,99 @@ end-proc f_dltUsrSpc;
 //=========================================================================
 
 dcl-proc f_activateSrvPgm export;
+  dcl-pi *n likeds(actSrvPgm_t);
+    i_srvPgm char(10) const;
+    i_lib    char(10) options(*nopass: *omit) const;
+    o_msg    likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_activateSrvPgm
-       likeds(actSrvPgm_t );
-i_srvPgm        char(10) const;
-i_lib           char(10) const  options(*nopass: *omit);
-o_msg           likeds(msg_t    )
-     options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-ds actSrvPgm likeds(actSrvPgm_t) inz;
 
-//  Return value
-dcl-ds actSrvPgm likeds(actSrvPgm_t ) inz;
+  //  Parameter positions
+  dcl-c p_lib 2;
+  dcl-c p_msg 3;
 
-//  Parameter positions
-dcl-c p_lib const(2);
-dcl-c p_msg const(3);
+  //  Optional parameter fields
+  dcl-s lib like(i_lib) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s lib             like(i_lib       ) inz;
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Local fields
+  dcl-s actMark like(actInf_t.actMark) inz;
+  dcl-s pSrvPgm pointer(*proc) inz;
+  dcl-ds actInf likeds(actInf_t) inz;
+  dcl-ds errCode likeds(errCode_t) inz;
 
-//  Local fields
-dcl-s actMark         like(actInf_t.actMark ) inz;
-dcl-s pSrvPgm         pointer(*proc) inz;
-dcl-ds actInf likeds(actInf_t       ) inz;
-dcl-ds errCode likeds(errCode_t      ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
+  //  Helper fields
+  dcl-ds rcvm0200 likeds(rcvm0200_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-ds rcvm0200 likeds(rcvm0200_t     ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Initialize return value
+  clear actSrvPgm;
+  msg = f_newMsg(cMSG_ID_OK);
 
-// Initialize return value
-clear actSrvPgm;
-msg = f_newMsg(cMSG_ID_OK);
+  // Process optional parameter values ...
+  // ... i_lib
+  if   %parms >= p_lib;
+    CEETSTA(isPresent: p_lib: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_lib
-if   %parms >= p_lib;
-   CEETSTA(isPresent: p_lib: *omit);
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    lib = i_lib;
+  else;
+    lib = '*LIBL';
+  endif;
 
-if   isPresent = 1;
-   lib = i_lib;
-else;
-   lib = '*LIBL';
-endif;
+  // Check object exist
 
-// Check object exist
+  // Get system pointer
+  monitor;
+    pSrvPgm = rslvsp(WLI_SRVPGM: i_srvPgm: lib: AUTH_OBJ_MGMT);
+  on-error;
+    rcvm0200 = f_rcvPgmMsg(cMsg_Any: '': cMsg_Act_Rmv);
+    msg = f_newMsg('CPF9898': 'Object ' + %trim(lib) + '/'
+                                        + %trim(i_srvPgm)
+                                        + ' not found');
+  endmon;
 
-// Get system pointer
-monitor;
-   pSrvPgm = rslvsp(WLI_SRVPGM: i_srvPgm: lib: AUTH_OBJ_MGMT);
-on-error;
-   rcvm0200 = f_rcvPgmMsg(cMsg_Any: '': cMsg_Act_Rmv);
-   msg = f_newMsg('CPF9898': 'Object ' + %trim(lib) + '/'
-                                       + %trim(i_srvPgm)
-                                       + ' not found');
-endmon;
+  // Actiate service program
+  if pSrvPgm <> *NULL;
+    errCode = f_newApiErrCode(cTrue);
+    QleActBndPgm(pSrvPgm: actMark: actInf: %size(actInf): errCode);
 
-// Actiate service program
-if pSrvPgm <> *NULL;
-   errCode = f_newApiErrCode(cTrue);
-   QleActBndPgm(pSrvPgm: actMark: actInf: %size(actInf): errCode);
-
-   if f_isAPIError(errCode);
+    if f_isAPIError(errCode);
       msg = f_cvtApiErrCodeToMsg(errCode);
-   endif;
-endif;
+    endif;
+  endif;
 
-if pSrvPgm <> *NULL;
-   actSrvPgm.procptr = pSrvPgm;
-   actSrvPgm.actMark = actMark;
-   actSrvPgm.name    = i_srvPgm;
-   actSrvPgm.lib     = lib;
-endif;
+  if pSrvPgm <> *NULL;
+    actSrvPgm.procptr = pSrvPgm;
+    actSrvPgm.actMark = actMark;
+    actSrvPgm.name    = i_srvPgm;
+    actSrvPgm.lib     = lib;
+  endif;
 
-// Process optional/omissible message parameter
-if   %parms >= p_msg;
-   CEETSTA(isPresent: p_msg: *omit);
-   if   isPresent = 1;
+  // Process optional/omissible message parameter
+  if   %parms >= p_msg;
+    CEETSTA(isPresent: p_msg: *omit);
+    if   isPresent = 1;
       o_msg = msg;
-   endif;
-else;
-   if   msg.ID <> cMSG_ID_OK;
+    endif;
+  else;
+    if   msg.ID <> cMSG_ID_OK;
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return actSrvPgm;
+  return actSrvPgm;
 
 
-end-proc f_activateSrvPgm;
+end-proc;
 
 //=========================================================================
 //  Gets a procedure pointer by name.
@@ -1536,69 +1489,66 @@ end-proc f_activateSrvPgm;
 //=========================================================================
 
 dcl-proc f_getProcPtrByName export;
+  dcl-pi *n likeds(actProc_t);
+    i_proc      char(256) const;
+    i_actSrvPgm likeds(actSrvPgm_t) const;
+    o_msg       likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_getProcPtrByName
-       likeds(actProc_t  );
-i_proc          char(256) const;
-i_actSrvPgm     const  likeds(actSrvPgm_t);
-o_msg           likeds(msg_t    )
-     options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-ds actProc likeds(actProc_t) inz;
 
-//  Return value
-dcl-ds actProc likeds(actProc_t ) inz;
+  //  Parameter positions
+  dcl-c p_msg 3;
 
-//  Parameter positions
-dcl-c p_msg const(3);
+  //  Optional parameter fields
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Local fields
+  dcl-s typeExpItem int(10) inz;
+  dcl-s pExpItem pointer(*proc) inz;
+  dcl-ds errCode likeds(errCode_t) inz;
 
-//  Local fields
-dcl-s typeExpItem     int(10) inz;
-dcl-s pExpItem        pointer(*proc) inz;
-dcl-ds errCode likeds(errCode_t      ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Initialize return value
+  clear actProc;
+  msg = f_newMsg(cMSG_ID_OK);
 
-// Initialize return value
-clear actProc;
-msg = f_newMsg(cMSG_ID_OK);
+  // Get procedure pointer by name
+  errCode = f_newApiErrCode(cTrue);
+  QleGetExp(i_actSrvPgm.actMark: *omit: %len(%trimR(i_proc))
+            : %trimR(i_proc): pExpItem: typeExpItem: errCode);
+  if f_isAPIError(errCode);
+    msg = f_cvtApiErrCodeToMsg(errCode);
+  endif;
 
-// Get procedure pointer by name
-errCode = f_newApiErrCode(cTrue);
-QleGetExp(i_actSrvPgm.actMark: *omit: %len(%trimR(i_proc))
-          : %trimR(i_proc): pExpItem: typeExpItem: errCode);
-if f_isAPIError(errCode);
-   msg = f_cvtApiErrCodeToMsg(errCode);
-endif;
+  if pExpItem <> *NULL;
+    actproc.procptr = pExpItem;
+    actproc.actMark = i_actSrvPgm.actMark;
+    actproc.name    = i_proc;
+    actproc.srvPgm  = i_actSrvPgm.name;
+    actproc.lib     = i_actSrvPgm.lib;
+  endif;
 
-if pExpItem <> *NULL;
-   actproc.procptr = pExpItem;
-   actproc.actMark = i_actSrvPgm.actMark;
-   actproc.name    = i_proc;
-   actproc.srvPgm  = i_actSrvPgm.name;
-   actproc.lib     = i_actSrvPgm.lib;
-endif;
-
-// Process optional/omissible message parameter
-if   %parms >= p_msg;
-   CEETSTA(isPresent: p_msg: *omit);
-   if   isPresent = 1;
+  // Process optional/omissible message parameter
+  if   %parms >= p_msg;
+    CEETSTA(isPresent: p_msg: *omit);
+    if   isPresent = 1;
       o_msg = msg;
-   endif;
-else;
-   if   msg.ID <> cMSG_ID_OK;
+    endif;
+  else;
+    if   msg.ID <> cMSG_ID_OK;
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return actProc;
+  return actProc;
 
 
-end-proc f_getProcPtrByName;
+end-proc;
 
 //=========================================================================
 //  Returns the name of the library that contains a given object.
@@ -1615,59 +1565,57 @@ end-proc f_getProcPtrByName;
 //=========================================================================
 
 dcl-proc f_getObjLib export;
+  dcl-pi *n char(10);
+    i_obj  char(10) const;
+    i_lib  char(10) options(*omit) const;
+    i_type char(10) const;
+  end-pi;
 
-dcl-pi f_getObjLib
-       char(10);
-  i_obj           char(10) const;
-  i_lib           char(10) const  options(*omit);
-  i_type          char(10) const;
-end-pi;
+  //  Return value
+  dcl-s rtnLib char(10) inz;
 
-//  Return value
-dcl-s rtnLib          char(10) inz;
+  //  Parameter positions
+  dcl-c p_lib 2;
 
-//  Parameter positions
-dcl-c p_lib const(2);
+  //  Optional parameter fields
+  dcl-s lib like(i_lib) inz;
 
-//  Optional parameter fields
-dcl-s lib             like(i_lib       ) inz;
+  //  Local fields
+  dcl-ds objd0100 likeds(objd0100_t) inz;
+  dcl-ds msg likeds(msg_t) inz;
 
-//  Local fields
-dcl-ds objd0100 likeds(objd0100_t) inz;
-dcl-ds msg likeds(msg_t     ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Process optional parameter values ...
+  // ... i_lib
+  if   %parms >= p_lib;
+    CEETSTA(isPresent: p_lib: *omit);                                                //R
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_lib
-if   %parms >= p_lib;
-   CEETSTA(isPresent: p_lib: *omit);                                                //R
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    lib = i_lib;
+  else;
+    lib = '*LIBL';
+  endif;
 
-if   isPresent = 1;
-   lib = i_lib;
-else;
-   lib = '*LIBL';
-endif;
+  // Retrieve the object description
+  objd0100 = f_rtvObjD(i_obj: lib: i_type: 'OBJD0100': msg);
 
-// Retrieve the object description
-objd0100 = f_rtvObjD(i_obj: lib: i_type: 'OBJD0100': msg);
+  // Set return value
+  if (msg.ID = cMSG_ID_OK);
+    rtnLib = objd0100.rtnLib;
+  else;
+    f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToMyself);
+  endif;
 
-// Set return value
-if (msg.ID = cMSG_ID_OK);
-   rtnLib = objd0100.rtnLib;
-else;
-   f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToMyself);
-endif;
-
-return rtnLib;
+  return rtnLib;
 
 
-end-proc f_getObjLib;
+end-proc;
 
 //=========================================================================
 //  Converts a QSYS object name to a path.
@@ -1690,169 +1638,169 @@ end-proc f_getObjLib;
 //   f_cvtQSYSObjNameToPath(object: library: member: '*FILE');
 //=========================================================================
 dcl-proc f_cvtQSYSObjNameToPath export;
-dcl-pi *N              varchar(5000) opdesc;
-  i_obj           char(40) const  options(*varsize);
-  i_libOrType     char(10) const  options(*nopass: *omit);
-  i_mbrOrType     char(10) const  options(*nopass: *omit);
-  i_objType       char(10) const  options(*nopass: *omit);
-end-pi;
+  dcl-pi *n varchar(5000) opdesc;
+    i_obj       char(40) options(*varsize) const;
+    i_libOrType char(10) options(*nopass: *omit) const;
+    i_mbrOrType char(10) options(*nopass: *omit) const;
+    i_objType   char(10) options(*nopass: *omit) const;
+  end-pi;
 
-//  Return value
-dcl-s path            varchar(5000) inz;
+  //  Return value
+  dcl-s path varchar(5000) inz;
 
-//  Parameter positions
-dcl-c p_obj const(1);
-dcl-c p_libOrType const(2);
-dcl-c p_mbrOrType const(3);
-dcl-c p_objType const(4);
+  //  Parameter positions
+  dcl-c p_obj 1;
+  dcl-c p_libOrType 2;
+  dcl-c p_mbrOrType 3;
+  dcl-c p_objType 4;
 
-//  Optional parameter fields
-dcl-s libOrType       like(i_libOrType ) inz;
-dcl-s mbrOrType       like(i_mbrOrType ) inz;
-dcl-s objType         like(i_objType   ) inz;
+  //  Optional parameter fields
+  dcl-s libOrType like(i_libOrType) inz;
+  dcl-s mbrOrType like(i_mbrOrType) inz;
+  dcl-s objType like(i_objType) inz;
 
-//  Local fields
-dcl-ds objInf likeds(strInf_t  ) inz;
-dcl-ds qQSYSObj likeds(qQSYSObj_t) inz;
-dcl-ds qFile likeds(qFile_t   ) inz;
-dcl-ds qObj likeds(qFile_t   ) inz;
+  //  Local fields
+  dcl-ds objInf likeds(strInf_t) inz;
+  dcl-ds qQSYSObj likeds(qQSYSObj_t) inz;
+  dcl-ds qFile likeds(qFile_t) inz;
+  dcl-ds qObj likeds(qFile_t) inz;
 
-dcl-s object          char(10) inz;
-dcl-s library         char(10) inz;
-dcl-s member          char(10) inz;
-dcl-s type            char(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  dcl-s object char(10) inz;
+  dcl-s library char(10) inz;
+  dcl-s member char(10) inz;
+  dcl-s type char(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// Process optional parameter values ...
-if (%parms() >= p_libOrType and %addr(i_libOrType) <> *null);
-   libOrType = i_libOrType;
-else;
-   libOrType = '';
-endif;
+  // Process optional parameter values ...
+  if (%parms() >= p_libOrType and %addr(i_libOrType) <> *null);
+    libOrType = i_libOrType;
+  else;
+    libOrType = '';
+  endif;
 
-if (%parms() >= p_mbrOrType and %addr(i_mbrOrType) <> *null);
-   mbrOrType = i_mbrOrType;
-else;
-   mbrOrType = '';
-endif;
+  if (%parms() >= p_mbrOrType and %addr(i_mbrOrType) <> *null);
+    mbrOrType = i_mbrOrType;
+  else;
+    mbrOrType = '';
+  endif;
 
-if (%parms() >= p_objType and %addr(i_objType) <> *null);
-   objType = i_objType;
-else;
-   objType = '';
-endif;
+  if (%parms() >= p_objType and %addr(i_objType) <> *null);
+    objType = i_objType;
+  else;
+    objType = '';
+  endif;
 
-CEEGSI(p_obj: objInf.dataType: objInf.curlen: objInf.maxlen: *omit);
+  CEEGSI(p_obj: objInf.dataType: objInf.curlen: objInf.maxlen: *omit);
 
-select;
-when (objInf.curlen = 40);   // 1 parameter
-   p_assert(%parms() = 1
-            : 'Expected number of parameters: 1');
-   qQSYSObj = i_obj;
-   object = qQSYSObj.name;
-   library = qQSYSObj.lib;
-   member = qQSYSObj.mbr;
-   type = qQSYSObj.type;
+  select;
+  when (objInf.curlen = 40);   // 1 parameter
+    p_assert(%parms() = 1
+             : 'Expected number of parameters: 1');
+    qQSYSObj = i_obj;
+    object = qQSYSObj.name;
+    library = qQSYSObj.lib;
+    member = qQSYSObj.mbr;
+    type = qQSYSObj.type;
 
-when (objInf.curlen = 30);   // 2 parameters
-   p_assert(%parms() = 1 or %parms() = 2
-            : 'Expected number of parameters: 1 or 2');
-   p_assert(%parms() = 1 or (%parms() = 2 and libOrType = '*FILE')
-            : 'Expected number of parameters: 1 or (2 and *FILE)');
-   qFile = i_obj;
-   object = qFile.name;
-   library = qFile.lib;
-   member = qFile.mbr;
-   if (%parms() = 1);
+  when (objInf.curlen = 30);   // 2 parameters
+    p_assert(%parms() = 1 or %parms() = 2
+             : 'Expected number of parameters: 1 or 2');
+    p_assert(%parms() = 1 or (%parms() = 2 and libOrType = '*FILE')
+             : 'Expected number of parameters: 1 or (2 and *FILE)');
+    qFile = i_obj;
+    object = qFile.name;
+    library = qFile.lib;
+    member = qFile.mbr;
+    if (%parms() = 1);
       type = '*FILE';
-   else;
+    else;
       type = libOrType;
-   endif;
+    endif;
 
-when (objInf.curlen = 20);   // 2 parameters
-   p_assert(%parms() = 2
-            : 'Expected number of parameters: 2');
-   qObj = i_obj;
-   object = qObj.name;
-   library = qObj.lib;
-   member = '';
-   type = libOrType;
+  when (objInf.curlen = 20);   // 2 parameters
+    p_assert(%parms() = 2
+             : 'Expected number of parameters: 2');
+    qObj = i_obj;
+    object = qObj.name;
+    library = qObj.lib;
+    member = '';
+    type = libOrType;
 
-other;                       // 3 or 4 parameters, eg:
-   p_assert(%parms() = 2 or %parms() = 3 or
-            (%parms() = 4 and objType = '*FILE')
-            : 'Expected number of parameters: 2, 3 or (4 and *FILE)');
-   object = i_obj;
-   select;
-   when (%parms() = 2);
+  other;                       // 3 or 4 parameters, eg:
+    p_assert(%parms() = 2 or %parms() = 3 or
+             (%parms() = 4 and objType = '*FILE')
+             : 'Expected number of parameters: 2, 3 or (4 and *FILE)');
+    object = i_obj;
+    select;
+    when (%parms() = 2);
       library = '';
       member = '';
       type = libOrType;
-   when (%parms() = 3);
+    when (%parms() = 3);
       library = libOrType;
       member = '';
       type = mbrOrType;
-   other;
+    other;
       library = libOrType;
       member = mbrOrType;
       type = objType;
-   endsl;
-endsl;
+    endsl;
+  endsl;
 
-if (type = '*LIB');
-   library = object;
-   object = '';
-else;
-   if (library = '');
+  if (type = '*LIB');
+    library = object;
+    object = '';
+  else;
+    if (library = '');
       library = '*LIBL';
-   endif;
-endif;
+    endif;
+  endif;
 
-path = '/QSYS.LIB';
+  path = '/QSYS.LIB';
 
-if (library <> '' and library <> 'QSYS');
-   path += '/';
+  if (library <> '' and library <> 'QSYS');
+    path += '/';
 
-   select;
-   when (library = '*ALL');
+    select;
+    when (library = '*ALL');
       path += '%ALL%';
-   when (library = '*ALLUSR');
+    when (library = '*ALLUSR');
       path += '%ALLUSR%';
-   when (library = '*CURLIB');
+    when (library = '*CURLIB');
       path += '%CURLIB%';
-   when (library = '*LIBL');
+    when (library = '*LIBL');
       path += '%LIBL%';
-   when (library = '*USRLIBL');
+    when (library = '*USRLIBL');
       path += '%USRLIBL%';
-   other;
+    other;
       path += %trim(library);
-   endsl;
+    endsl;
 
-   path += '.LIB';
-endif;
+    path += '.LIB';
+  endif;
 
-if (object <> '');
-   path += '/';
+  if (object <> '');
+    path += '/';
 
-   select;
-   when (object = '*ALL');
+    select;
+    when (object = '*ALL');
       path += '%ALL%';
-   other;
+    other;
       path += %trim(object);
-   endsl;
+    endsl;
 
-   path += '.' + %trimR(%subst(type: 2));
-endif;
+    path += '.' + %trimR(%subst(type: 2));
+  endif;
 
-if (member <> '');
-   path += '/';
+  if (member <> '');
+    path += '/';
 
-   path += %trim(member);
+    path += %trim(member);
 
-   path += '.MBR';
-endif;
+    path += '.MBR';
+  endif;
 
-return path;
+  return path;
 
 end-proc;
 
@@ -1867,66 +1815,66 @@ end-proc;
 //   qQSYSObj      - resolved QSYS object name.
 //=========================================================================
 dcl-proc f_cvtPathToQSYSObjName export;
-dcl-pi *N likeds(qQSYSObj_t);
-  i_path          varchar(5000) const   options(*varsize);
-end-pi;
+  dcl-pi *n likeds(qQSYSObj_t);
+    i_path varchar(5000) options(*varsize) const;
+  end-pi;
 
-//  Return value
-dcl-ds qQSYSObj likeds(qQSYSObj_t);
+  //  Return value
+  dcl-ds qQSYSObj likeds(qQSYSObj_t);
 
-//  Local fields
-dcl-ds pathName likeds(Qlg_Path_Name_t) inz;
-dcl-ds qsys_info likeds(qsys0100_t) inz;
-dcl-ds errCode likeds(errCode_t) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Local fields
+  dcl-ds pathName likeds(Qlg_Path_Name_t) inz;
+  dcl-ds qsys_info likeds(qsys0100_t) inz;
+  dcl-ds errCode likeds(errCode_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-pathName = *ALLx'00';
-pathName.CCSID = QLG_PATH_JOB_CCSID;
-pathName.Country_ID = QLG_PATH_JOB_COUNTRYID;
-pathName.Language_ID = QLG_PATH_JOB_LANGUAGEID;
-pathName.Reserved = *ALLx'00';
-pathName.Path_Type = QLG_CHAR_SINGLE;
-pathName.Path_Length = %len(%trimR(i_path));
-pathName.Path_Name_Delimiter = '/';
-pathName.Reserved2 = *ALLx'00';
-pathName.Path_Name = i_path;
-errCode = f_newApiErrCode(cFalse);
+  pathName = *ALLx'00';
+  pathName.CCSID = QLG_PATH_JOB_CCSID;
+  pathName.Country_ID = QLG_PATH_JOB_COUNTRYID;
+  pathName.Language_ID = QLG_PATH_JOB_LANGUAGEID;
+  pathName.Reserved = *ALLx'00';
+  pathName.Path_Type = QLG_CHAR_SINGLE;
+  pathName.Path_Length = %len(%trimR(i_path));
+  pathName.Path_Name_Delimiter = '/';
+  pathName.Reserved2 = *ALLx'00';
+  pathName.Path_Name = i_path;
+  errCode = f_newApiErrCode(cFalse);
 
-Qp0lCvtPathToQSYSObjName(
-   pathName: qsys_info: 'QSYS0100': %size(qsys_info): 0: errCode);
+  Qp0lCvtPathToQSYSObjName(
+     pathName: qsys_info: 'QSYS0100': %size(qsys_info): 0: errCode);
 
-if (%str(%addr(qsys_info.obj_type)) = '' and
-    %str(%addr(qsys_info.lib_type)) = '*LIB');
-   qQSYSObj.name = %str(%addr(qsys_info.lib_name));
-   qQSYSObj.lib = '';
-   qQSYSObj.mbr = '';
-   qQSYSObj.type = %str(%addr(qsys_info.lib_type));
-else;
-   qQSYSObj.name = %str(%addr(qsys_info.obj_name));
-   qQSYSObj.lib = %str(%addr(qsys_info.lib_name));
-   qQSYSObj.mbr = %str(%addr(qsys_info.mbr_name));
-   qQSYSObj.type = %str(%addr(qsys_info.obj_type));
-endif;
+  if (%str(%addr(qsys_info.obj_type)) = '' and
+      %str(%addr(qsys_info.lib_type)) = '*LIB');
+    qQSYSObj.name = %str(%addr(qsys_info.lib_name));
+    qQSYSObj.lib = '';
+    qQSYSObj.mbr = '';
+    qQSYSObj.type = %str(%addr(qsys_info.lib_type));
+  else;
+    qQSYSObj.name = %str(%addr(qsys_info.obj_name));
+    qQSYSObj.lib = %str(%addr(qsys_info.lib_name));
+    qQSYSObj.mbr = %str(%addr(qsys_info.mbr_name));
+    qQSYSObj.type = %str(%addr(qsys_info.obj_type));
+  endif;
 
-select;
-when (qQSYSObj.lib = '%ALL%');
-   qQSYSObj.lib = '*ALL';
-when (qQSYSObj.lib = '%ALLUSR%');
-   qQSYSObj.lib = '*ALLUSR';
-when (qQSYSObj.lib = '%CURLIB%');
-   qQSYSObj.lib = '*CURLIB';
-when (qQSYSObj.lib = '%LIBL%');
-   qQSYSObj.lib = '*LIBL';
-when (qQSYSObj.lib = '%USRLIBL%');
-   qQSYSObj.lib = '*USRLIBL';
-endsl;
+  select;
+  when (qQSYSObj.lib = '%ALL%');
+    qQSYSObj.lib = '*ALL';
+  when (qQSYSObj.lib = '%ALLUSR%');
+    qQSYSObj.lib = '*ALLUSR';
+  when (qQSYSObj.lib = '%CURLIB%');
+    qQSYSObj.lib = '*CURLIB';
+  when (qQSYSObj.lib = '%LIBL%');
+    qQSYSObj.lib = '*LIBL';
+  when (qQSYSObj.lib = '%USRLIBL%');
+    qQSYSObj.lib = '*USRLIBL';
+  endsl;
 
-select;
-when (qQSYSObj.name = '%ALL%');
-   qQSYSObj.name = '*ALL';
-endsl;
+  select;
+  when (qQSYSObj.name = '%ALL%');
+    qQSYSObj.name = '*ALL';
+  endsl;
 
-return qQSYSObj;
+  return qQSYSObj;
 
 end-proc;
 
@@ -1945,81 +1893,78 @@ end-proc;
 //=========================================================================
 
 dcl-proc rtvUsrSpcAttr;
+  dcl-pi *n likeds(spca0100_t);
+    i_usrSpc char(10) const;
+    i_lib    char(10) options(*nopass: *omit) const;
+    o_msg    likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi rtvUsrSpcAttr
-       likeds(spca0100_t );
-i_usrSpc        char(10) const;
-i_lib           char(10) const  options(*nopass: *omit);
-o_msg           likeds(msg_t    )
-     options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-ds spca0100 likeds(spca0100_t) inz;
 
-//  Return value
-dcl-ds spca0100 likeds(spca0100_t ) inz;
+  //  Parameter positions
+  dcl-c p_lib 2;
+  dcl-c p_msg 3;
 
-//  Parameter positions
-dcl-c p_lib const(2);
-dcl-c p_msg const(3);
+  //  Optional parameter fields
+  dcl-s lib like(i_lib) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s lib             like(i_lib       ) inz;
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Local fields
+  dcl-ds qUsrSpc likeds(qObj_t) inz;
+  dcl-ds errCode likeds(errCode_t) inz;
 
-//  Local fields
-dcl-ds qUsrSpc likeds(qObj_t    ) inz;
-dcl-ds errCode likeds(errCode_t ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Initialize return value
+  clear spca0100;
 
-// Initialize return value
-clear spca0100;
+  // Process optional parameter values ...
+  // ... i_lib
+  if (%parms() >= p_lib);
+    CEETSTA(isPresent: p_lib: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_lib
-if (%parms() >= p_lib);
-   CEETSTA(isPresent: p_lib: *omit);
-else;
-   isPresent = 0;
-endif;
+  if (isPresent = 1);
+    lib = i_lib;
+  else;
+    lib = '*LIBL';
+  endif;
 
-if (isPresent = 1);
-   lib = i_lib;
-else;
-   lib = '*LIBL';
-endif;
+  // Retrive user space attributes
+  qUsrSpc.name = i_usrSpc;
+  qUsrSpc.lib  = i_lib;
+  errCode      = f_newApiErrCode(cTrue);
+  QUSRUSAT(spca0100: %size(spca0100): 'SPCA0100': qUsrSpc: errCode);
 
-// Retrive user space attributes
-qUsrSpc.name = i_usrSpc;
-qUsrSpc.lib  = i_lib;
-errCode      = f_newApiErrCode(cTrue);
-QUSRUSAT(spca0100: %size(spca0100): 'SPCA0100': qUsrSpc: errCode);
+  // Set return value
+  if (f_isApiError(errCode));
+    clear spca0100;
+    msg = f_cvtApiErrCodeToMsg(errCode);
+  else;
+    msg = f_newMsg(cMSG_ID_OK);
+  endif;
 
-// Set return value
-if (f_isApiError(errCode));
-   clear spca0100;
-   msg = f_cvtApiErrCodeToMsg(errCode);
-else;
-   msg = f_newMsg(cMSG_ID_OK);
-endif;
-
-// Process optional/omissible message parameter
-if (%parms() >= p_msg);
-   CEETSTA(isPresent: p_msg: *omit);
-   if (isPresent = 1);
+  // Process optional/omissible message parameter
+  if (%parms() >= p_msg);
+    CEETSTA(isPresent: p_msg: *omit);
+    if (isPresent = 1);
       o_msg = msg;
-   endif;
-else;
-   if (msg.ID <> cMSG_ID_OK);
+    endif;
+  else;
+    if (msg.ID <> cMSG_ID_OK);
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return spca0100;
+  return spca0100;
 
 
-end-proc rtvUsrSpcAttr;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -2037,90 +1982,86 @@ end-proc rtvUsrSpcAttr;
 //=========================================================================
 
 dcl-proc chgUsrSpcAttr;
+  dcl-pi *n ind;
+    i_usrSpc char(10) const;
+    i_lib    char(10) options(*omit) const;
+    i_attr   char(128) const;
+    o_msg    likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi chgUsrSpcAttr
-       ind;
-  i_usrSpc        char(10) const;
-  i_lib           char(10) const  options(*omit);
-  i_attr          char(128) const;
-  o_msg           likeds(msg_t    )
-options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s isChanged ind inz(cFalse);
 
-//  Return value
-dcl-s isChanged       ind inz(cFalse);
+  //  Parameter positions
+  dcl-c p_lib 2;
+  dcl-c p_msg 4;
 
-//  Parameter positions
-dcl-c p_lib const(2);
-dcl-c p_msg const(4);
+  //  Optional parameter fields
+  dcl-s lib like(i_lib) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s lib             like(i_lib       ) inz;
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Local fields
+  dcl-s rtnLib char(10) inz;
+  dcl-ds qUsrSpc likeds(qObj_t) inz;
+  dcl-ds errCode likeds(errCode_t) inz;
 
-//  Local fields
-dcl-s rtnLib          char(10) inz;
-dcl-ds qUsrSpc likeds(qObj_t    ) inz;
-dcl-ds errCode likeds(errCode_t ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
+  //  Helper fields QUSCUSAT
+  dcl-ds userSpaceAttr qualified;
+    numAttrs  int(10) inz;
+    attrToChg char(128) inz;
+  end-ds;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields QUSCUSAT
-dcl-ds userSpaceAttr qualified;
-  numAttrs        int(10) inz;
-  attrToChg       char(128) inz;
-end-ds;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Initialize return value
+  isChanged = cFalse;
 
-// Initialize return value
-isChanged = cFalse;
+  // Process optional parameter values ...
+  // ... i_lib
+  if (%parms() >= p_lib);
+    CEETSTA(isPresent: p_lib: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... i_lib
-if (%parms() >= p_lib);
-   CEETSTA(isPresent: p_lib: *omit);
-else;
-   isPresent = 0;
-endif;
+  if (isPresent = 1);
+    lib = i_lib;
+  else;
+    lib = '*LIBL';
+  endif;
 
-if (isPresent = 1);
-   lib = i_lib;
-else;
-   lib = '*LIBL';
-endif;
+  // Change the attribute of the given user space
+  qUsrSpc.name = i_usrSpc;
+  qUsrSpc.lib  = lib;
+  userSpaceAttr.numAttrs  = 1;
+  userSpaceAttr.attrToChg = i_attr;
+  errCode = f_newApiErrCode(cTrue);
+  QUSCUSAT(rtnLib: qUsrSpc: userSpaceAttr: errCode);
 
-// Change the attribute of the given user space
-qUsrSpc.name = i_usrSpc;
-qUsrSpc.lib  = lib;
-userSpaceAttr.numAttrs  = 1;
-userSpaceAttr.attrToChg = i_attr;
-errCode = f_newApiErrCode(cTrue);
-QUSCUSAT(rtnLib: qUsrSpc: userSpaceAttr: errCode);
+  // Set return value
+  if (f_isApiError(errCode));
+    isChanged = cFalse;
+    msg       = f_cvtApiErrCodeToMsg(errCode);
+  else;
+    isChanged = cTrue;
+    msg       = f_newMsg(cMSG_ID_OK);
+  endif;
 
-// Set return value
-if (f_isApiError(errCode));
-   isChanged = cFalse;
-   msg       = f_cvtApiErrCodeToMsg(errCode);
-else;
-   isChanged = cTrue;
-   msg       = f_newMsg(cMSG_ID_OK);
-endif;
-
-// Process optional/omissible message parameter
-if (%parms() >= p_msg);
-   CEETSTA(isPresent: p_msg: *omit);
-   if (isPresent = 1);
+  // Process optional/omissible message parameter
+  if (%parms() >= p_msg);
+    CEETSTA(isPresent: p_msg: *omit);
+    if (isPresent = 1);
       o_msg = msg;
-   endif;
-else;
-   if (msg.ID <> cMSG_ID_OK);
+    endif;
+  else;
+    if (msg.ID <> cMSG_ID_OK);
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return isChanged;
+  return isChanged;
 
 
-end-proc chgUsrSpcAttr;
-
+end-proc;

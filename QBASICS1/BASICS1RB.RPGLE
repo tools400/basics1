@@ -1,4 +1,4 @@
-**FREE
+**free
 //=====================================================================*
 //  BASICS1RB  - SrvPgm: Basic Routines - BasicStack                   *
 //=====================================================================*
@@ -44,29 +44,29 @@
 //                                                                     *
 //   >>END-PRE-COMPILER<<                                              *
 //=====================================================================*
-ctl-opt NOMAIN;
-ctl-opt BNDDIR('QC2LE');
+ctl-opt nomain;
+ctl-opt bnddir('QC2LE');
 //  Standard H-Specs
-/COPY QBASICS1,H_SPEC
-/COPY QBASICS1,COPYRIGHT
+/copy QBASICS1,H_SPEC
+/copy QBASICS1,COPYRIGHT
 //=====================================================================*
 
 // -----------------------------------------
 //  Exported functions
 // -----------------------------------------
-/COPY QBASICS1,PBASICS1RB
+/copy QBASICS1,PBASICS1RB
 
 // -----------------------------------------
 //  Reference fields
 // -----------------------------------------
-/COPY QBASICS1,BASICS1R0
+/copy QBASICS1,BASICS1R0
 
-dcl-ds hStack_t qualified   based(pDummy)   align;
-  intType         uns(20);
-  intSize         uns(10);
-  heapID          int(10);
-  pList           like(BasicList_handle_t);
-  memMgr          likeds(MemoryManager_manager_t);
+dcl-ds hStack_t qualified based(pDummy) align;
+  intType uns(20);
+  intSize uns(10);
+  heapID  int(10);
+  pList   like(BasicList_handle_t);
+  memMgr  likeds(MemoryManager_manager_t);
 end-ds;
 
 // -----------------------------------------
@@ -74,30 +74,24 @@ end-ds;
 // -----------------------------------------
 
 //  Checks, whether a given handle is a valid stack handle, or not.
-dcl-pr checkStackHandle
-       extproc('checkStackHandle');
-  i_pStack        const  like(BasicStack_handle_t  );
+dcl-pr checkStackHandle extproc('checkStackHandle');
+  i_pStack like(BasicStack_handle_t) const;
 end-pr;
 
 //  Sends an ESCAPE message to signal an error condition.
-dcl-pr signalError
-       extproc('signalError');
-  i_text          varchar(128) const;
-  i_proc          varchar(256) const;
+dcl-pr signalError extproc('signalError');
+  i_text varchar(128) const;
+  i_proc varchar(256) const;
 end-pr;
 
 // -----------------------------------------
 //  Global constants
 // -----------------------------------------
-dcl-c cHANDLE_TYPE_STACK
-      const(6693091772879487297);                                        // =  *Stack
-dcl-c cHANDLE_SIZE
-      const(%size(hStack_t));
+dcl-c cHANDLE_TYPE_STACK 6693091772879487297; // =  *Stack
+dcl-c cHANDLE_SIZE %size(hStack_t);
 
-dcl-c cERROR_STACK_HANDLE_NULL
-      const('Stack handle is NULL');
-dcl-c cERROR_STACK_HANDLE_INVALID
-      const('Stack handle is invalid');
+dcl-c cERROR_STACK_HANDLE_NULL 'Stack handle is NULL';
+dcl-c cERROR_STACK_HANDLE_INVALID 'Stack handle is invalid';
 
 // -----------------------------------------
 //  Global fields
@@ -115,64 +109,62 @@ dcl-c cERROR_STACK_HANDLE_INVALID
 //                   success, else NULL.
 //=========================================================================
 dcl-proc BasicStack_new export;
+  dcl-pi *n like(BasicStack_handle_t);
+    i_increment uns(10) options(*nopass: *omit) const;
+    i_heapID    uns(10) options(*nopass: *omit) const;
+  end-pi;
 
-dcl-pi BasicStack_new
-       like(BasicStack_handle_t  );
-  i_increment     uns(10) const  options(*nopass: *omit);
-  i_heapID        uns(10) const  options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s pStack like(BasicStack_handle_t) inz;
 
-//  Return value
-dcl-s pStack          like(BasicStack_handle_t  ) inz;
+  //  Parameter positions
+  dcl-c p_increment 1;
+  dcl-c p_heapID 2;
 
-//  Parameter positions
-dcl-c p_increment const(1);
-dcl-c p_heapID const(2);
+  //  Fields for optional parameters
+  dcl-s increment like(i_increment) inz;
+  dcl-s heapID like(i_heapID) inz;
 
-//  Fields for optional parameters
-dcl-s increment       like(i_increment ) inz;
-dcl-s heapID          like(i_heapID    ) inz;
+  //  Memory Manager
+/copy QBASICS1,MEMMGR
 
-//  Memory Manager
-/COPY QBASICS1,MEMMGR
+  //  Stack handle
+  dcl-ds hStack likeds(hStack_t) based(pStack);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Stack handle
-dcl-ds hStack likeds(hStack_t   ) based(pStack);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Get values of optional parameters
+  // i_increment
+  if (%parms() >= p_increment and %addr(i_increment) <> *NULL);
+    increment = i_increment;
+  else;
+    increment = 256;
+  endif;
 
-// Get values of optional parameters
-// i_increment
-if (%parms() >= p_increment and %addr(i_increment) <> *NULL);
-   increment = i_increment;
-else;
-   increment = 256;
-endif;
+  // ... i_heapID
+  if (%parms() >= p_heapID and %addr(i_heapID) <> *NULL);
+    heapID = i_heapID;
+  else;
+    heapID = 0;
+  endif;
 
-// ... i_heapID
-if (%parms() >= p_heapID and %addr(i_heapID) <> *NULL);
-   heapID = i_heapID;
-else;
-   heapID = 0;
-endif;
+  // Set memory manager
+  mm_memMgr = MemoryManager_getDefaultManager();
 
-// Set memory manager
-mm_memMgr = MemoryManager_getDefaultManager();
+  // Allocate memory for stack handle
+  pStack = mm_allocate(%size(hStack_t): heapID);
 
-// Allocate memory for stack handle
-pStack = mm_allocate(%size(hStack_t): heapID);
+  // Initialize stack handle
+  clear hStack;
+  hStack.intType = cHANDLE_TYPE_STACK;
+  hStack.intSize = %size(hStack);
+  hStack.pList   = BasicList_new('*BASICSTACK': increment);
+  hStack.heapID  = heapID;
+  hStack.memMgr  = mm_memMgr;
 
-// Initialize stack handle
-clear hStack;
-hStack.intType = cHANDLE_TYPE_STACK;
-hStack.intSize = %size(hStack);
-hStack.pList   = BasicList_new('*BASICSTACK': increment);
-hStack.heapID  = heapID;
-hStack.memMgr  = mm_memMgr;
-
-return pStack;
+  return pStack;
 
 
-end-proc BasicStack_new;
+end-proc;
 
 //=========================================================================
 //  Clones a given BasicStack.
@@ -185,26 +177,24 @@ end-proc BasicStack_new;
 //                   success, else NULL.
 //=========================================================================
 dcl-proc BasicStack_clone export;
+  dcl-pi *n like(BasicStack_handle_t);
+    i_pStack like(BasicStack_handle_t) const;
+  end-pi;
 
-dcl-pi BasicStack_clone
-       like(BasicStack_handle_t  );
-  i_pStack        const  like(BasicStack_handle_t  );
-end-pi;
+  //  Return value
+  dcl-s pStackRtn like(BasicStack_handle_t) inz;
 
-//  Return value
-dcl-s pStackRtn       like(BasicStack_handle_t  ) inz;
+  //  Stack handle
+  dcl-ds hStack likeds(hStack_t) based(i_pStack);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Stack handle
-dcl-ds hStack likeds(hStack_t   ) based(i_pStack);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  p_assert(cFalse
+           : 'Procedure not yet implemented');
 
-p_assert(cFalse
-         : 'Procedure not yet implemented');
-
-return pStackRtn;
+  return pStackRtn;
 
 
-end-proc BasicStack_clone;
+end-proc;
 
 //=========================================================================
 //  Gets the last entry from top of the stack without removing it from stack.
@@ -219,54 +209,52 @@ end-proc BasicStack_clone;
 //                   success, else NULL.
 //=========================================================================
 dcl-proc BasicStack_peek export;
+  dcl-pi *n pointer;
+    i_pStack like(BasicStack_handle_t) const;
+    i_pEntry pointer options(*nopass) const;
+    i_length int(10) options(*nopass) const;
+  end-pi;
 
-dcl-pi BasicStack_peek
-       pointer;
-  i_pStack        const  like(BasicStack_handle_t  );
-  i_pEntry        pointer const  options(*nopass);
-  i_length        int(10) const  options(*nopass);
-end-pi;
+  //  Return value
+  dcl-s pElemData pointer inz;
 
-//  Return value
-dcl-s pElemData       pointer inz;
+  //  Parameter positions
+  dcl-c p_pEntry 2;
+  dcl-c p_length 3;
 
-//  Parameter positions
-dcl-c p_pEntry const(2);
-dcl-c p_length const(3);
+  //  Fields for optional parameters
+  dcl-s pEntry like(i_pEntry) inz;
+  dcl-s length like(i_length) inz;
 
-//  Fields for optional parameters
-dcl-s pEntry          like(i_pEntry    ) inz;
-dcl-s length          like(i_length    ) inz;
+  //  Local fields
+  dcl-s numElements int(10) inz;
 
-//  Local fields
-dcl-s numElements     int(10) inz;
+  //  Stack handle
+  dcl-ds hStack likeds(hStack_t) based(i_pStack);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Stack handle
-dcl-ds hStack likeds(hStack_t   ) based(i_pStack);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkStackHandle(i_pStack);
 
-checkStackHandle(i_pStack);
+  p_assert(%parms() <> p_pEntry
+           : 'Invalid number of arguments: i_length is missing');
 
-p_assert(%parms() <> p_pEntry
-         : 'Invalid number of arguments: i_length is missing');
-
-// Get element from underlaying BasicList
-numElements = BasicList_getNumE(hStack.pList);
-if numElements <> -1;
-   if %parms() >= p_length;
+  // Get element from underlaying BasicList
+  numElements = BasicList_getNumE(hStack.pList);
+  if numElements <> -1;
+    if %parms() >= p_length;
       pElemData = BasicList_get(hStack.pList: numElements
                                 : i_pEntry: i_length);
-   else;
+    else;
       pElemData = BasicList_get(hStack.pList: numElements);
-   endif;
-else;
-   pElemData = *NULL;
-endif;
+    endif;
+  else;
+    pElemData = *NULL;
+  endif;
 
-return pElemData;
+  return pElemData;
 
 
-end-proc BasicStack_peek;
+end-proc;
 
 //=========================================================================
 //  Removes the lement at the top of the stack and returnns that element.
@@ -281,40 +269,38 @@ end-proc BasicStack_peek;
 //                   success, else NULL.
 //=========================================================================
 dcl-proc BasicStack_pop export;
+  dcl-pi *n pointer;
+    i_pStack like(BasicStack_handle_t) const;
+    i_pEntry pointer const;
+    i_length int(10) const;
+  end-pi;
 
-dcl-pi BasicStack_pop
-       pointer;
-  i_pStack        const  like(BasicStack_handle_t  );
-  i_pEntry        pointer const;
-  i_length        int(10) const;
-end-pi;
+  //  Return value
+  dcl-s pElemData pointer inz;
 
-//  Return value
-dcl-s pElemData       pointer inz;
+  //  Local fields
+  dcl-s numElements int(10) inz;
 
-//  Local fields
-dcl-s numElements     int(10) inz;
+  //  Stack handle
+  dcl-ds hStack likeds(hStack_t) based(i_pStack);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Stack handle
-dcl-ds hStack likeds(hStack_t   ) based(i_pStack);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkStackHandle(i_pStack);
 
-checkStackHandle(i_pStack);
+  // Get element from underlaying BasicList
+  numElements = BasicList_getNumE(hStack.pList);
+  if numElements <> -1;
+    pElemData = BasicList_get(
+                     hStack.pList: numElements: i_pEntry: i_length);
+    BasicList_remove(hStack.pList: numElements);
+  else;
+    pElemData = *NULL;
+  endif;
 
-// Get element from underlaying BasicList
-numElements = BasicList_getNumE(hStack.pList);
-if numElements <> -1;
-   pElemData = BasicList_get(
-                    hStack.pList: numElements: i_pEntry: i_length);
-   BasicList_remove(hStack.pList: numElements);
-else;
-   pElemData = *NULL;
-endif;
-
-return pElemData;
+  return pElemData;
 
 
-end-proc BasicStack_pop;
+end-proc;
 
 //=========================================================================
 //  Pushes an item onto the top of the stack.
@@ -329,43 +315,41 @@ end-proc BasicStack_pop;
 //                   success, else -1.
 //=========================================================================
 dcl-proc BasicStack_push export;
+  dcl-pi *n int(10);
+    i_pStack like(BasicStack_handle_t) const;
+    i_pEntry pointer options(*string) const;
+    i_length int(10) options(*nopass) const;
+  end-pi;
 
-dcl-pi BasicStack_push
-       int(10);
-  i_pStack        const  like(BasicStack_handle_t  );
-  i_pEntry        pointer const  options(*string);
-  i_length        int(10) const  options(*nopass);
-end-pi;
+  //  Return value
+  dcl-s index int(10) inz(-1);
 
-//  Return value
-dcl-s index           int(10) inz(-1);
+  //  Parameter positions
+  dcl-c p_length 3;
 
-//  Parameter positions
-dcl-c p_length const(3);
+  //  Fields for optional parameters
+  dcl-s length like(i_length) inz;
 
-//  Fields for optional parameters
-dcl-s length          like(i_length     ) inz;
+  //  Stack handle
+  dcl-ds hStack likeds(hStack_t) based(i_pStack);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Stack handle
-dcl-ds hStack likeds(hStack_t   ) based(i_pStack);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkStackHandle(i_pStack);
 
-checkStackHandle(i_pStack);
+  // Get length of entry data
+  if %parms() >= p_length;
+    length = i_length;
+  else;
+    length = strlen(i_pEntry);
+  endif;
 
-// Get length of entry data
-if %parms() >= p_length;
-   length = i_length;
-else;
-   length = strlen(i_pEntry);
-endif;
+  // Add entry to underlaying BasicList
+  index = BasicList_add(hStack.pList: i_pEntry: length);
 
-// Add entry to underlaying BasicList
-index = BasicList_add(hStack.pList: i_pEntry: length);
-
-return index;
+  return index;
 
 
-end-proc BasicStack_push;
+end-proc;
 
 //=========================================================================
 //  Returns the size of of the element that is on top of this stack.
@@ -377,36 +361,34 @@ end-proc BasicStack_push;
 //   size          - Returns the size of the element on success, else -1.
 //=========================================================================
 dcl-proc BasicStack_getSize export;
+  dcl-pi *n int(10);
+    i_pStack like(BasicStack_handle_t) const;
+  end-pi;
 
-dcl-pi BasicStack_getSize
-       int(10);
-  i_pStack        const  like(BasicStack_handle_t  );
-end-pi;
+  //  Return value
+  dcl-s size int(10) inz(-1);
 
-//  Return value
-dcl-s size            int(10) inz(-1);
+  //  Local fields
+  dcl-s numElements int(10) inz;
 
-//  Local fields
-dcl-s numElements     int(10) inz;
+  //  Stack handle
+  dcl-ds hStack likeds(hStack_t) based(i_pStack);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Stack handle
-dcl-ds hStack likeds(hStack_t   ) based(i_pStack);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkStackHandle(i_pStack);
 
-checkStackHandle(i_pStack);
+  // Get index of last element of this stack
+  numElements = BasicList_getNumE(hStack.pList);
 
-// Get index of last element of this stack
-numElements = BasicList_getNumE(hStack.pList);
+  // Get size of that element
+  if numElements <> -1;
+    size = BasicList_getSize(hStack.pList: numElements);
+  endif;
 
-// Get size of that element
-if numElements <> -1;
-   size = BasicList_getSize(hStack.pList: numElements);
-endif;
-
-return size;
+  return size;
 
 
-end-proc BasicStack_getSize;
+end-proc;
 
 //=========================================================================
 //  Returns the number of elements in this stack.
@@ -419,28 +401,26 @@ end-proc BasicStack_getSize;
 //                   success, else -1.
 //=========================================================================
 dcl-proc BasicStack_getNumE export;
+  dcl-pi *n int(10);
+    i_pStack like(BasicStack_handle_t) const;
+  end-pi;
 
-dcl-pi BasicStack_getNumE
-       int(10);
-  i_pStack        const  like(BasicStack_handle_t  );
-end-pi;
+  //  Return value
+  dcl-s numE int(10) inz(-1);
 
-//  Return value
-dcl-s numE            int(10) inz(-1);
+  //  Stack handle
+  dcl-ds hStack likeds(hStack_t) based(i_pStack);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Stack handle
-dcl-ds hStack likeds(hStack_t   ) based(i_pStack);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkStackHandle(i_pStack);
 
-checkStackHandle(i_pStack);
+  // Return number of elements of underlaying list
+  numE = BasicList_getNumE(hStack.pList);
 
-// Return number of elements of underlaying list
-numE = BasicList_getNumE(hStack.pList);
-
-return numE;
+  return numE;
 
 
-end-proc BasicStack_getNumE;
+end-proc;
 
 //=========================================================================
 //  Returns the heap ID of a given BasicStack.
@@ -452,28 +432,26 @@ end-proc BasicStack_getNumE;
 //   heapID        - ID of the heap this BasicStack belongs to.
 //=========================================================================
 dcl-proc BasicStack_getHeapID export;
+  dcl-pi *n int(10);
+    i_pStack like(BasicStack_handle_t) const;
+  end-pi;
 
-dcl-pi BasicStack_getHeapID
-       int(10);
-  i_pStack        const  like(BasicStack_handle_t  );
-end-pi;
+  //  Return value
+  dcl-s heapID int(10) inz(-1);
 
-//  Return value
-dcl-s heapID          int(10) inz(-1);
+  //  Stack handle
+  dcl-ds hStack likeds(hStack_t) based(i_pStack);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Stack handle
-dcl-ds hStack likeds(hStack_t   ) based(i_pStack);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkStackHandle(i_pStack);
 
-checkStackHandle(i_pStack);
+  // Return the heap ID of underlaying list
+  heapID = BasicList_getHeapID(hStack.pList);
 
-// Return the heap ID of underlaying list
-heapID = BasicList_getHeapID(hStack.pList);
-
-return heapID;
+  return heapID;
 
 
-end-proc BasicStack_getHeapID;
+end-proc;
 
 //=========================================================================
 //  Removes all entries from a given stack.
@@ -485,28 +463,26 @@ end-proc BasicStack_getHeapID;
 //   rc              Returns 0 success, else -1.
 //=========================================================================
 dcl-proc BasicStack_clear export;
+  dcl-pi *n int(10);
+    i_pStack like(BasicStack_handle_t) const;
+  end-pi;
 
-dcl-pi BasicStack_clear
-       int(10);
-  i_pStack        const  like(BasicStack_handle_t  );
-end-pi;
+  //  Return value
+  dcl-s rc int(10) inz(-1);
 
-//  Return value
-dcl-s rc              int(10) inz(-1);
+  //  Stack handle
+  dcl-ds hStack likeds(hStack_t) based(i_pStack);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Stack handle
-dcl-ds hStack likeds(hStack_t   ) based(i_pStack);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkStackHandle(i_pStack);
 
-checkStackHandle(i_pStack);
+  // Clear underlaying BasicList
+  rc = BasicList_clear(hStack.pList);
 
-// Clear underlaying BasicList
-rc = BasicList_clear(hStack.pList);
-
-return rc;
+  return rc;
 
 
-end-proc BasicStack_clear;
+end-proc;
 
 //=========================================================================
 //  Deletes a given BasicStack.
@@ -518,47 +494,45 @@ end-proc BasicStack_clear;
 //   rc              Returns 0 success, else -1.
 //=========================================================================
 dcl-proc BasicStack_delete export;
+  dcl-pi *n int(10);
+    io_pStack like(BasicStack_handle_t);
+  end-pi;
 
-dcl-pi BasicStack_delete
-       int(10);
-  io_pStack       like(BasicStack_handle_t  );
-end-pi;
+  //  Return value
+  dcl-s rc int(10) inz(-1);
 
-//  Return value
-dcl-s rc              int(10) inz(-1);
+  //  Memory Manager
+/copy QBASICS1,MEMMGR
 
-//  Memory Manager
-/COPY QBASICS1,MEMMGR
+  //  Stack handle
+  dcl-ds hStack likeds(hStack_t) based(io_pStack);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Stack handle
-dcl-ds hStack likeds(hStack_t   ) based(io_pStack);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  checkStackHandle(io_pStack);
 
-checkStackHandle(io_pStack);
+  // Set memory manager
+  mm_memMgr = hStack.memMgr;
 
-// Set memory manager
-mm_memMgr = hStack.memMgr;
+  // Delete underlaying BasicList.
+  rc = BasicList_delete(hStack.pList);
 
-// Delete underlaying BasicList.
-rc = BasicList_delete(hStack.pList);
+  // Clear stack handle
+  clear hStack;
+  hStack.intType = 0;
+  hStack.intSize = 0;
+  hStack.pList   = BasicList_null();
+  hStack.heapID  = 0;
+  clear hStack.memMgr;
 
-// Clear stack handle
-clear hStack;
-hStack.intType = 0;
-hStack.intSize = 0;
-hStack.pList   = BasicList_null();
-hStack.heapID  = 0;
-clear hStack.memMgr;
+  // Free memory of map handle
+  mm_free(io_pStack);
 
-// Free memory of map handle
-mm_free(io_pStack);
+  io_pStack = BasicStack_null();
 
-io_pStack = BasicStack_null();
-
-return rc;
+  return rc;
 
 
-end-proc BasicStack_delete;
+end-proc;
 
 //=========================================================================
 //  Returns a BasicStack NULL handle.
@@ -570,21 +544,19 @@ end-proc BasicStack_delete;
 //   pStack        - NULL handle of a BasicStack.
 //=========================================================================
 dcl-proc BasicStack_null export;
+  dcl-pi *n like(BasicStack_handle_t);
+  end-pi;
 
-dcl-pi BasicStack_null
-       like(BasicStack_handle_t  );
-end-pi;
+  //  Return value
+  dcl-s pStack like(BasicStack_handle_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Return value
-dcl-s pStack          like(BasicStack_handle_t  ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  pStack = *NULL;
 
-pStack = *NULL;
-
-return pStack;
+  return pStack;
 
 
-end-proc BasicStack_null;
+end-proc;
 
 //=========================================================================
 //  Checks a given BasicStack handle for a NULL value.
@@ -596,29 +568,27 @@ end-proc BasicStack_null;
 //   isNull        - Returns TRUE if the handle is null, else FALSE.
 //=========================================================================
 dcl-proc BasicStack_isNull export;
+  dcl-pi *n ind;
+    i_pStack like(BasicStack_handle_t) const;
+  end-pi;
 
-dcl-pi BasicStack_isNull
-       ind;
-  i_pStack        const  like(BasicStack_handle_t  );
-end-pi;
+  //  Return value
+  dcl-s isNull ind inz(cTrue);
 
-//  Return value
-dcl-s isNull          ind inz(cTrue);
+  //  Stack handle
+  dcl-ds hStack likeds(hStack_t) based(i_pStack);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Stack handle
-dcl-ds hStack likeds(hStack_t   ) based(i_pStack);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (i_pStack = BasicStack_null());
+    isNull = cTrue;
+  else;
+    isNull = cFalse;
+  endif;
 
-if (i_pStack = BasicStack_null());
-   isNull = cTrue;
-else;
-   isNull = cFalse;
-endif;
-
-return isNull;
+  return isNull;
 
 
-end-proc BasicStack_isNull;
+end-proc;
 
 //=========================================================================
 //  *** private ***
@@ -626,54 +596,51 @@ end-proc BasicStack_isNull;
 //  Returns TRUE for a valid stack handle, else FALSE.
 //=========================================================================
 dcl-proc checkStackHandle;
+  dcl-pi *n;
+    i_pStack like(BasicStack_handle_t) const;
+  end-pi;
 
-dcl-pi checkStackHandle;
-  i_pStack        const  like(BasicStack_handle_t  );
-end-pi;
+  //  Stack handle
+  dcl-ds hStack likeds(hStack_t) based(i_pStack);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Stack handle
-dcl-ds hStack likeds(hStack_t   ) based(i_pStack);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (BasicStack_isNull(i_pStack));
+    signalError(cERROR_STACK_HANDLE_NULL: f_caller());
+  endif;
 
-if (BasicStack_isNull(i_pStack));
-   signalError(cERROR_STACK_HANDLE_NULL: f_caller());
-endif;
+  if (hStack.intType <> cHANDLE_TYPE_STACK);
+    signalError(cERROR_STACK_HANDLE_INVALID: f_caller());
+  endif;
 
-if (hStack.intType <> cHANDLE_TYPE_STACK);
-   signalError(cERROR_STACK_HANDLE_INVALID: f_caller());
-endif;
+  if (hStack.intSize <> cHANDLE_SIZE);
+    signalError(cERROR_STACK_HANDLE_INVALID: f_caller());
+  endif;
 
-if (hStack.intSize <> cHANDLE_SIZE);
-   signalError(cERROR_STACK_HANDLE_INVALID: f_caller());
-endif;
-
-return;
+  return;
 
 
-end-proc checkStackHandle;
+end-proc;
 
 //=========================================================================
 //  *** private ***
 //  Sends an ESCAPE message to signal an error condition.
 //=========================================================================
 dcl-proc signalError;
+  dcl-pi *n;
+    i_text varchar(128) const;
+    i_proc varchar(256) const;
+  end-pi;
 
-dcl-pi signalError;
-  i_text          varchar(128) const;
-  i_proc          varchar(256) const;
-end-pi;
+  //  Helper fields
+  dcl-ds msg likeds(msg_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-ds msg likeds(msg_t ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  msg = f_newMsg('CPF9898'
+                 : 'BasicStack: ERROR - ' + i_text
+                 : cMsg_Escape: 'QCPFMSG': '*LIBL');
+  f_sndPgmMsg(msg: cMsg_Same: i_proc);
 
-msg = f_newMsg('CPF9898'
-               : 'BasicStack: ERROR - ' + i_text
-               : cMsg_Escape: 'QCPFMSG': '*LIBL');
-f_sndPgmMsg(msg: cMsg_Same: i_proc);
-
-return;
+  return;
 
 
-end-proc signalError;
-
+end-proc;

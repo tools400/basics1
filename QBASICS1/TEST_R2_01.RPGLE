@@ -1,4 +1,4 @@
-**FREE
+**free
 //===============================================================*
 //    CALL PGM(TEST_R2_01)                                       *
 //===============================================================*
@@ -25,12 +25,12 @@
 //                                                               *
 //   >>END-PRE-COMPILER<<                                        *
 //===============================================================*
-ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
-ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
-ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
-ctl-opt EXPROPTS(*RESDECPOS);
-ctl-opt EXTBININT(*YES);
-ctl-opt BNDDIR('QC2LE');
+ctl-opt debug option(*srcstmt: *nodebugio);
+ctl-opt decedit('0,') datedit(*DMY.);
+ctl-opt datfmt(*iso) timfmt(*iso);
+ctl-opt expropts(*resdecpos);
+ctl-opt extbinint(*yes);
+ctl-opt bnddir('QC2LE');
 //===============================================================*
 
 // ------------------------------------
@@ -40,7 +40,7 @@ ctl-opt BNDDIR('QC2LE');
 // ------------------------------------
 //  External Prototypes
 // ------------------------------------
-/COPY QBASICS1,PBASICS1
+/copy QBASICS1,PBASICS1
 
 // ------------------------------------
 //  Global Fields
@@ -54,8 +54,7 @@ ctl-opt BNDDIR('QC2LE');
 //  Prototypes
 // ------------------------------------
 
-dcl-pr PGM_ENTRY_POINT
-       extpgm('TEST_R2_01');
+dcl-pr PGM_ENTRY_POINT extpgm('TEST_R2_01');
 end-pr;
 
 dcl-pr main;
@@ -64,7 +63,6 @@ end-pr;
 //===============================================================*
 //  Program Entry Point
 //===============================================================*
-
 dcl-pi PGM_ENTRY_POINT;
 end-pi;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -80,29 +78,26 @@ return;
 //  Main procedure
 //===============================================================*
 dcl-proc main;
+  dcl-pi *n;
+  end-pi;
 
-dcl-pi main;
-end-pi;
+  dcl-pr fclose int(10) extproc('fclose');
+    i_pStreamF pointer value;
+  end-pr;
 
-dcl-pr fclose
-       int(10) extproc('fclose');
-  i_pStreamF      pointer value;
-end-pr;
+  //  Helper fields
+  dcl-ds msg likeds(msg_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-ds msg likeds(msg_t     ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  fClose(*NULL);
+  if   f_errno <> 0;
+    msg = f_newMsg('CPF9897': f_strerror(f_errno));
+    f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+    msg = f_cvtErrnoToMsg(f_errno);
+    f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+  endif;
 
-fClose(*NULL);
-if   f_errno <> 0;
-   msg = f_newMsg('CPF9897': f_strerror(f_errno));
-   f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-   msg = f_cvtErrnoToMsg(f_errno);
-   f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-endif;
-
-return;
+  return;
 
 
 end-proc main;
-

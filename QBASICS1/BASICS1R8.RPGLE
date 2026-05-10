@@ -1,4 +1,4 @@
-**FREE
+**free
 //=====================================================================*
 //  BASICS1R8  - SrvPgm: Basic Routines - Handle/Memory                *
 //=====================================================================*
@@ -57,46 +57,46 @@
 //                                                                     *
 //   >>END-PRE-COMPILER<<                                              *
 //=====================================================================*
-ctl-opt NOMAIN;
-ctl-opt BNDDIR('QC2LE');
+ctl-opt nomain;
+ctl-opt bnddir('QC2LE');
 //  Standard H-Specs
-/COPY QBASICS1,H_SPEC
-/COPY QBASICS1,COPYRIGHT
+/copy QBASICS1,H_SPEC
+/copy QBASICS1,COPYRIGHT
 //=====================================================================*
 
 // -----------------------------------------
 //  Exported functions
 // -----------------------------------------
-/DEFINE INCLUDE_INTERNAL_PROCDURES
-/COPY QBASICS1,PBASICS1R8
-/UNDEFINE INCLUDE_INTERNAL_PROCDURES
+/define INCLUDE_INTERNAL_PROCDURES
+/copy QBASICS1,PBASICS1R8
+/undefine INCLUDE_INTERNAL_PROCDURES
 
 // -----------------------------------------
 //  Reference fields
 // -----------------------------------------
-/COPY QBASICS1,BASICS1R0
+/copy QBASICS1,BASICS1R0
 
-dcl-ds baseHandle_t len(32) qualified   based(pDummy)   align;
-  type            char(20);
-  size            int(10);
+dcl-ds baseHandle_t len(32) qualified based(pDummy) align;
+  type char(20);
+  size int(10);
 end-ds;
 
 /if not defined(*V5R2M0)
-dcl-ds handle_t qualified   based(pDummy)   align;
-  baseHandle      like(baseHandle_t  );
-  pUserHandle     pointer;
+dcl-ds handle_t qualified based(pDummy) align;
+  baseHandle  like(baseHandle_t);
+  pUserHandle pointer;
 end-ds;
 /else
-dcl-ds handle_t qualified   based(pDummy)   align;
-  baseHandle      likeds(baseHandle_t);
-pUserHandle     pointer;
+dcl-ds handle_t qualified based(pDummy) align;
+  baseHandle  likeds(baseHandle_t);
+  pUserHandle pointer;
 end-ds;
 /endif
 
 // -----------------------------------------
 //  Imported Prototypes
 // -----------------------------------------
-/COPY QBASICS1,HEAPAPI
+/copy QBASICS1,HEAPAPI
 
 // -----------------------------------------
 //  Private prototypes
@@ -109,10 +109,10 @@ end-ds;
 // -----------------------------------------
 //  Global fields
 // -----------------------------------------
-dcl-s g_handleList    pointer dim(32767) inz;
+dcl-s g_handleList pointer dim(32767) inz;
 
 dcl-ds g_mmStatus qualified;
-  numAlloc        uns(10) inz(0);
+  numAlloc uns(10) inz(0);
 end-ds;
 
 //=========================================================================
@@ -126,49 +126,49 @@ end-ds;
 //   aHandle       - Returns the handle on success, else a NULL handle.
 //=========================================================================
 dcl-proc HANDLE_new export;
-dcl-pi *N        like(HANDLE_handle_t);
-  i_type          value  like(HANDLE_type_t  );
-  i_size          uns(10) value;
-end-pi;
+  dcl-pi *n like(HANDLE_handle_t);
+    i_type like(HANDLE_type_t) value;
+    i_size uns(10) value;
+  end-pi;
 
-//  Return value
-dcl-s aHandle         like(HANDLE_handle_t) inz;
+  //  Return value
+  dcl-s aHandle like(HANDLE_handle_t) inz;
 
-//  Helper fields
-dcl-ds handle likeds(handle_t    ) based(pHandle);
+  //  Helper fields
+  dcl-ds handle likeds(handle_t) based(pHandle);
 
-// V5R1
-dcl-ds baseHandle likeds(baseHandle_t) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // V5R1
+  dcl-ds baseHandle likeds(baseHandle_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// Find a free handle element
-aHandle = %lookup(*NULL: g_handleList);
+  // Find a free handle element
+  aHandle = %lookup(*NULL: g_handleList);
 
-// If there is no free element, ...
-if   aHandle = 0;
-   // then return a NULL handle
-   aHandle = HANDLE_null();
-else;
-   // else allocate memory for a base handle
-   // and the size of memory requested.
-   pHandle = xalloc(%size(baseHandle_t) + i_size);
-   g_handleList(aHandle) = pHandle;
+  // If there is no free element, ...
+  if   aHandle = 0;
+    // then return a NULL handle
+    aHandle = HANDLE_null();
+  else;
+    // else allocate memory for a base handle
+    // and the size of memory requested.
+    pHandle = xalloc(%size(baseHandle_t) + i_size);
+    g_handleList(aHandle) = pHandle;
 
-   // Initialize handle - V5R3
-   // handle.baseHandle.type = i_type;
-   // handle.baseHandle.size = i_size;
-   // handle.pUserHandle = xalloc(baseHandle.size);
-   // memset(handle.pUserHandle: x'00': baseHandle.size);
+    // Initialize handle - V5R3
+    // handle.baseHandle.type = i_type;
+    // handle.baseHandle.size = i_size;
+    // handle.pUserHandle = xalloc(baseHandle.size);
+    // memset(handle.pUserHandle: x'00': baseHandle.size);
 
-   // Initialize handle - V5R1
-   baseHandle.type = i_type;
-   baseHandle.size = i_size;
-   handle.baseHandle = baseHandle;
-   handle.pUserHandle = xalloc(baseHandle.size);
-   memset(handle.pUserHandle: x'00': baseHandle.size);
-endif;
+    // Initialize handle - V5R1
+    baseHandle.type = i_type;
+    baseHandle.size = i_size;
+    handle.baseHandle = baseHandle;
+    handle.pUserHandle = xalloc(baseHandle.size);
+    memset(handle.pUserHandle: x'00': baseHandle.size);
+  endif;
 
-return   aHandle;
+  return   aHandle;
 
 end-proc;
 
@@ -182,17 +182,17 @@ end-proc;
 //   aHandle       - Returns a NULL handle.
 //=========================================================================
 dcl-proc HANDLE_null export;
-dcl-pi *N        like(HANDLE_handle_t);
-end-pi;
+  dcl-pi *n like(HANDLE_handle_t);
+  end-pi;
 
-//  Return value
-dcl-s aHandle         like(HANDLE_handle_t) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Return value
+  dcl-s aHandle like(HANDLE_handle_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// Return a NULL handle
-aHandle = 0;
+  // Return a NULL handle
+  aHandle = 0;
 
-return   aHandle;
+  return   aHandle;
 
 end-proc;
 
@@ -206,36 +206,36 @@ end-proc;
 //   isNull        - Returns cTrue if the handle is NULL, else cFalse.
 //=========================================================================
 dcl-proc HANDLE_isNull export;
-dcl-pi *N              ind;
-  i_handle        value  like(HANDLE_handle_t);
-end-pi;
+  dcl-pi *n ind;
+    i_handle like(HANDLE_handle_t) value;
+  end-pi;
 
-//  Return value
-dcl-s isNull          ind inz(cFalse);
+  //  Return value
+  dcl-s isNull ind inz(cFalse);
 
-//  Helper fields
-dcl-ds handle likeds(handle_t) based(pHandle);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  dcl-ds handle likeds(handle_t) based(pHandle);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// Also allow 0 here!
-p_assert(i_handle >= 0 and i_handle <= %elem(g_handleList):
-         'Value of io_handle is out of range');
+  // Also allow 0 here!
+  p_assert(i_handle >= 0 and i_handle <= %elem(g_handleList):
+           'Value of io_handle is out of range');
 
-// Get handle adress
-if   i_handle = 0;
-   pHandle = *NULL;
-else;
-   pHandle = g_handleList(i_handle);
-endif;
+  // Get handle adress
+  if   i_handle = 0;
+    pHandle = *NULL;
+  else;
+    pHandle = g_handleList(i_handle);
+  endif;
 
-// Check handle NULL value
-if   pHandle = *NULL;
-   isNull = cTrue;
-else;
-   isNull = cFalse;
-endif;
+  // Check handle NULL value
+  if   pHandle = *NULL;
+    isNull = cTrue;
+  else;
+    isNull = cFalse;
+  endif;
 
-return   isNull;
+  return   isNull;
 
 end-proc;
 
@@ -250,31 +250,31 @@ end-proc;
 //   isValid       - Returns cTrue on success, else cFalse.
 //=========================================================================
 dcl-proc HANDLE_isTypeOf export;
-dcl-pi *N              ind;
-  i_handle        value  like(HANDLE_handle_t);
-  i_type          value  like(HANDLE_type_t  );
-end-pi;
+  dcl-pi *n ind;
+    i_handle like(HANDLE_handle_t) value;
+    i_type   like(HANDLE_type_t) value;
+  end-pi;
 
-//  Return value
-dcl-s isValid         ind inz(cFalse);
+  //  Return value
+  dcl-s isValid ind inz(cFalse);
 
-//  Helper fields
-dcl-ds handle likeds(handle_t) based(pHandle);
+  //  Helper fields
+  dcl-ds handle likeds(handle_t) based(pHandle);
 
 /if not defined(*V5R2M0)
-dcl-ds baseHandle likeds(baseHandle_t) inz;
+  dcl-ds baseHandle likeds(baseHandle_t) inz;
 /endif
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-if (i_handle < 1 or i_handle > %elem(g_handleList));
-   isValid = cFalse;
-   return isValid;
-endif;
+  if (i_handle < 1 or i_handle > %elem(g_handleList));
+    isValid = cFalse;
+    return isValid;
+  endif;
 
-// Get handle adress
-pHandle = g_handleList(i_handle);
+  // Get handle adress
+  pHandle = g_handleList(i_handle);
 
-if pHandle <> *NULL;
+  if pHandle <> *NULL;
 
 /if not defined(*V5R2M0)
    baseHandle = handle.baseHandle;
@@ -284,17 +284,17 @@ if pHandle <> *NULL;
       isValid = cFalse;
    endif;
 /else
-   if handle.baseHandle.type = i_type;
+    if handle.baseHandle.type = i_type;
       isValid = cTrue;
-   else;
+    else;
       isValid = cFalse;
-   endif;
+    endif;
 /endif
-else;
-   isValid = cFalse;
-endif;
+  else;
+    isValid = cFalse;
+  endif;
 
-return   isValid;
+  return   isValid;
 
 end-proc;
 
@@ -308,27 +308,27 @@ end-proc;
 //   pHandle       - Returns the pointer of a given handle.
 //=========================================================================
 dcl-proc HANDLE_getPointer export;
-dcl-pi *N              pointer;
-  i_handle        value  like(HANDLE_handle_t);
-end-pi;
+  dcl-pi *n pointer;
+    i_handle like(HANDLE_handle_t) value;
+  end-pi;
 
-//  Return value
-dcl-s pUserHandle     pointer inz;
+  //  Return value
+  dcl-s pUserHandle pointer inz;
 
-//  Helper fields
-dcl-ds handle likeds(handle_t) based(pHandle);
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Helper fields
+  dcl-ds handle likeds(handle_t) based(pHandle);
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-p_assert(i_handle >= 1 and i_handle <= %elem(g_handleList):
-         'Value of io_handle is out of range');
+  p_assert(i_handle >= 1 and i_handle <= %elem(g_handleList):
+           'Value of io_handle is out of range');
 
-// Get handle adress
-pHandle = g_handleList(i_handle);
+  // Get handle adress
+  pHandle = g_handleList(i_handle);
 
-// Get address of user handle
-pUserHandle = handle.pUserHandle;
+  // Get address of user handle
+  pUserHandle = handle.pUserHandle;
 
-return   pUserHandle;
+  return   pUserHandle;
 
 end-proc;
 
@@ -342,49 +342,49 @@ end-proc;
 //   void
 //=========================================================================
 dcl-proc HANDLE_delete export;
-dcl-pi *N;
-  io_handle       like(HANDLE_handle_t);
-end-pi;
+  dcl-pi *n;
+    io_handle like(HANDLE_handle_t);
+  end-pi;
 
-//  Helper fields
-dcl-ds handle likeds(handle_t) based(pHandle);
+  //  Helper fields
+  dcl-ds handle likeds(handle_t) based(pHandle);
 
-// V5R1
-dcl-ds baseHandle likeds(baseHandle_t) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // V5R1
+  dcl-ds baseHandle likeds(baseHandle_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-p_assert(io_handle >= 1 and io_handle <= %elem(g_handleList):
-         'Value of io_handle is out of range');
+  p_assert(io_handle >= 1 and io_handle <= %elem(g_handleList):
+           'Value of io_handle is out of range');
 
-// Get handle adress
-pHandle = g_handleList(io_handle);
+  // Get handle adress
+  pHandle = g_handleList(io_handle);
 
-p_assert(pHandle <> *NULL:
-         'Handle address is already *NULL');
+  p_assert(pHandle <> *NULL:
+           'Handle address is already *NULL');
 
-// Initialize handle memory - V5R3
-// memset(handle.pUserHandle: x'00': baseHandle.size);
-// handle.baseHandle.size = 0;
-// handle.baseHandle.type = *ALLx'00';
+  // Initialize handle memory - V5R3
+  // memset(handle.pUserHandle: x'00': baseHandle.size);
+  // handle.baseHandle.size = 0;
+  // handle.baseHandle.type = *ALLx'00';
 
-// Initialize handle memory - V5R1
-baseHandle = handle.baseHandle;
-memset(handle.pUserHandle: x'00': baseHandle.size);
-xdealloc(handle.pUserHandle);
-baseHandle.size = 0;
-baseHandle.type = *ALLx'00';
-handle.baseHandle = baseHandle;
+  // Initialize handle memory - V5R1
+  baseHandle = handle.baseHandle;
+  memset(handle.pUserHandle: x'00': baseHandle.size);
+  xdealloc(handle.pUserHandle);
+  baseHandle.size = 0;
+  baseHandle.type = *ALLx'00';
+  handle.baseHandle = baseHandle;
 
-// Free handle memory
-xdealloc(pHandle);
+  // Free handle memory
+  xdealloc(pHandle);
 
-// Free index in handle list
-g_handleList(io_handle) = *NULL;
+  // Free index in handle list
+  g_handleList(io_handle) = *NULL;
 
-// Free user handle
-io_handle = HANDLE_null();
+  // Free user handle
+  io_handle = HANDLE_null();
 
-return;
+  return;
 
 end-proc;
 
@@ -399,36 +399,36 @@ end-proc;
 //   pMemory       - A pointer to the memory cell.
 //=========================================================================
 dcl-proc MEMORY_allocate export;
-dcl-pi *N              pointer;
-  io_aMemList     pointer;
-  i_size          int(10) value;
-end-pi;
+  dcl-pi *n pointer;
+    io_aMemList pointer;
+    i_size      int(10) value;
+  end-pi;
 
-//  Return value
-dcl-s pMemory         pointer inz;
+  //  Return value
+  dcl-s pMemory pointer inz;
 
 
-dcl-ds cell qualified   based(pCell);
-  pPrvCell        pointer;
-  size            int(10);
-end-ds;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  dcl-ds cell qualified based(pCell);
+    pPrvCell pointer;
+    size     int(10);
+  end-ds;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-if (%rem(i_size : %size(pDummy)) <> 0);
-   i_size = (%div(i_size : %size(pDummy)) + 1) * %size(pDummy);
-endif;
+  if (%rem(i_size : %size(pDummy)) <> 0);
+    i_size = (%div(i_size : %size(pDummy)) + 1) * %size(pDummy);
+  endif;
 
-if (i_size = 0);
-   pMemory = *NULL;
-else;
-   pMemory = xalloc(i_size + %size(cell));
-   pCell   = pMemory + i_size;            // Position cell right after payload
-   cell.pPrvCell    = io_aMemList;        // Remember the address of the prv. cell
-   cell.size        = i_size;             // Remember the size of the current cell
-   io_aMemList      = pCell;              // Remember this cell
-endif;
+  if (i_size = 0);
+    pMemory = *NULL;
+  else;
+    pMemory = xalloc(i_size + %size(cell));
+    pCell   = pMemory + i_size;            // Position cell right after payload
+    cell.pPrvCell    = io_aMemList;        // Remember the address of the prv. cell
+    cell.size        = i_size;             // Remember the size of the current cell
+    io_aMemList      = pCell;              // Remember this cell
+  endif;
 
-return pMemory;
+  return pMemory;
 
 end-proc;
 
@@ -443,29 +443,29 @@ end-proc;
 //   void
 //=========================================================================
 dcl-proc MEMORY_freeAll export;
-dcl-pi *N;
-  io_aMemList     pointer;
-end-pi;
+  dcl-pi *n;
+    io_aMemList pointer;
+  end-pi;
 
-//  Helper fields
-dcl-s pMemory         pointer inz;
+  //  Helper fields
+  dcl-s pMemory pointer inz;
 
-dcl-ds cell qualified   based(pCell);
-  pPrvCell        pointer;
-  size            int(10);
-end-ds;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  dcl-ds cell qualified based(pCell);
+    pPrvCell pointer;
+    size     int(10);
+  end-ds;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-dow (io_aMemList <> *NULL);
-   pCell            = io_aMemList;             // Get last cell allocated
-   pMemory          = pCell - cell.size;       // Get start address of this cell
-   io_aMemList      = cell.pPrvCell;           // Go back to prv. cell
-   cell.size        = 0;                       // Clear size of this cell
-   cell.pPrvCell    = *NULL;                   // Clear mem-ptr of this cell
-   free(pMemory);                              // Free memory of this cell
-enddo;
+  dow (io_aMemList <> *NULL);
+    pCell            = io_aMemList;             // Get last cell allocated
+    pMemory          = pCell - cell.size;       // Get start address of this cell
+    io_aMemList      = cell.pPrvCell;           // Go back to prv. cell
+    cell.size        = 0;                       // Clear size of this cell
+    cell.pPrvCell    = *NULL;                   // Clear mem-ptr of this cell
+    free(pMemory);                              // Free memory of this cell
+  enddo;
 
-return;
+  return;
 
 end-proc;
 
@@ -479,59 +479,59 @@ end-proc;
 //   void
 //=========================================================================
 dcl-proc MEMORY_free export;
-dcl-pi *N;
-  io_aMemList     pointer;
-  io_pMem         pointer;
-end-pi;
+  dcl-pi *n;
+    io_aMemList pointer;
+    io_pMem     pointer;
+  end-pi;
 
-//  Helper fields
-dcl-s pMemory         pointer inz;
+  //  Helper fields
+  dcl-s pMemory pointer inz;
 
-dcl-ds prvCell qualified   based(pPrvCell);
-  pPrvCell        pointer;
-  size            int(10);
-end-ds;
+  dcl-ds prvCell qualified based(pPrvCell);
+    pPrvCell pointer;
+    size     int(10);
+  end-ds;
 
-dcl-ds cell qualified   based(pCell);
-  pPrvCell        pointer;
-  size            int(10);
-end-ds;
+  dcl-ds cell qualified based(pCell);
+    pPrvCell pointer;
+    size     int(10);
+  end-ds;
 
-dcl-ds nextCell qualified   based(pNextCell);
-  pPrvCell        pointer;
-  size            int(10);
-end-ds;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  dcl-ds nextCell qualified based(pNextCell);
+    pPrvCell pointer;
+    size     int(10);
+  end-ds;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// Return to caller because there's nothing to do.
-if io_aMemList = *NULL;
-   return;
-endif;
+  // Return to caller because there's nothing to do.
+  if io_aMemList = *NULL;
+    return;
+  endif;
 
-// When we start searching for the requested cell,
-// there is no cell before the current cell.
-pPrvCell = *NULL;
+  // When we start searching for the requested cell,
+  // there is no cell before the current cell.
+  pPrvCell = *NULL;
 
-// Point "cell" to last allocated cell.
-pCell = io_aMemList;
+  // Point "cell" to last allocated cell.
+  pCell = io_aMemList;
 
-// Spin through chain on allocated memory cells
-// searching for the cell to free:
-dow (pCell <> *NULL);
-   pMemory = pCell - cell.size;       // Get start address of this cell
+  // Spin through chain on allocated memory cells
+  // searching for the cell to free:
+  dow (pCell <> *NULL);
+    pMemory = pCell - cell.size;       // Get start address of this cell
 
-   // If we hit the cell to delete ...
-   if pMemory = io_pMem;
+    // If we hit the cell to delete ...
+    if pMemory = io_pMem;
       // ... let "nextCel" point to next cell in chain of cells.
       pNextCell        = cell.pPrvCell;
 
       // If there is no cell before the cell to delete ...
       if pPrvCell = *NULL;
-         // ... set pointer of "nextCell" as the start of the list of cells.
-         io_aMemList = pNextCell;
+        // ... set pointer of "nextCell" as the start of the list of cells.
+        io_aMemList = pNextCell;
       else;
-         // ... else link "nextCell" to "prvCell"
-         prvCell.pPrvCell = pNextCell;
+        // ... else link "nextCell" to "prvCell"
+        prvCell.pPrvCell = pNextCell;
       endif;
 
       // Clear cell data and free memory
@@ -541,16 +541,16 @@ dow (pCell <> *NULL);
 
       pNextCell = *NULL;
       leave;   // Ready => Leave
-   endif;
+    endif;
 
-   // Rememeber this cell as the previous cell.
-   pPrvCell  = pCell;
+    // Rememeber this cell as the previous cell.
+    pPrvCell  = pCell;
 
-   // Goto next cell
-   pCell = cell.pPrvCell;
-enddo;
+    // Goto next cell
+    pCell = cell.pPrvCell;
+  enddo;
 
-return;
+  return;
 
 end-proc;
 
@@ -563,18 +563,18 @@ end-proc;
 //   memMgr        - The default memory manager.
 //=========================================================================
 dcl-proc MemoryManager_getDefaultManager export;
-dcl-pi *N       likeds(MemoryManager_manager_t);
-end-pi;
+  dcl-pi *n likeds(MemoryManager_manager_t);
+  end-pi;
 
-//  Return value
-dcl-ds memMgr likeds(MemoryManager_manager_t) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Return value
+  dcl-ds memMgr likeds(MemoryManager_manager_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-memMgr.pAllocate   = %paddr('BASICS1R8_MemoryManager_allocate');
-memMgr.pReallocate = %paddr('BASICS1R8_MemoryManager_reallocate');
-memMgr.pFree       = %paddr('BASICS1R8_MemoryManager_free');
+  memMgr.pAllocate   = %paddr('BASICS1R8_MemoryManager_allocate');
+  memMgr.pReallocate = %paddr('BASICS1R8_MemoryManager_reallocate');
+  memMgr.pFree       = %paddr('BASICS1R8_MemoryManager_free');
 
-return memMgr;
+  return memMgr;
 
 end-proc;
 
@@ -588,41 +588,41 @@ end-proc;
 //   pMemory       - The reserved storage block.
 //=========================================================================
 dcl-proc MemoryManager_allocate export;
-dcl-pi *N              pointer;
-  i_size          uns(10) value;
-  i_heapID        int(10) value  options(*nopass);
-end-pi;
+  dcl-pi *n pointer;
+    i_size   uns(10) value;
+    i_heapID int(10) options(*nopass) value;
+  end-pi;
 
-//  Return value
-dcl-s pMemory         pointer inz;
+  //  Return value
+  dcl-s pMemory pointer inz;
 
-//  Parameter positions
-dcl-c p_heapID const(2);
+  //  Parameter positions
+  dcl-c p_heapID 2;
 
-//  Optional parameter fields
-dcl-s heapID          like(i_heapID ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Optional parameter fields
+  dcl-s heapID like(i_heapID) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-if (%parms() >= p_heapID);
-   heapID = i_heapID;
-else;
-   heapID = 0;
-endif;
+  if (%parms() >= p_heapID);
+    heapID = i_heapID;
+  else;
+    heapID = 0;
+  endif;
 
-select;
-when (heapID = -1);
-   // TODO: allocate teraspace memory
-when (heapID > 0);
-   CEEGTST(heapID: i_size: pMemory: *omit);
-other;
-   pMemory = malloc(i_size);
-endsl;
+  select;
+  when (heapID = -1);
+  // TODO: allocate teraspace memory
+  when (heapID > 0);
+    CEEGTST(heapID: i_size: pMemory: *omit);
+  other;
+    pMemory = malloc(i_size);
+  endsl;
 
-if (pMemory <> *NULL);
-   g_mmStatus.numAlloc = g_mmStatus.numAlloc + 1;
-endif;
+  if (pMemory <> *NULL);
+    g_mmStatus.numAlloc = g_mmStatus.numAlloc + 1;
+  endif;
 
-return pMemory;
+  return pMemory;
 
 end-proc;
 
@@ -638,18 +638,18 @@ end-proc;
 //   pMemory       - The reserved storage block.
 //=========================================================================
 dcl-proc MemoryManager_reallocate export;
-dcl-pi *N              pointer;
-  i_pMem          pointer value;
-  i_size          uns(10) value;
-end-pi;
+  dcl-pi *n pointer;
+    i_pMem pointer value;
+    i_size uns(10) value;
+  end-pi;
 
-//  Return value
-dcl-s pMemory         pointer inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Return value
+  dcl-s pMemory pointer inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-pMemory = realloc(i_pMem: i_size);
+  pMemory = realloc(i_pMem: i_size);
 
-return pMemory;
+  return pMemory;
 
 end-proc;
 
@@ -663,19 +663,19 @@ end-proc;
 //   void
 //=========================================================================
 dcl-proc MemoryManager_free export;
-dcl-pi *N;
-  io_pMem         pointer;
-end-pi;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  dcl-pi *n;
+    io_pMem pointer;
+  end-pi;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-p_assert(io_pMem <> *NULL);
+  p_assert(io_pMem <> *NULL);
 
-free(io_pMem);
-io_pMem = *NULL;
+  free(io_pMem);
+  io_pMem = *NULL;
 
-g_mmStatus.numAlloc = g_mmStatus.numAlloc - 1;
+  g_mmStatus.numAlloc = g_mmStatus.numAlloc - 1;
 
-return;
+  return;
 
 end-proc;
 
@@ -694,47 +694,47 @@ end-proc;
 //   headID        - The heap identifier of the created heap.
 //=========================================================================
 dcl-proc MemoryManager_createHeap export;
-dcl-pi *N              int(10);
-  i_initialSize   int(10) const  options(*nopass: *omit);
-  i_increment     int(10) const  options(*nopass: *omit);
-  i_allocStrat    int(10) const  options(*nopass: *omit);
-end-pi;
+  dcl-pi *n int(10);
+    i_initialSize int(10) options(*nopass: *omit) const;
+    i_increment   int(10) options(*nopass: *omit) const;
+    i_allocStrat  int(10) options(*nopass: *omit) const;
+  end-pi;
 
-//  Return value
-dcl-s heapID          int(10) inz;
+  //  Return value
+  dcl-s heapID int(10) inz;
 
-//  Parameter positions
-dcl-c p_initialSize 1;
-dcl-c p_increment 2;
-dcl-c p_allocStrat 3;
+  //  Parameter positions
+  dcl-c p_initialSize 1;
+  dcl-c p_increment 2;
+  dcl-c p_allocStrat 3;
 
-//  Fields for optional parameters
-dcl-s initialSize     like(i_initialSize) inz;
-dcl-s increment       like(i_increment  ) inz;
-dcl-s allocStrat      like(i_allocStrat ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Fields for optional parameters
+  dcl-s initialSize like(i_initialSize) inz;
+  dcl-s increment like(i_increment) inz;
+  dcl-s allocStrat like(i_allocStrat) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-if (%parms() >= p_initialSize and %addr(i_initialSize) <> *NULL);
-   initialSize = i_initialSize;
-else;
-   initialSize = 0;
-endif;
+  if (%parms() >= p_initialSize and %addr(i_initialSize) <> *NULL);
+    initialSize = i_initialSize;
+  else;
+    initialSize = 0;
+  endif;
 
-if (%parms() >= p_increment and %addr(i_increment) <> *NULL);
-   increment = i_increment;
-else;
-   increment = 0;
-endif;
+  if (%parms() >= p_increment and %addr(i_increment) <> *NULL);
+    increment = i_increment;
+  else;
+    increment = 0;
+  endif;
 
-if (%parms() >= p_allocStrat and %addr(i_allocStrat) <> *NULL);
-   allocStrat = i_allocStrat;
-else;
-   allocStrat = 0;
-endif;
+  if (%parms() >= p_allocStrat and %addr(i_allocStrat) <> *NULL);
+    allocStrat = i_allocStrat;
+  else;
+    allocStrat = 0;
+  endif;
 
-CEECRHP(heapID: initialSize: increment: allocStrat: *omit);
+  CEECRHP(heapID: initialSize: increment: allocStrat: *omit);
 
-return heapID;
+  return heapID;
 
 end-proc;
 
@@ -748,15 +748,15 @@ end-proc;
 //   void
 //=========================================================================
 dcl-proc MemoryManager_deleteHeap export;
-dcl-pi *N;
-  io_heapID       int(10);
-end-pi;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  dcl-pi *n;
+    io_heapID int(10);
+  end-pi;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-CEEDSHP(io_heapID: *omit);
-io_heapID = 0;
+  CEEDSHP(io_heapID: *omit);
+  io_heapID = 0;
 
-return;
+  return;
 
 end-proc;
 
@@ -772,17 +772,17 @@ end-proc;
 //   pMem          - Pointer to the newly allocated storage.
 //=========================================================================
 dcl-proc xalloc export;
-dcl-pi *N              pointer;
-  i_size          int(10) const;
-end-pi;
+  dcl-pi *n pointer;
+    i_size int(10) const;
+  end-pi;
 
-//  Return value
-dcl-s pMem            pointer inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Return value
+  dcl-s pMem pointer inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-pMem = %alloc(i_size);
+  pMem = %alloc(i_size);
 
-return pMem;
+  return pMem;
 
 end-proc;
 
@@ -800,18 +800,18 @@ end-proc;
 //   pMem          - Pointer to the resized heap storage.
 //=========================================================================
 dcl-proc xrealloc export;
-dcl-pi *N              pointer;
-  i_pMem          pointer const;
-  i_size          int(10) const;
-end-pi;
+  dcl-pi *n pointer;
+    i_pMem pointer const;
+    i_size int(10) const;
+  end-pi;
 
-//  Return value
-dcl-s pMem            pointer inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  //  Return value
+  dcl-s pMem pointer inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-pMem = %realloc(i_pMem: i_size);
+  pMem = %realloc(i_pMem: i_size);
 
-return pMem;
+  return pMem;
 
 end-proc;
 
@@ -827,12 +827,11 @@ end-proc;
 //   void
 //=========================================================================
 dcl-proc xdealloc export;
-dcl-pi *N;
-  io_pMem         pointer;
-end-pi;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  dcl-pi *n;
+    io_pMem pointer;
+  end-pi;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-dealloc(N) io_pMem;
+  dealloc(N) io_pMem;
 
 end-proc;
-

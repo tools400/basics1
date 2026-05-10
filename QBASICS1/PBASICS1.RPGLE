@@ -1,19 +1,19 @@
-**FREE
-/IF NOT DEFINED(D_BASIC)
-/DEFINE D_BASIC
+**free
+/if NOT DEFINED(D_BASIC)
+/define D_BASIC
 
 // -----------------------------------------
 //  Constants
 // -----------------------------------------
-/IF NOT DEFINED(cTrue)
-/DEFINE cTrue
-dcl-c cTrue const(*on );
-/ENDIF
+/if NOT DEFINED(cTrue)
+/define cTrue
+dcl-c cTrue *on;
+/endif
 
-/IF NOT DEFINED(cFalse)
-/DEFINE cFalse
-dcl-c cFalse const(*off);
-/ENDIF
+/if NOT DEFINED(cFalse)
+/define cFalse
+dcl-c cFalse *off;
+/endif
 
 // -----------------------------------------
 //  Reference fields
@@ -22,22 +22,22 @@ dcl-c cFalse const(*off);
 // -----------------------------------------
 //  Prototypes
 // -----------------------------------------
-/COPY QBASICS1,PBASICS1R1                   Messages
-/COPY QBASICS1,PBASICS1R2                   API Error Handling
-/COPY QBASICS1,PBASICS1R3                   Strings
-/COPY QBASICS1,PBASICS1R4                   Assert/This
-/COPY QBASICS1,PBASICS1R5                   Objects
-/COPY QBASICS1,PBASICS1R6                   Commands
-/COPY QBASICS1,PBASICS1R7                   Mathematics
-/COPY QBASICS1,PBASICS1R8                   Handle/Memory
-/COPY QBASICS1,PBASICS1R9                   Display Information
-/COPY QBASICS1,PBASICS1RA                   BasicList
-/COPY QBASICS1,PBASICS1RB                   BasicStack
-/COPY QBASICS1,PBASICS1RC                   BasicMap
-/COPY QBASICS1,PBASICS1RD                   Url
-/COPY QBASICS1,PBASICS1RE                   Date and Time
-/COPY QBASICS1,PBASICS1RF                   System Values
-/COPY QBASICS1,PBASICS1RG                   BasicProperties
-/COPY QBASICS1,PBASICS1RH                   MemoryBufferRdrWtr
+/copy QBASICS1,PBASICS1R1                   Messages
+/copy QBASICS1,PBASICS1R2                   API Error Handling
+/copy QBASICS1,PBASICS1R3                   Strings
+/copy QBASICS1,PBASICS1R4                   Assert/This
+/copy QBASICS1,PBASICS1R5                   Objects
+/copy QBASICS1,PBASICS1R6                   Commands
+/copy QBASICS1,PBASICS1R7                   Mathematics
+/copy QBASICS1,PBASICS1R8                   Handle/Memory
+/copy QBASICS1,PBASICS1R9                   Display Information
+/copy QBASICS1,PBASICS1RA                   BasicList
+/copy QBASICS1,PBASICS1RB                   BasicStack
+/copy QBASICS1,PBASICS1RC                   BasicMap
+/copy QBASICS1,PBASICS1RD                   Url
+/copy QBASICS1,PBASICS1RE                   Date and Time
+/copy QBASICS1,PBASICS1RF                   System Values
+/copy QBASICS1,PBASICS1RG                   BasicProperties
+/copy QBASICS1,PBASICS1RH                   MemoryBufferRdrWtr
 
-/ENDIF
+/endif

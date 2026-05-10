@@ -1,4 +1,4 @@
-**FREE
+**free
 //===============================================================*
 //    CALL PGM(TEST_R3_11) PARM(x'C88593939640E696999384')       *
 //===============================================================*
@@ -25,11 +25,11 @@
 //                                                               *
 //   >>END-PRE-COMPILER<<                                        *
 //===============================================================*
-ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
-ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
-ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
-ctl-opt EXPROPTS(*RESDECPOS);
-ctl-opt EXTBININT(*YES);
+ctl-opt debug option(*srcstmt: *nodebugio);
+ctl-opt decedit('0,') datedit(*DMY.);
+ctl-opt datfmt(*iso) timfmt(*iso);
+ctl-opt expropts(*resdecpos);
+ctl-opt extbinint(*yes);
 //===============================================================*
 
 // ------------------------------------
@@ -39,7 +39,7 @@ ctl-opt EXTBININT(*YES);
 // ------------------------------------
 //  External Prototypes
 // ------------------------------------
-/COPY QBASICS1,PBASICS1
+/copy QBASICS1,PBASICS1
 
 // ------------------------------------
 //  Global Fields
@@ -53,28 +53,26 @@ ctl-opt EXTBININT(*YES);
 //  Prototypes
 // ------------------------------------
 
-dcl-pr PGM_ENTRY_POINT
-       extpgm('TEST_R3_11');
-  gi_buffer       char(32) const  options(*nopass);
+dcl-pr PGM_ENTRY_POINT extpgm('TEST_R3_11');
+  gi_buffer char(32) options(*nopass) const;
 end-pr;
 
 dcl-pr main;
-  i_buffer        char(32) const;
+  i_buffer char(32) const;
 end-pr;
 
 //===============================================================*
 //  Program Entry Point
 //===============================================================*
-
 dcl-pi PGM_ENTRY_POINT;
-  gi_buffer       char(32) const  options(*nopass);
+  gi_buffer char(32) options(*nopass) const;
 end-pi;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if (%parms() >= %parmNum(gi_buffer));
-   main(gi_buffer);
+  main(gi_buffer);
 else;
-   main('Hello World!');
+  main('Hello World!');
 endif;
 
 *inlr = *on;
@@ -86,40 +84,38 @@ return;
 //  Main procedure
 //===============================================================*
 dcl-proc main;
+  dcl-pi *n;
+    i_buffer char(32) const;
+  end-pi;
 
-dcl-pi main;
-  i_buffer        char(32) const;
-end-pi;
+  //  Helper fields
+  dcl-s size int(5) inz;
+  dcl-s buffer like(i_buffer) inz;
+  dcl-s string varchar(64) inz;
+  dcl-s msgText char(128) inz;
+  dcl-ds msg likeds(msg_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s size            int(5) inz;
-dcl-s buffer          like(i_buffer) inz;
-dcl-s string          varchar(64) inz;
-dcl-s msgText         char(128) inz;
-dcl-ds msg likeds(msg_t ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Convert a buffer to a hex string.
+  buffer = i_buffer;
+  size   = %len(%trimR(buffer));
+  string = f_cvtBufferToHexString(%addr(buffer): size);
 
-// Convert a buffer to a hex string.
-buffer = i_buffer;
-size   = %len(%trimR(buffer));
-string = f_cvtBufferToHexString(%addr(buffer): size);
+  msgText = 'Buffer: ''' + %trimR(buffer) + '''' +
+            ' ==> Hex-String: ''' + string + '''';
+  msg = f_newMsg(cMsg_ID_NONE: msgText);
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-msgText = 'Buffer: ''' + %trimR(buffer) + '''' +
-          ' ==> Hex-String: ''' + string + '''';
-msg = f_newMsg(cMsg_ID_NONE: msgText);
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+  // Convert a string of hex values to a buffer
+  string = 'C140A297818385948195408381948540A39981A5859393899587';
+  size = f_cvtHexStringToBuffer(string: %addr(buffer): %size(buffer));
 
-// Convert a string of hex values to a buffer
-string = 'C140A297818385948195408381948540A39981A5859393899587';
-size = f_cvtHexStringToBuffer(string: %addr(buffer): %size(buffer));
+  msgText = 'Hex-String: ''' + string + '''' +
+            ' ==> Buffer: ''' + %subst(buffer: 1: size) + '''';
+  msg = f_newMsg(cMsg_ID_NONE: msgText);
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-msgText = 'Hex-String: ''' + string + '''' +
-          ' ==> Buffer: ''' + %subst(buffer: 1: size) + '''';
-msg = f_newMsg(cMsg_ID_NONE: msgText);
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-
-return;
+  return;
 
 
 end-proc main;
-

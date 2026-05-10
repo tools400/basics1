@@ -1,77 +1,77 @@
-**FREE
-/IF NOT DEFINED(rcvm0200_t)
-/DEFINE rcvm0200_t
+**free
+/if NOT DEFINED(rcvm0200_t)
+/define rcvm0200_t
 //===============================================================*
 //  QMHRCVM API - RCVM0200                                       *
 //===============================================================*
 
-dcl-ds rcvm0200_t qualified           based(pDummy);
+dcl-ds rcvm0200_t qualified based(pDummy);
   // Bytes returned
-  bytRet          int(10);
+  bytRet      int(10);
   // Bytes available
-  bytAvl          int(10);
+  bytAvl      int(10);
   // Message Severity
-  msgSev          int(10);
+  msgSev      int(10);
   // Message ID
-  msgID           char(7);
+  msgID       char(7);
   // Message Type
-  msgType         char(2);
+  msgType     char(2);
   // Message Key
-  msgKey          char(4);
+  msgKey      char(4);
   // Message File
-  msgF            char(10);
+  msgF        char(10);
   // Message Library Specified
-  msgLS           char(10);
+  msgLS       char(10);
   // Message Library Used
-  msgLU           char(10);
+  msgLU       char(10);
   // Sending Job
-  sndJob          char(10);
+  sndJob      char(10);
   // Sending User Profile
-  sndUsr          char(10);
+  sndUsr      char(10);
   // Sending Job Number
-  sndNbr          char(6);
+  sndNbr      char(6);
   // Sending Program
-  sndPgm          char(12);
+  sndPgm      char(12);
   // Sending program Instr. Nbr.
-  sndINb          char(4);
+  sndINb      char(4);
   // Sending Date
-  sndDat          char(7);
+  sndDat      char(7);
   // Sending Time
-  sndTim          char(6);
+  sndTim      char(6);
   // Receiving program
-  rcvPgm          char(10);
+  rcvPgm      char(10);
   // Receiving Program Instr. Nbr
-  rcvINb          char(4);
+  rcvINb      char(4);
   // Sending Type
-  sndTyp          char(1);
+  sndTyp      char(1);
   // Receiving Type
-  rcvTyp          char(1);
+  rcvTyp      char(1);
   // Reserved 01
-  reserved_01     char(1);
+  reserved_01 char(1);
   // Conversion Status ID Text
-  cStIDTx         int(10);
+  cStIDTx     int(10);
   // Conversion Status ID Data
-  cStIDDt         int(10);
+  cStIDDt     int(10);
   // Alert Option
-  alrOpt          char(9);
+  alrOpt      char(9);
   // CCSID of msg and help
-  ccsidMH         int(10);
+  ccsidMH     int(10);
   // CCSID of replacement data
-  ccsidRD         int(10);
+  ccsidRD     int(10);
   // Length replacement data ret.
-  lnRplDtR        int(10);
+  lnRplDtR    int(10);
   // Length replacement data avl.
-  lnRplDtA        int(10);
+  lnRplDtA    int(10);
   // Length message ret.
-  lnMgR           int(10);
+  lnMgR       int(10);
   // Length message avl.
-  lnMgA           int(10);
+  lnMgA       int(10);
   // Length message help ret.
-  lnMgHR          int(10);
+  lnMgHR      int(10);
   // Length message help avl.
-  lnMgHA          int(10);
+  lnMgHA      int(10);
   // Value of varying length!
-  value           char(4096);
+  value       char(4096);
 end-ds;
 
-/ENDIF
+/endif

@@ -1,4 +1,4 @@
-**FREE
+**free
 //===============================================================*
 //    CALL PGM(TEST_R3_07)                                       *
 //===============================================================*
@@ -25,11 +25,11 @@
 //                                                               *
 //   >>END-PRE-COMPILER<<                                        *
 //===============================================================*
-ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
-ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
-ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
-ctl-opt EXPROPTS(*RESDECPOS);
-ctl-opt EXTBININT(*YES);
+ctl-opt debug option(*srcstmt: *nodebugio);
+ctl-opt decedit('0,') datedit(*DMY.);
+ctl-opt datfmt(*iso) timfmt(*iso);
+ctl-opt expropts(*resdecpos);
+ctl-opt extbinint(*yes);
 //===============================================================*
 
 // ------------------------------------
@@ -39,7 +39,7 @@ ctl-opt EXTBININT(*YES);
 // ------------------------------------
 //  External Prototypes
 // ------------------------------------
-/COPY QBASICS1,PBASICS1
+/copy QBASICS1,PBASICS1
 
 // ------------------------------------
 //  Global Fields
@@ -53,8 +53,7 @@ ctl-opt EXTBININT(*YES);
 //  Prototypes
 // ------------------------------------
 
-dcl-pr PGM_ENTRY_POINT
-       extpgm('TEST_R3_07');
+dcl-pr PGM_ENTRY_POINT extpgm('TEST_R3_07');
 end-pr;
 
 dcl-pr main;
@@ -63,7 +62,6 @@ end-pr;
 //===============================================================*
 //  Program Entry Point
 //===============================================================*
-
 dcl-pi PGM_ENTRY_POINT;
 end-pi;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -79,28 +77,26 @@ return;
 //  Main procedure
 //===============================================================*
 dcl-proc main;
+  dcl-pi *n;
+  end-pi;
 
-dcl-pi main;
-end-pi;
+  //  Helper fields
+  dcl-s string varchar(128) inz;
+  dcl-s kwdValue varchar(128) inz;
+  dcl-c cCMD 'PGM(*LIBL/QCMDEXC';
+  dcl-c cKEYWORD_PGM 'PGM';
 
-//  Helper fields
-dcl-s string          varchar(128) inz;
-dcl-s kwdValue        varchar(128) inz;
-dcl-c cCMD const('PGM(*LIBL/QCMDEXC');
-dcl-c cKEYWORD_PGM const('PGM');
+  dcl-ds msg likeds(msg_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-dcl-ds msg likeds(msg_t      ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  string   = cCMD;
+  kwdValue = f_rmvKeyword(cKEYWORD_PGM: string);
 
-string   = cCMD;
-kwdValue = f_rmvKeyword(cKEYWORD_PGM: string);
+  msg = f_newMsg(cMSG_ID_NONE: 'The value of ' + cKEYWORD_PGM +
+                 ' is: ' + kwdValue);
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-msg = f_newMsg(cMSG_ID_NONE: 'The value of ' + cKEYWORD_PGM +
-               ' is: ' + kwdValue);
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-
-return;
+  return;
 
 
 end-proc main;
-

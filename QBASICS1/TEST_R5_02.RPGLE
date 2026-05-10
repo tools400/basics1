@@ -1,4 +1,4 @@
-**FREE
+**free
 //===============================================================*
 //  CALL PGM(TEST_R5_02) PARM('QRPGSRC' 'QGPL' '*FILE' '*FIRST') *
 //===============================================================*
@@ -25,11 +25,11 @@
 //                                                               *
 //   >>END-PRE-COMPILER<<                                        *
 //===============================================================*
-ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
-ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
-ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
-ctl-opt EXPROPTS(*RESDECPOS);
-ctl-opt EXTBININT(*YES);
+ctl-opt debug option(*srcstmt: *nodebugio);
+ctl-opt decedit('0,') datedit(*DMY.);
+ctl-opt datfmt(*iso) timfmt(*iso);
+ctl-opt expropts(*resdecpos);
+ctl-opt extbinint(*yes);
 //===============================================================*
 
 // ------------------------------------
@@ -39,7 +39,7 @@ ctl-opt EXTBININT(*YES);
 // ------------------------------------
 //  External Prototypes
 // ------------------------------------
-/COPY QBASICS1,PBASICS1
+/copy QBASICS1,PBASICS1
 
 // ------------------------------------
 //  Global Fields
@@ -53,34 +53,32 @@ ctl-opt EXTBININT(*YES);
 //  Prototypes
 // ------------------------------------
 
-dcl-pr PGM_ENTRY_POINT
-       extpgm('TEST_R5_02');
-  gi_file         char(10) const  options(*nopass);
-  gi_lib          char(10) const  options(*nopass);
-  gi_mbr          char(10) const  options(*nopass);
+dcl-pr PGM_ENTRY_POINT extpgm('TEST_R5_02');
+  gi_file char(10) options(*nopass) const;
+  gi_lib  char(10) options(*nopass) const;
+  gi_mbr  char(10) options(*nopass) const;
 end-pr;
 
 dcl-pr main;
-  i_file          const  like(gi_file   );
-  i_lib           const  like(gi_lib    );
-  i_mbr           const  like(gi_mbr    );
+  i_file like(gi_file) const;
+  i_lib  like(gi_lib) const;
+  i_mbr  like(gi_mbr) const;
 end-pr;
 
 //===============================================================*
 //  Program Entry Point
 //===============================================================*
-
 dcl-pi PGM_ENTRY_POINT;
-  gi_file         char(10) const  options(*nopass);
-  gi_lib          char(10) const  options(*nopass);
-  gi_mbr          char(10) const  options(*nopass);
+  gi_file char(10) options(*nopass) const;
+  gi_lib  char(10) options(*nopass) const;
+  gi_mbr  char(10) options(*nopass) const;
 end-pi;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if (%parms() >= %parmNum(gi_mbr));
-   main(gi_file: gi_lib: gi_mbr);
+  main(gi_file: gi_lib: gi_mbr);
 else;
-   main('QBASICS1': '*LIBL': 'TEST_R5_02');
+  main('QBASICS1': '*LIBL': 'TEST_R5_02');
 endif;
 
 *inlr = *on;
@@ -92,36 +90,34 @@ return;
 //  Main procedure
 //===============================================================*
 dcl-proc main;
+  dcl-pi *n;
+    i_file like(gi_file) const;
+    i_lib  like(gi_lib) const;
+    i_mbr  like(gi_mbr) const;
+  end-pi;
 
-dcl-pi main;
-  i_file          const  like(gi_file   );
-  i_lib           const  like(gi_lib    );
-  i_mbr           const  like(gi_mbr    );
-end-pi;
+  //  Helper fields
+  dcl-ds msg likeds(msg_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-ds msg likeds(msg_t     ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-if (not f_startsWith('*': i_lib) and
-    not f_exist(i_lib: *omit: '*LIB'));
-   msg = f_newMsg('CPF9898': 'Library ' + %trim(i_lib)
-                             + ' does not exist');
-   f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-else;
-   if   not f_exist(i_file: i_lib: '*FILE': i_mbr);
+  if (not f_startsWith('*': i_lib) and
+      not f_exist(i_lib: *omit: '*LIB'));
+    msg = f_newMsg('CPF9898': 'Library ' + %trim(i_lib)
+                              + ' does not exist');
+    f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+  else;
+    if   not f_exist(i_file: i_lib: '*FILE': i_mbr);
       msg = f_newMsg('CPF9898': 'Member ' + %trim(i_lib) + '/'
                                 + %trim(i_file) + ' (' + %trim(i_mbr)
                                 + ') does not exist');
       f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-   else;
+    else;
       msg = f_newMsg('CPF9897': 'Done');
       f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-   endif;
-endif;
+    endif;
+  endif;
 
-return;
+  return;
 
 
 end-proc main;
-

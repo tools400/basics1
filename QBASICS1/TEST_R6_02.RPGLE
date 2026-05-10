@@ -1,4 +1,4 @@
-**FREE
+**free
 //===============================================================*
 //    CALL PGM(TEST_R6_02) PARM('de.tools400.test_r6_02.')       *
 //===============================================================*
@@ -25,11 +25,11 @@
 //                                                               *
 //   >>END-PRE-COMPILER<<                                        *
 //===============================================================*
-ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
-ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
-ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
-ctl-opt EXPROPTS(*RESDECPOS);
-ctl-opt EXTBININT(*YES);
+ctl-opt debug option(*srcstmt: *nodebugio);
+ctl-opt decedit('0,') datedit(*DMY.);
+ctl-opt datfmt(*iso) timfmt(*iso);
+ctl-opt expropts(*resdecpos);
+ctl-opt extbinint(*yes);
 //===============================================================*
 
 // ------------------------------------
@@ -39,7 +39,7 @@ ctl-opt EXTBININT(*YES);
 // ------------------------------------
 //  External Prototypes
 // ------------------------------------
-/COPY QBASICS1,PBASICS1
+/copy QBASICS1,PBASICS1
 
 // ------------------------------------
 //  Global Fields
@@ -53,28 +53,26 @@ ctl-opt EXTBININT(*YES);
 //  Prototypes
 // ------------------------------------
 
-dcl-pr PGM_ENTRY_POINT
-       extpgm('TEST_R6_02');
-  gi_prefix       char(32) const  options(*nopass);
+dcl-pr PGM_ENTRY_POINT extpgm('TEST_R6_02');
+  gi_prefix char(32) options(*nopass) const;
 end-pr;
 
 dcl-pr main;
-  i_prefix        varchar(32) const;
+  i_prefix varchar(32) const;
 end-pr;
 
 //===============================================================*
 //  Program Entry Point
 //===============================================================*
-
 dcl-pi PGM_ENTRY_POINT;
-  gi_prefix       char(32) const  options(*nopass);
+  gi_prefix char(32) options(*nopass) const;
 end-pi;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if (%parms() >= %parmNum(gi_prefix));
-   main(%trim(gi_prefix));
+  main(%trim(gi_prefix));
 else;
-   main('TEST_R6_02_');
+  main('TEST_R6_02_');
 endif;
 
 *inlr = *on;
@@ -86,69 +84,67 @@ return;
 //  Main procedure
 //===============================================================*
 dcl-proc main;
+  dcl-pi *n;
+    i_prefix varchar(32) const;
+  end-pi;
 
-dcl-pi main;
-  i_prefix        varchar(32) const;
-end-pi;
+  //  Helper fields
+  dcl-s isError ind inz(cFalse);
+  dcl-s x int(10) inz;
+  dcl-s numEnvVar int(10) inz;
+  dcl-ds envVar likeds(envVar_t) inz;
+  dcl-ds msg likeds(msg_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//  Helper fields
-dcl-s isError         ind inz(cFalse);
-dcl-s x               int(10) inz;
-dcl-s numEnvVar       int(10) inz;
-dcl-ds envVar likeds(envVar_t ) inz;
-dcl-ds msg likeds(msg_t    ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Get number of environment variables
+  numEnvVar = f_getNumEnvVar();
 
-// Get number of environment variables
-numEnvVar = f_getNumEnvVar();
+  // Check environment variables for prefix
+  for x = 1 to numEnvVar;
+    envVar = f_getEnvVarByIndex(x);
 
-// Check environment variables for prefix
-for x = 1 to numEnvVar;
-   envVar = f_getEnvVarByIndex(x);
-
-   // If an existing variable starts with the
-   // given prefix ...
-   if %len(envVar.name) >= %len(i_prefix);
+    // If an existing variable starts with the
+    // given prefix ...
+    if %len(envVar.name) >= %len(i_prefix);
       if f_left(envVar.name: %len(i_prefix)) =
                                       f_left(i_prefix: %len(i_prefix));
-         // ... then tell the user that we can't proceed.
-         msg = f_newMsg('CPF9897':
-                        'ERROR - Found variable starting with: ' +
-                        envVar.name + '. Can''t proceed!');
-         f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-         isError = cTrue;
+        // ... then tell the user that we can't proceed.
+        msg = f_newMsg('CPF9897':
+                       'ERROR - Found variable starting with: ' +
+                       envVar.name + '. Can''t proceed!');
+        f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+        isError = cTrue;
       endif;
-   endif;
-endfor;
+    endif;
+  endfor;
 
-// If there is no variable that starts with the
-// given prefix ...
-if not isError;
+  // If there is no variable that starts with the
+  // given prefix ...
+  if not isError;
 
-   // ... add some variables to the environment
-   f_setEnvVar(i_prefix + 'var1': 'Hello World');
-   f_setEnvVar(i_prefix + 'var2': 'A Spaceman came travelling ...');
+    // ... add some variables to the environment
+    f_setEnvVar(i_prefix + 'var1': 'Hello World');
+    f_setEnvVar(i_prefix + 'var2': 'A Spaceman came travelling ...');
 
-   // ... spinn through all of the variables
-   numEnvVar = f_getNumEnvVar();
+    // ... spinn through all of the variables
+    numEnvVar = f_getNumEnvVar();
 
-   for x = 1 to numEnvVar;
+    for x = 1 to numEnvVar;
       envVar = f_getEnvVarByIndex(x);
       // ... and show them
       msg = f_newMsg('CPF9897': 'Found variable: ' + envVar.name +
                                              ' = ' + envVar.value);
       f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-   endfor;
+    endfor;
 
-   // ... finally remove the environment variables we
-   //     just added before.
-   f_delEnvVar(i_prefix + 'var1');
-   f_delEnvVar(i_prefix + 'var2');
+    // ... finally remove the environment variables we
+    //     just added before.
+    f_delEnvVar(i_prefix + 'var1');
+    f_delEnvVar(i_prefix + 'var2');
 
-endif;
+  endif;
 
-return;
+  return;
 
 
 end-proc main;
-

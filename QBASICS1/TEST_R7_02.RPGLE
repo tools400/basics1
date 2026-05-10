@@ -1,4 +1,4 @@
-**FREE
+**free
 //===============================================================*
 //    CALL PGM(TEST_R7_02)                                       *
 //===============================================================*
@@ -25,11 +25,11 @@
 //                                                               *
 //   >>END-PRE-COMPILER<<                                        *
 //===============================================================*
-ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
-ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
-ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
-ctl-opt EXPROPTS(*RESDECPOS);
-ctl-opt EXTBININT(*YES);
+ctl-opt debug option(*srcstmt: *nodebugio);
+ctl-opt decedit('0,') datedit(*DMY.);
+ctl-opt datfmt(*iso) timfmt(*iso);
+ctl-opt expropts(*resdecpos);
+ctl-opt extbinint(*yes);
 //===============================================================*
 
 // ------------------------------------
@@ -39,7 +39,7 @@ ctl-opt EXTBININT(*YES);
 // ------------------------------------
 //  External Prototypes
 // ------------------------------------
-/COPY QBASICS1,PBASICS1
+/copy QBASICS1,PBASICS1
 
 // ------------------------------------
 //  Global Fields
@@ -48,16 +48,15 @@ ctl-opt EXTBININT(*YES);
 // ------------------------------------
 //  Global Constants
 // ------------------------------------
-dcl-c cFILE_CREATE const(1);
-dcl-c cFILE_REPLACE const(2);
-dcl-c cFILE_APPEND const(4);
+dcl-c cFILE_CREATE 1;
+dcl-c cFILE_REPLACE 2;
+dcl-c cFILE_APPEND 4;
 
 // ------------------------------------
 //  Prototypes
 // ------------------------------------
 
-dcl-pr PGM_ENTRY_POINT
-       extpgm('TEST_R7_02');
+dcl-pr PGM_ENTRY_POINT extpgm('TEST_R7_02');
 end-pr;
 
 dcl-pr main;
@@ -66,7 +65,6 @@ end-pr;
 //===============================================================*
 //  Program Entry Point
 //===============================================================*
-
 dcl-pi PGM_ENTRY_POINT;
 end-pi;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -82,46 +80,44 @@ return;
 //  Main procedure
 //===============================================================*
 dcl-proc main;
+  dcl-pi *n;
+  end-pi;
 
-dcl-pi main;
-end-pi;
+  //  Helper fields
+  dcl-ds msg likeds(msg_t) inz;
 
-//  Helper fields
-dcl-ds msg likeds(msg_t     ) inz;
+  dcl-s rpgLEngth uns(5) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-dcl-s rpgLEngth       uns(5) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Compute length of a 1-byte integer field ( 3 I 0)
+  rpgLength = f_clcLengthOfRPGIntFieldFromBufSize(1);
 
-// Compute length of a 1-byte integer field ( 3 I 0)
-rpgLength = f_clcLengthOfRPGIntFieldFromBufSize(1);
+  msg = f_newMsg(cMSG_ID_NONE: 'Length of 1-byte integer is: ' +
+                 %editc(rpgLength: 'Z'));
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-msg = f_newMsg(cMSG_ID_NONE: 'Length of 1-byte integer is: ' +
-               %editc(rpgLength: 'Z'));
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+  // Compute length of a 2-byte integer field ( 5 I 0)
+  rpgLength = f_clcLengthOfRPGIntFieldFromBufSize(2);
 
-// Compute length of a 2-byte integer field ( 5 I 0)
-rpgLength = f_clcLengthOfRPGIntFieldFromBufSize(2);
+  msg = f_newMsg(cMSG_ID_NONE: 'Length of 2-byte integer is: ' +
+                 %editc(rpgLength: 'Z'));
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-msg = f_newMsg(cMSG_ID_NONE: 'Length of 2-byte integer is: ' +
-               %editc(rpgLength: 'Z'));
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+  // Compute length of a 4-byte integer field (10 I 0)
+  rpgLength = f_clcLengthOfRPGIntFieldFromBufSize(4);
 
-// Compute length of a 4-byte integer field (10 I 0)
-rpgLength = f_clcLengthOfRPGIntFieldFromBufSize(4);
+  msg = f_newMsg(cMSG_ID_NONE: 'Length of 4-byte integer is: ' +
+                 %editc(rpgLength: 'Z'));
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-msg = f_newMsg(cMSG_ID_NONE: 'Length of 4-byte integer is: ' +
-               %editc(rpgLength: 'Z'));
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+  // Compute length of a 8-byte integer field (20 I 0)
+  rpgLength = f_clcLengthOfRPGIntFieldFromBufSize(8);
 
-// Compute length of a 8-byte integer field (20 I 0)
-rpgLength = f_clcLengthOfRPGIntFieldFromBufSize(8);
+  msg = f_newMsg(cMSG_ID_NONE: 'Length of 8-byte integer is: ' +
+                 %editc(rpgLength: 'Z'));
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-msg = f_newMsg(cMSG_ID_NONE: 'Length of 8-byte integer is: ' +
-               %editc(rpgLength: 'Z'));
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-
-return;
+  return;
 
 
 end-proc main;
-

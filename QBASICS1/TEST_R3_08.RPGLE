@@ -1,4 +1,4 @@
-**FREE
+**free
 //===============================================================*
 //    CALL PGM(TEST_R3_08)                                       *
 //===============================================================*
@@ -25,11 +25,11 @@
 //                                                               *
 //   >>END-PRE-COMPILER<<                                        *
 //===============================================================*
-ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
-ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
-ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
-ctl-opt EXPROPTS(*RESDECPOS);
-ctl-opt EXTBININT(*YES);
+ctl-opt debug option(*srcstmt: *nodebugio);
+ctl-opt decedit('0,') datedit(*DMY.);
+ctl-opt datfmt(*iso) timfmt(*iso);
+ctl-opt expropts(*resdecpos);
+ctl-opt extbinint(*yes);
 //===============================================================*
 
 // ------------------------------------
@@ -39,7 +39,7 @@ ctl-opt EXTBININT(*YES);
 // ------------------------------------
 //  External Prototypes
 // ------------------------------------
-/COPY QBASICS1,PBASICS1
+/copy QBASICS1,PBASICS1
 
 // ------------------------------------
 //  Global Fields
@@ -53,8 +53,7 @@ ctl-opt EXTBININT(*YES);
 //  Prototypes
 // ------------------------------------
 
-dcl-pr PGM_ENTRY_POINT
-       extpgm('TEST_R3_08');
+dcl-pr PGM_ENTRY_POINT extpgm('TEST_R3_08');
 end-pr;
 
 dcl-pr main;
@@ -63,7 +62,6 @@ end-pr;
 //===============================================================*
 //  Program Entry Point
 //===============================================================*
-
 dcl-pi PGM_ENTRY_POINT;
 end-pi;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -79,54 +77,52 @@ return;
 //  Main procedure
 //===============================================================*
 dcl-proc main;
+  dcl-pi *n;
+  end-pi;
 
-dcl-pi main;
-end-pi;
+  //  Helper fields
+  dcl-s string varchar(128) inz;
 
-//  Helper fields
-dcl-s string          varchar(128) inz;
+  dcl-ds msg likeds(msg_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-dcl-ds msg likeds(msg_t      ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // Center a literal into a string
+  string = f_space(40);
+  string = '>' + f_center('Hello World': %len(string)) + '<';
+  msg = f_newMsg(cMSG_ID_NONE: 'Centered (literal)  : ' + string);
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-// Center a literal into a string
-string = f_space(40);
-string = '>' + f_center('Hello World': %len(string)) + '<';
-msg = f_newMsg(cMSG_ID_NONE: 'Centered (literal)  : ' + string);
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+  // Center a given string
+  string = 'Hello World' + f_space(29);   // = 40 characters
+  string = '>' + f_center(string) + '<';
+  msg = f_newMsg(cMSG_ID_NONE: 'Centered (string)   : ' + string);
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-// Center a given string
-string = 'Hello World' + f_space(29);   // = 40 characters
-string = '>' + f_center(string) + '<';
-msg = f_newMsg(cMSG_ID_NONE: 'Centered (string)   : ' + string);
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+  // Center a given string, target too small
+  string = f_space(5);
+  string = '>' + f_center('Hello World': %len(string)) + '<';
+  msg = f_newMsg(cMSG_ID_NONE: 'Centered (too small): ' + string);
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-// Center a given string, target too small
-string = f_space(5);
-string = '>' + f_center('Hello World': %len(string)) + '<';
-msg = f_newMsg(cMSG_ID_NONE: 'Centered (too small): ' + string);
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+  // Right align a literal into a string
+  string = f_space(40);
+  string = '>' + f_alignR('Hello World': %len(string)) + '<';
+  msg = f_newMsg(cMSG_ID_NONE: 'Aligned  (literal)  : ' + string);
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-// Right align a literal into a string
-string = f_space(40);
-string = '>' + f_alignR('Hello World': %len(string)) + '<';
-msg = f_newMsg(cMSG_ID_NONE: 'Aligned  (literal)  : ' + string);
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+  // Right align a given string
+  string = 'Hello World' + f_space(29);   // = 40 characters
+  string = '>' + f_alignR(string) + '<';
+  msg = f_newMsg(cMSG_ID_NONE: 'Aligned  (string)   : ' + string);
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-// Right align a given string
-string = 'Hello World' + f_space(29);   // = 40 characters
-string = '>' + f_alignR(string) + '<';
-msg = f_newMsg(cMSG_ID_NONE: 'Aligned  (string)   : ' + string);
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+  // Right align a given string, target too small
+  string = f_space(5);
+  string = '>' + f_alignR('Hello World': %len(string)) + '<';
+  msg = f_newMsg(cMSG_ID_NONE: 'Aligned  (too small): ' + string);
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-// Right align a given string, target too small
-string = f_space(5);
-string = '>' + f_alignR('Hello World': %len(string)) + '<';
-msg = f_newMsg(cMSG_ID_NONE: 'Aligned  (too small): ' + string);
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
-
-return;
+  return;
 
 
 end-proc main;
-

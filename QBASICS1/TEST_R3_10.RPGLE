@@ -1,4 +1,4 @@
-**FREE
+**free
 //===============================================================*
 //    CALL PGM(TEST_R3_09)                                       *
 //===============================================================*
@@ -25,11 +25,11 @@
 //                                                               *
 //   >>END-PRE-COMPILER<<                                        *
 //===============================================================*
-ctl-opt DEBUG OPTION(*SRCSTMT : *NODEBUGIO);
-ctl-opt DECEDIT('0,') DATEDIT(*DMY.);
-ctl-opt DATFMT(*ISO )  TIMFMT(*ISO );
-ctl-opt EXPROPTS(*RESDECPOS);
-ctl-opt EXTBININT(*YES);
+ctl-opt debug option(*srcstmt: *nodebugio);
+ctl-opt decedit('0,') datedit(*DMY.);
+ctl-opt datfmt(*iso) timfmt(*iso);
+ctl-opt expropts(*resdecpos);
+ctl-opt extbinint(*yes);
 //===============================================================*
 
 // ------------------------------------
@@ -39,7 +39,7 @@ ctl-opt EXTBININT(*YES);
 // ------------------------------------
 //  External Prototypes
 // ------------------------------------
-/COPY QBASICS1,PBASICS1
+/copy QBASICS1,PBASICS1
 
 // ------------------------------------
 //  Global Fields
@@ -53,8 +53,7 @@ ctl-opt EXTBININT(*YES);
 //  Prototypes
 // ------------------------------------
 
-dcl-pr PGM_ENTRY_POINT
-       extpgm('TEST_R3_09');
+dcl-pr PGM_ENTRY_POINT extpgm('TEST_R3_09');
 end-pr;
 
 dcl-pr main;
@@ -63,7 +62,6 @@ end-pr;
 //===============================================================*
 //  Program Entry Point
 //===============================================================*
-
 dcl-pi PGM_ENTRY_POINT;
 end-pi;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -79,92 +77,85 @@ return;
 //  Main procedure
 //===============================================================*
 dcl-proc main;
+  dcl-pi *n;
+  end-pi;
 
-dcl-pi main;
-end-pi;
+  //  Helper fields
+  dcl-s isEqual ind inz;
+  dcl-c text 'A spaceman came travelling on his ship from afar, ''twas +
+    light years of time since his mission did start, And over a +
+    village he halted his craft, And it hung in the sky like a +
+    star, just like a star...';
+  dcl-s searchArg varchar(256) inz;
+  dcl-s searchText varchar(32) inz;
+  dcl-s startPos int(10) inz;
+  dcl-s position int(10) inz;
 
-//  Helper fields
-dcl-s isEqual         ind inz;
-dcl-c text const('+
-A spaceman came travelling on his +
-ship from afar, +
-''twas light years of time since +
-his mission did start, +
-And over a village he halted his +
-craft, +
-And it hung in the sky like a +
-star, just like a star...');
-dcl-s searchArg       varchar(256) inz;
-dcl-s searchText      varchar(32) inz;
-dcl-s startPos        int(10) inz;
-dcl-s position        int(10) inz;
+  dcl-ds msg likeds(msg_t) inz;
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-dcl-ds msg likeds(msg_t      ) inz;
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  msg = f_newMsg(cMsg_ID_NONE: text);
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-msg = f_newMsg(cMsg_ID_NONE: text);
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+  startPos  = %len(text);
+  searchArg = 'star';
+  position  = f_scanR(searchArg: text);
+  exsr sndMsg;
 
-startPos  = %len(text);
-searchArg = 'star';
-position  = f_scanR(searchArg: text);
-exsr sndMsg;
+  startPos  = 190;
+  searchArg = 'star';
+  position  = f_scanR(searchArg: text: startPos);
+  exsr sndMsg;
 
-startPos  = 190;
-searchArg = 'star';
-position  = f_scanR(searchArg: text: startPos);
-exsr sndMsg;
+  startPos  = 170;
+  searchArg = 'star';
+  position  = f_scanR(searchArg: text: startPos);
+  exsr sndMsg;
 
-startPos  = 170;
-searchArg = 'star';
-position  = f_scanR(searchArg: text: startPos);
-exsr sndMsg;
+  startPos  = 90;
+  searchArg = 'star';
+  position  = f_scanR(searchArg: text: startPos);
+  exsr sndMsg;
 
-startPos  = 90;
-searchArg = 'star';
-position  = f_scanR(searchArg: text: startPos);
-exsr sndMsg;
+  startPos  = %len(text);
+  searchArg = text;
+  position  = f_scanR(searchArg: text: startPos);
+  exsr sndMsg;
 
-startPos  = %len(text);
-searchArg = text;
-position  = f_scanR(searchArg: text: startPos);
-exsr sndMsg;
+  msg = f_newMsg(cMsg_ID_NONE: '- Search argument longer than text: -');
+  f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-msg = f_newMsg(cMsg_ID_NONE: '- Search argument longer than text: -');
-f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+  startPos  = %len(text);
+  searchArg = text + ' an extension';
+  position  = f_scanR(searchArg: text: startPos);
+  exsr sndMsg;
 
-startPos  = %len(text);
-searchArg = text + ' an extension';
-position  = f_scanR(searchArg: text: startPos);
-exsr sndMsg;
+  return;
 
-return;
+  begsr sndMsg;
 
-begsr sndMsg;
-
-   if %len(searchArg) > 10;
+    if %len(searchArg) > 10;
       searchText = %subst(searchArg: 1: 10) + ' ...';
-   else;
+    else;
       searchText = searchArg;
-   endif;
+    endif;
 
-   if position = 0;
+    if position = 0;
       msg = f_newMsg(cMsg_ID_NONE: 'Search argument ''' +
                      searchText +
                      ''' was not found before position ' +
                      %char(startPos) + '.');
-   else;
+    else;
       msg = f_newMsg(cMsg_ID_NONE: 'Search argument ''' +
                                    searchText +
                                    ''' found at position ' +
                                    %char(position) + '. ' +
                                    'Start position: ' + %char(startPos));
-   endif;
+    endif;
 
-   f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
+    f_sndPgmMsg(msg: cMsg_Prv: cMsg_ToCtlBdy);
 
-endsr;
+  endsr;
 
 
 end-proc main;
-

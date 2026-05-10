@@ -1,8 +1,8 @@
-**FREE
-/IF NOT DEFINED(url_t)
-/DEFINE url_t
+**free
+/if NOT DEFINED(url_t)
+/define url_t
 
 //  URL
-dcl-s url_t           varchar(446);
+dcl-s url_t varchar(446);
 
-/ENDIF
+/endif

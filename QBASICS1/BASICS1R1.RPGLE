@@ -1,4 +1,4 @@
-**FREE
+**free
 //=====================================================================*
 //  BASICS1R1  - SrvPgm: Basic Routines - Messages                     *
 //=====================================================================*
@@ -62,63 +62,60 @@
 //                                                                     *
 //   >>END-PRE-COMPILER<<                                              *
 //=====================================================================*
-ctl-opt NOMAIN;
+ctl-opt nomain;
 //  Standard H-Specs
-/COPY QBASICS1,H_SPEC
-/COPY QBASICS1,COPYRIGHT
+/copy QBASICS1,H_SPEC
+/copy QBASICS1,COPYRIGHT
 //=====================================================================*
 
 // -----------------------------------------
 //  Exported functions
 // -----------------------------------------
-/COPY QBASICS1,PBASICS1R1
+/copy QBASICS1,PBASICS1R1
 
 // -----------------------------------------
 //  Reference fields
 // -----------------------------------------
-/COPY QBASICS1,BASICS1R0
+/copy QBASICS1,BASICS1R0
 
 // -----------------------------------------
 //  Imported prototypes
 // -----------------------------------------
-/DEFINE INCLUDE_INTERNAL_PROCDURES
-/COPY QBASICS1,PBASICS1R8
-/UNDEFINE INCLUDE_INTERNAL_PROCDURES
+/define INCLUDE_INTERNAL_PROCDURES
+/copy QBASICS1,PBASICS1R8
+/undefine INCLUDE_INTERNAL_PROCDURES
 
 // -----------------------------------------
 //  Private prototypes
 // -----------------------------------------
 
 //  Get application message file name
-dcl-pr lf_getAppMsgFileName
-       char(10);
+dcl-pr lf_getAppMsgFileName char(10);
 end-pr;
 
 //  Get application message file library name
-dcl-pr lf_getAppMsgFileLibrary
-       char(10);
+dcl-pr lf_getAppMsgFileLibrary char(10);
 end-pr;
 
 //  Set application message file name
 dcl-pr lp_setAppMsgFileName;
-  i_file          char(10) const;
+  i_file char(10) const;
 end-pr;
 
 //  Set application message file library name
 dcl-pr lp_setAppMsgFileLibrary;
-  i_lib           char(10) const;
+  i_lib char(10) const;
 end-pr;
 
 //  Retrieve message description
-dcl-pr lf_rtvMsgD
-       pointer;
-  i_format        char(8) const;
-  i_msgID         char(7) const;
-  i_rplData       varchar(4096) const;
-  i_qMsgF         const  likeds(qObj_t    );
-o_msg           likeds(msg_t     );
-i_rplVars       char(10) const  options(*nopass);
-i_rtnCtrlChr    char(10) const  options(*nopass);
+dcl-pr lf_rtvMsgD pointer;
+  i_format     char(8) const;
+  i_msgID      char(7) const;
+  i_rplData    varchar(4096) const;
+  i_qMsgF      likeds(qObj_t) const;
+  o_msg        likeds(msg_t);
+  i_rplVars    char(10) options(*nopass) const;
+  i_rtnCtrlChr char(10) options(*nopass) const;
 end-pr;
 
 // -----------------------------------------
@@ -128,7 +125,7 @@ end-pr;
 // -----------------------------------------
 //  Global fields
 // -----------------------------------------
-dcl-ds g_qAppMsgFile likeds(qObj_t    ) inz;
+dcl-ds g_qAppMsgFile likeds(qObj_t) inz;
 
 //=======================================================================
 //  Sets the application message file.
@@ -143,59 +140,58 @@ dcl-ds g_qAppMsgFile likeds(qObj_t    ) inz;
 //   void
 //=======================================================================
 dcl-proc p_setAppMsgFile export;
+  dcl-pi *n;
+    i_file char(10) options(*nopass) const;
+    i_lib  char(10) options(*nopass) const;
+  end-pi;
 
-dcl-pi p_setAppMsgFile;
-  i_file          char(10) const  options(*nopass);
-  i_lib           char(10) const  options(*nopass);
-end-pi;
+  //  Parameter positions
+  dcl-c p_file 1;
+  dcl-c p_lib 2;
 
-//  Parameter positions
-dcl-c p_file const(1);
-dcl-c p_lib const(2);
+  //  Optional parameter fields
+  dcl-s file like(i_file) inz;
+  dcl-s lib like(i_lib) inz;
 
-//  Optional parameter fields
-dcl-s file            like(i_file    ) inz;
-dcl-s lib             like(i_lib     ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  //-------------------------------------------------------------------*
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-//-------------------------------------------------------------------*
+  // Process optional parameter values ...
+  // ... file
+  if   %parms >= p_file;
+    CEETSTA(isPresent: p_file: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... file
-if   %parms >= p_file;
-   CEETSTA(isPresent: p_file: *omit);
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    file = i_file;
+  else;
+    file = 'QCPFMSG';
+  endif;
 
-if   isPresent = 1;
-   file = i_file;
-else;
-   file = 'QCPFMSG';
-endif;
+  // ... library
+  if   %parms >= p_lib;
+    CEETSTA(isPresent: p_lib: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... library
-if   %parms >= p_lib;
-   CEETSTA(isPresent: p_lib: *omit);
-else;
-   isPresent = 0;
-endif;
+  if   isPresent = 1;
+    lib = i_lib;
+  else;
+    lib = '*LIBL';
+  endif;
 
-if   isPresent = 1;
-   lib = i_lib;
-else;
-   lib = '*LIBL';
-endif;
+  // Set the message file ...
+  lp_setAppMsgFileName(file);
+  lp_setAppMsgFileLibrary(lib);
 
-// Set the message file ...
-lp_setAppMsgFileName(file);
-lp_setAppMsgFileLibrary(lib);
-
-return;
+  return;
 
 
-end-proc p_setAppMsgFile;
+end-proc;
 
 //=========================================================================
 //  Creates a new message.
@@ -225,139 +221,132 @@ end-proc p_setAppMsgFile;
 //   void
 //=========================================================================
 dcl-proc f_newMsg export;
+  dcl-pi *n likeds(msg_t);
+    i_ID   like(msg_t.id) options(*omit: *nopass) const;
+    i_data varchar(512) options(*omit: *nopass) const;
+    i_type like(msg_t.type) options(*omit: *nopass) const;
+    i_file like(msg_t.file) options(*omit: *nopass) const;
+    i_lib  like(msg_t.lib) options(*omit: *nopass) const;
+  end-pi;
 
-dcl-pi f_newMsg
-       likeds(msg_t     );
-i_ID            const  like(msg_t.id    )
-     options(*omit: *nopass);
-i_data          varchar(512) const
-     options(*omit: *nopass);
-i_type          const  like(msg_t.type  )
-     options(*omit: *nopass);
-i_file          const  like(msg_t.file  )
-     options(*omit: *nopass);
-i_lib           const  like(msg_t.lib   )
-     options(*omit: *nopass);
-end-pi;
+  //  Return value
+  dcl-ds msg likeds(msg_t) inz;
 
-//  Return value
-dcl-ds msg likeds(msg_t     ) inz;
+  //  Parameter positions
+  dcl-c p_ID 1;
+  dcl-c p_data 2;
+  dcl-c p_type 3;
+  dcl-c p_file 4;
+  dcl-c p_lib 5;
 
-//  Parameter positions
-dcl-c p_ID const(1);
-dcl-c p_data const(2);
-dcl-c p_type const(3);
-dcl-c p_file const(4);
-dcl-c p_lib const(5);
+  //  Optional parameter fields
+  dcl-s ID like(i_ID) inz;
+  dcl-s data like(i_data) inz;
+  dcl-s type like(i_type) inz;
+  dcl-s file like(i_file) inz;
+  dcl-s lib like(i_lib) inz;
 
-//  Optional parameter fields
-dcl-s ID              like(i_ID      ) inz;
-dcl-s data            like(i_data    ) inz;
-dcl-s type            like(i_type    ) inz;
-dcl-s file            like(i_file    ) inz;
-dcl-s lib             like(i_lib     ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  // ---------------------------------------------------------
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-// ---------------------------------------------------------
+  // Process optional parameter values ...
+  // ... ID
+  if  %parms >= p_ID;
+    CEETSTA(isPresent: p_ID: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... ID
-if  %parms >= p_ID;
-   CEETSTA(isPresent: p_ID: *omit);
-else;
-   isPresent = 0;
-endif;
-
-if  isPresent = 1;
-   ID = i_ID;
-else;
-   if  %parms >= p_ID;
+  if  isPresent = 1;
+    ID = i_ID;
+  else;
+    if  %parms >= p_ID;
       ID = cMSG_ID_NONE;
-   else;
+    else;
       ID = cMSG_ID_NULL;
-   endif;
-endif;
+    endif;
+  endif;
 
-// ... Data
-if  %parms >= p_data;
-   CEETSTA(isPresent: p_data: *omit);
-else;
-   isPresent = 0;
-endif;
+  // ... Data
+  if  %parms >= p_data;
+    CEETSTA(isPresent: p_data: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-if  isPresent = 1;
-   data = i_data;
-else;
-   data = '';
-endif;
+  if  isPresent = 1;
+    data = i_data;
+  else;
+    data = '';
+  endif;
 
-// ... Type
-if  %parms >= p_type;
-   CEETSTA(isPresent: p_type: *omit);
-else;
-   isPresent = 0;
-endif;
+  // ... Type
+  if  %parms >= p_type;
+    CEETSTA(isPresent: p_type: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-if  isPresent = 1;
-   type = i_type;
-else;
-   if   (ID <> cMsg_ID_OK  ) and
-        (ID <> cMsg_ID_NULL);
+  if  isPresent = 1;
+    type = i_type;
+  else;
+    if   (ID <> cMsg_ID_OK  ) and
+         (ID <> cMsg_ID_NULL);
       type = cMsg_Info;
-   else;
+    else;
       type = '';
-   endif;
-endif;
+    endif;
+  endif;
 
-// ... File
-if  %parms >= p_file;
-   CEETSTA(isPresent: p_file: *omit);
-else;
-   isPresent = 0;
-endif;
+  // ... File
+  if  %parms >= p_file;
+    CEETSTA(isPresent: p_file: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-if  isPresent = 1;
-   file = i_file;
-else;
-   file = lf_getAppMsgFileName();
-endif;
+  if  isPresent = 1;
+    file = i_file;
+  else;
+    file = lf_getAppMsgFileName();
+  endif;
 
-// ... Library
-if  %parms >= p_lib;
-   CEETSTA(isPresent: p_lib: *omit);
-else;
-   isPresent = 0;
-endif;
+  // ... Library
+  if  %parms >= p_lib;
+    CEETSTA(isPresent: p_lib: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-if  isPresent = 1;
-   lib = i_lib;
-else;
-   lib = lf_getAppMsgFileLibrary();
-endif;
+  if  isPresent = 1;
+    lib = i_lib;
+  else;
+    lib = lf_getAppMsgFileLibrary();
+  endif;
 
-// Check dependencies ...
-if   (ID = cMSG_ID_NONE) and (data = '');
-   p_assert(cFalse:
-            'Message data must not be *BLANKS in case that -
+  // Check dependencies ...
+  if   (ID = cMSG_ID_NONE) and (data = '');
+    p_assert(cFalse:
+             'Message data must not be *BLANKS in case that -
                message ID is specified as cMsg_ID_NONE.'           );
-endif;
+  endif;
 
-// Produce message ...
-clear   msg;
+  // Produce message ...
+  clear   msg;
 
-msg.ID   = ID;
-if   msg.ID <> cMSG_ID_NULL;
-   msg.data = data;
-   msg.type = type;
-   msg.file = file;
-   msg.lib  = lib;
-endif;
+  msg.ID   = ID;
+  if   msg.ID <> cMSG_ID_NULL;
+    msg.data = data;
+    msg.type = type;
+    msg.file = file;
+    msg.lib  = lib;
+  endif;
 
-return   msg;
+  return   msg;
 
 
-end-proc f_newMsg;
+end-proc;
 
 //=========================================================================
 //  Sends a program message.
@@ -390,194 +379,191 @@ end-proc f_newMsg;
 //   msgKey        - The message key of the message sent.
 //=========================================================================
 dcl-proc f_sndPgmMsg export;
+  dcl-pi *n char(4);
+    i_msg    likeds(msg_t) const;
+    i_toStkC int(10) options(*nopass: *omit) const;
+    i_toProc char(256) options(*nopass: *omit) const;
+    i_toMod  char(10) options(*nopass: *omit) const;
+    i_toPgm  char(10) options(*nopass: *omit) const;
+    o_msg    likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_sndPgmMsg
-       char(4);
-  i_msg           const  likeds(msg_t   );
-i_toStkC        int(10) const  options(*nopass: *omit);
-i_toProc        char(256) const  options(*nopass: *omit);
-i_toMod         char(10) const  options(*nopass: *omit);
-i_toPgm         char(10) const  options(*nopass: *omit);
-o_msg           likeds(msg_t    )
-     options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s msgKey char(4) inz;
 
-//  Return value
-dcl-s msgKey          char(4) inz;
+  //  Parameter positions
+  dcl-c p_toStkC 2;
+  dcl-c p_toProc 3;
+  dcl-c p_toMod 4;
+  dcl-c p_toPgm 5;
+  dcl-c p_msg 6;
 
-//  Parameter positions
-dcl-c p_toStkC const(2);
-dcl-c p_toProc const(3);
-dcl-c p_toMod const(4);
-dcl-c p_toPgm const(5);
-dcl-c p_msg const(6);
+  //  Optional parameter fields
+  dcl-s toStkC like(i_toStkC) inz;
+  dcl-s toProc like(i_toProc) inz;
+  dcl-s toMod like(i_toMod) inz;
+  dcl-s toPgm like(i_toPgm) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s toStkC          like(i_toStkC  ) inz;
-dcl-s toProc          like(i_toProc  ) inz;
-dcl-s toMod           like(i_toMod   ) inz;
-dcl-s toPgm           like(i_toPgm   ) inz;
-dcl-ds msg likeds(o_msg   ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
+  //  Helper fields QMHSNDPM
+  dcl-ds qMsgF likeds(qObj_t) inz;
+  dcl-s callStkE like(i_toProc) inz;
+  dcl-s callStkCtr int(10) inz;
+  dcl-ds callStkEQ qualified;
+    module  char(10) inz;
+    program char(10) inz;
+  end-ds;
+  dcl-ds errCode likeds(errCode_t) inz;
+  //-------------------------------------------------------------------*
 
-//  Helper fields QMHSNDPM
-dcl-ds qMsgF likeds(qObj_t    ) inz;
-dcl-s callStkE        like(i_toProc)     inz;
-dcl-s callStkCtr      int(10) inz;
-dcl-ds callStkEQ qualified;
-  module          char(10) inz;
-  program         char(10) inz;
-end-ds;
-dcl-ds errCode likeds(errCode_t ) inz;
-//-------------------------------------------------------------------*
+  // Process optional parameter values ...
+  // ... stack counter
+  if  %parms >= p_toStkC;
+    CEETSTA(isPresent: p_toStkC: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... stack counter
-if  %parms >= p_toStkC;
-   CEETSTA(isPresent: p_toStkC: *omit);
-else;
-   isPresent = 0;
-endif;
+  if  isPresent = 1;
+    toStkC = i_toStkC;
+  else;
+    toStkC = cMsg_Same;
+  endif;
 
-if  isPresent = 1;
-   toStkC = i_toStkC;
-else;
-   toStkC = cMsg_Same;
-endif;
+  // ... to procedure
+  if  %parms >= p_toProc;
+    CEETSTA(isPresent: p_toProc: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... to procedure
-if  %parms >= p_toProc;
-   CEETSTA(isPresent: p_toProc: *omit);
-else;
-   isPresent = 0;
-endif;
+  if  isPresent = 1;
+    toProc = i_toProc;
+  else;
+    toProc = cMsg_toMySelf;
+  endif;
 
-if  isPresent = 1;
-   toProc = i_toProc;
-else;
-   toProc = cMsg_toMySelf;
-endif;
+  // ... to module
+  if  %parms >= p_toMod;
+    CEETSTA(isPresent: p_toMod: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... to module
-if  %parms >= p_toMod;
-   CEETSTA(isPresent: p_toMod: *omit);
-else;
-   isPresent = 0;
-endif;
+  if  isPresent = 1;
+    toMod  = i_toMod;
+  else;
+    toMod  = '*NONE';
+  endif;
 
-if  isPresent = 1;
-   toMod  = i_toMod;
-else;
-   toMod  = '*NONE';
-endif;
+  // ... to program
+  if  %parms >= p_toPgm;
+    CEETSTA(isPresent: p_toPgm: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... to program
-if  %parms >= p_toPgm;
-   CEETSTA(isPresent: p_toPgm: *omit);
-else;
-   isPresent = 0;
-endif;
+  if  isPresent = 1;
+    toPgm  = i_toPgm;
+  else;
+    toPgm  = '*NONE';
+  endif;
 
-if  isPresent = 1;
-   toPgm  = i_toPgm;
-else;
-   toPgm  = '*NONE';
-endif;
+  // Check dependencies ...
+  p_assert(i_msg.ID <> cMSG_ID_OK     and
+           i_msg.ID <> cMSG_ID_NULL         :
+           'Message ID must not be ''' + i_msg.ID + '''.'   );
 
-// Check dependencies ...
-p_assert(i_msg.ID <> cMSG_ID_OK     and
-         i_msg.ID <> cMSG_ID_NULL         :
-         'Message ID must not be ''' + i_msg.ID + '''.'   );
+  // Set values to call QMHSNDPM API:
+  // Call stack counter ...
+  select;
+  // ... *EXT
+  when   toStkC = cMsg_Ext;
+    callStkCtr = 0;
+    toProc     = '*EXT';
+  // ... *PERVIOUS
+  when   toStkC = cMsg_Prv;
+    callStkCtr = 1;
+  // ... *SAME
+  when   toStkC = cMsg_Same;
+    callStkCtr = 0;
+  // ... others
+  other;
+    callStkCtr = toStkC;
+  endsl;
 
-// Set values to call QMHSNDPM API:
-// Call stack counter ...
-select;
-   // ... *EXT
-when   toStkC = cMsg_Ext;
-   callStkCtr = 0;
-   toProc     = '*EXT';
-   // ... *PERVIOUS
-when   toStkC = cMsg_Prv;
-   callStkCtr = 1;
-   // ... *SAME
-when   toStkC = cMsg_Same;
-   callStkCtr = 0;
-   // ... others
-other;
-   callStkCtr = toStkC;
-endsl;
+  // To procedure ...
+  select;
+  // ... *
+  when   toProc = cMsg_ToMyself;
+    callStkE   = '*';
+    // ... add 1 to skip f_sndPgmMsg() stack entry
+    callStkCtr = callStkCtr + 1;
+  // ... *PGMBDY
+  when   toProc = cMsg_ToPgmBdy;
+    callStkE   = '*PGMBDY';
+  // ... *CTLBDY
+  when   toProc = cMsg_ToCtlBdy;
+    callStkE   = '*CTLBDY';
+  // ... *PGMNAME
+  when   toProc = cMsg_ToPgm;
+    callStkE   = '*PGMNAME';
+  // ... *EXT
+  when   toProc = '*EXT';
+    callStkE   = '*EXT';
+  // ... named procedure
+  other;
+    callStkE   = toProc;
+  endsl;
 
-// To procedure ...
-select;
-   // ... *
-when   toProc = cMsg_ToMyself;
-   callStkE   = '*';
-   // ... add 1 to skip f_sndPgmMsg() stack entry
-   callStkCtr = callStkCtr + 1;
-   // ... *PGMBDY
-when   toProc = cMsg_ToPgmBdy;
-   callStkE   = '*PGMBDY';
-   // ... *CTLBDY
-when   toProc = cMsg_ToCtlBdy;
-   callStkE   = '*CTLBDY';
-   // ... *PGMNAME
-when   toProc = cMsg_ToPgm;
-   callStkE   = '*PGMNAME';
-   // ... *EXT
-when   toProc = '*EXT';
-   callStkE   = '*EXT';
-   // ... named procedure
-other;
-   callStkE   = toProc;
-endsl;
+  // To module ...
+  callStkEQ.module  = toMod;
 
-// To module ...
-callStkEQ.module  = toMod;
+  // To program ...
+  callStkEQ.program = toPgm;
 
-// To program ...
-callStkEQ.program = toPgm;
+  // Set message file name and library ...
+  qMsgF.name = i_msg.file;
+  qMsgF.lib  = i_msg.lib;
 
-// Set message file name and library ...
-qMsgF.name = i_msg.file;
-qMsgF.lib  = i_msg.lib;
+  // Initialize message key ...
+  msgKey  = '';
 
-// Initialize message key ...
-msgKey  = '';
+  // Initialize error code ...
+  errCode = f_newApiErrCode(cFalse);
 
-// Initialize error code ...
-errCode = f_newApiErrCode(cFalse);
+  // Finally send the message ...
+  QMHSNDPM(i_msg.ID: qMsgF: i_msg.data: %len(%trimR(i_msg.data)):
+           i_msg.type: callStkE: callStkCtr: msgKey: errCode:
+           %len(%trimR(callStkE)): callStkEQ: -1);
 
-// Finally send the message ...
-QMHSNDPM(i_msg.ID: qMsgF: i_msg.data: %len(%trimR(i_msg.data)):
-         i_msg.type: callStkE: callStkCtr: msgKey: errCode:
-         %len(%trimR(callStkE)): callStkEQ: -1);
+  // Check API error code
+  if  f_isApiError(errCode);
+    msgKey = '';
+    msg    = f_cvtApiErrCodeToMsg(errCode);
+  else;
+    msg    = f_newMsg(cMsg_ID_OK);
+  endif;
 
-// Check API error code
-if  f_isApiError(errCode);
-   msgKey = '';
-   msg    = f_cvtApiErrCodeToMsg(errCode);
-else;
-   msg    = f_newMsg(cMsg_ID_OK);
-endif;
-
-// Process optional/omissible message parameter
-if   %parms >= p_msg;
-   CEETSTA(isPresent: p_msg: *omit);
-   if   isPresent = 1;
+  // Process optional/omissible message parameter
+  if   %parms >= p_msg;
+    CEETSTA(isPresent: p_msg: *omit);
+    if   isPresent = 1;
       o_msg = msg;
-   endif;
-else;
-   if   msg.ID <> cMSG_ID_OK;
+    endif;
+  else;
+    if   msg.ID <> cMSG_ID_OK;
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return   msgKey;
+  return   msgKey;
 
 
-end-proc f_sndPgmMsg;
+end-proc;
 
 //=========================================================================
 //  Receives a program message.
@@ -621,220 +607,217 @@ end-proc f_sndPgmMsg;
 //   rcvm0200_t    - Format RCVM0200 of the received message.
 //=========================================================================
 dcl-proc f_rcvPgmMsg export;
+  dcl-pi *n likeds(rcvm0200_t);
+    i_msgType  char(10) const;
+    i_msgKey   char(4) options(*nopass: *omit) const;
+    i_action   char(10) options(*nopass: *omit) const;
+    i_wait     int(10) options(*nopass: *omit) const;
+    i_fromStkC int(10) options(*nopass: *omit) const;
+    i_fromProc char(256) options(*nopass: *omit) const;
+    i_fromMod  char(10) options(*nopass: *omit) const;
+    i_fromPgm  char(10) options(*nopass: *omit) const;
+    o_msg      likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_rcvPgmMsg
-       likeds(rcvm0200_t);
-i_msgType       char(10) const;
-i_msgKey        char(4) const  options(*nopass: *omit);
-i_action        char(10) const  options(*nopass: *omit);
-i_wait          int(10) const  options(*nopass: *omit);
-i_fromStkC      int(10) const  options(*nopass: *omit);
-i_fromProc      char(256) const  options(*nopass: *omit);
-i_fromMod       char(10) const  options(*nopass: *omit);
-i_fromPgm       char(10) const  options(*nopass: *omit);
-o_msg           likeds(msg_t    )
-     options(*nopass: *omit);
-end-pi;
+  //  Parameter positions
+  dcl-c p_msgKey 2;
+  dcl-c p_action 3;
+  dcl-c p_wait 4;
+  dcl-c p_fromStkC 5;
+  dcl-c p_fromProc 6;
+  dcl-c p_fromMod 7;
+  dcl-c p_fromPgm 8;
+  dcl-c p_msg 9;
 
-//  Parameter positions
-dcl-c p_msgKey const(2);
-dcl-c p_action const(3);
-dcl-c p_wait const(4);
-dcl-c p_fromStkC const(5);
-dcl-c p_fromProc const(6);
-dcl-c p_fromMod const(7);
-dcl-c p_fromPgm const(8);
-dcl-c p_msg const(9);
+  //  Optional parameter fields
+  dcl-s msgKey like(i_msgKey) inz;
+  dcl-s action like(i_action) inz;
+  dcl-s wait like(i_wait) inz;
+  dcl-s fromStkC like(i_fromStkC) inz;
+  dcl-s fromProc like(i_fromProc) inz;
+  dcl-s fromMod like(i_fromMod) inz;
+  dcl-s fromPgm like(i_fromPgm) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s msgKey          like(i_msgKey  ) inz;
-dcl-s action          like(i_action  ) inz;
-dcl-s wait            like(i_wait    ) inz;
-dcl-s fromStkC        like(i_fromStkC) inz;
-dcl-s fromProc        like(i_fromProc) inz;
-dcl-s fromMod         like(i_fromMod ) inz;
-dcl-s fromPgm         like(i_fromPgm ) inz;
-dcl-ds msg likeds(o_msg   ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
+  //  Helper fields QMHSNDPM
+  dcl-ds rcvm0200 likeds(rcvm0200_t) inz;
+  dcl-s callStkE like(i_fromProc) inz;
+  dcl-s callStkCtr int(10) inz;
+  dcl-ds callStkEQ qualified;
+    module  char(10) inz;
+    program char(10) inz;
+  end-ds;
+  dcl-ds errCode likeds(errCode_t) inz;
+  //-------------------------------------------------------------------*
 
-//  Helper fields QMHSNDPM
-dcl-ds rcvm0200 likeds(rcvm0200_t) inz;
-dcl-s callStkE        like(i_fromProc  ) inz;
-dcl-s callStkCtr      int(10) inz;
-dcl-ds callStkEQ qualified;
-  module          char(10) inz;
-  program         char(10) inz;
-end-ds;
-dcl-ds errCode likeds(errCode_t ) inz;
-//-------------------------------------------------------------------*
+  // Process optional parameter values ...
+  // ... message key
+  if  %parms >= p_msgKey;
+    CEETSTA(isPresent: p_msgKey: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... message key
-if  %parms >= p_msgKey;
-   CEETSTA(isPresent: p_msgKey: *omit);
-else;
-   isPresent = 0;
-endif;
+  if  isPresent = 1;
+    msgKey = i_msgKey;
+  else;
+    msgKey = '';
+  endif;
 
-if  isPresent = 1;
-   msgKey = i_msgKey;
-else;
-   msgKey = '';
-endif;
+  // ... action
+  if  %parms >= p_action;
+    CEETSTA(isPresent: p_action: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... action
-if  %parms >= p_action;
-   CEETSTA(isPresent: p_action: *omit);
-else;
-   isPresent = 0;
-endif;
+  if  isPresent = 1;
+    action = i_action;
+  else;
+    action = cMsg_Act_Same;
+  endif;
 
-if  isPresent = 1;
-   action = i_action;
-else;
-   action = cMsg_Act_Same;
-endif;
+  // ... wait
+  if  %parms >= p_wait;
+    CEETSTA(isPresent: p_wait: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... wait
-if  %parms >= p_wait;
-   CEETSTA(isPresent: p_wait: *omit);
-else;
-   isPresent = 0;
-endif;
+  if  isPresent = 1;
+    wait = i_wait;
+  else;
+    wait = 0;            //  Do not wait for the message.
+  endif;
 
-if  isPresent = 1;
-   wait = i_wait;
-else;
-   wait = 0;            //  Do not wait for the message.
-endif;
+  // ... stack counter
+  if  %parms >= p_fromStkC;
+    CEETSTA(isPresent: p_fromStkC: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... stack counter
-if  %parms >= p_fromStkC;
-   CEETSTA(isPresent: p_fromStkC: *omit);
-else;
-   isPresent = 0;
-endif;
+  if  isPresent = 1;
+    fromStkC = i_fromStkC;
+  else;
+    fromStkC = cMsg_Same;
+  endif;
 
-if  isPresent = 1;
-   fromStkC = i_fromStkC;
-else;
-   fromStkC = cMsg_Same;
-endif;
+  // ... from procedure
+  if  %parms >= p_fromProc;
+    CEETSTA(isPresent: p_fromProc: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... from procedure
-if  %parms >= p_fromProc;
-   CEETSTA(isPresent: p_fromProc: *omit);
-else;
-   isPresent = 0;
-endif;
+  if  isPresent = 1;
+    fromProc = i_fromProc;
+  else;
+    fromProc = cMsg_toMySelf;
+  endif;
 
-if  isPresent = 1;
-   fromProc = i_fromProc;
-else;
-   fromProc = cMsg_toMySelf;
-endif;
+  // ... from module
+  if  %parms >= p_fromMod;
+    CEETSTA(isPresent: p_fromMod: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... from module
-if  %parms >= p_fromMod;
-   CEETSTA(isPresent: p_fromMod: *omit);
-else;
-   isPresent = 0;
-endif;
+  if  isPresent = 1;
+    fromMod  = i_fromMod;
+  else;
+    fromMod  = '*NONE';
+  endif;
 
-if  isPresent = 1;
-   fromMod  = i_fromMod;
-else;
-   fromMod  = '*NONE';
-endif;
+  // ... from program
+  if  %parms >= p_fromPgm;
+    CEETSTA(isPresent: p_fromPgm: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... from program
-if  %parms >= p_fromPgm;
-   CEETSTA(isPresent: p_fromPgm: *omit);
-else;
-   isPresent = 0;
-endif;
+  if  isPresent = 1;
+    fromPgm  = i_fromPgm;
+  else;
+    fromPgm  = '*NONE';
+  endif;
 
-if  isPresent = 1;
-   fromPgm  = i_fromPgm;
-else;
-   fromPgm  = '*NONE';
-endif;
+  // Set values to call QMHSNDPM API:
+  // Call stack counter ...
+  select;
+  // ... *EXT
+  when   fromStkC = cMsg_Ext;
+    callStkCtr = 0;
+    fromProc   = '*EXT';
+  // ... *PERVIOUS
+  when   fromStkC = cMsg_Prv;
+    callStkCtr = 1;
+  // ... *SAME
+  when   fromStkC = cMsg_Same;
+    callStkCtr = 0;
+  // ... sonst
+  other;
+    callStkCtr = fromStkC;
+  endsl;
 
-// Set values to call QMHSNDPM API:
-// Call stack counter ...
-select;
-   // ... *EXT
-when   fromStkC = cMsg_Ext;
-   callStkCtr = 0;
-   fromProc   = '*EXT';
-   // ... *PERVIOUS
-when   fromStkC = cMsg_Prv;
-   callStkCtr = 1;
-   // ... *SAME
-when   fromStkC = cMsg_Same;
-   callStkCtr = 0;
-   // ... sonst
-other;
-   callStkCtr = fromStkC;
-endsl;
+  // From procedure ...
+  select;
+  // ... *
+  when   fromProc = cMsg_ToMyself;
+    callStkE   = '*';
+    // ... add 1 to skip f_rcvPgmMsg() stack entry
+    callStkCtr = callStkCtr + 1;
+  // ... *EXT
+  when   fromProc = '*EXT';
+    callStkE   = '*EXT';
+  // ... named procedure
+  other;
+    callStkE   = fromProc;
+  endsl;
 
-// From procedure ...
-select;
-   // ... *
-when   fromProc = cMsg_ToMyself;
-   callStkE   = '*';
-   // ... add 1 to skip f_rcvPgmMsg() stack entry
-   callStkCtr = callStkCtr + 1;
-   // ... *EXT
-when   fromProc = '*EXT';
-   callStkE   = '*EXT';
-   // ... named procedure
-other;
-   callStkE   = fromProc;
-endsl;
+  // From module ...
+  callStkEQ.module  = fromMod;
 
-// From module ...
-callStkEQ.module  = fromMod;
+  // From program ...
+  callStkEQ.program = fromPgm;
 
-// From program ...
-callStkEQ.program = fromPgm;
+  // Initialize error code ...
+  errCode = f_newApiErrCode(cFalse);
 
-// Initialize error code ...
-errCode = f_newApiErrCode(cFalse);
+  // Finally receive the message ...
+  QMHRCVPM(rcvm0200: %size(rcvm0200): 'RCVM0200': callStkE: callStkCtr:
+           i_msgType: msgKey: wait: action: errCode:
+           %len(%trimR(callStkE)): callStkEQ);
 
-// Finally receive the message ...
-QMHRCVPM(rcvm0200: %size(rcvm0200): 'RCVM0200': callStkE: callStkCtr:
-         i_msgType: msgKey: wait: action: errCode:
-         %len(%trimR(callStkE)): callStkEQ);
+  // Check API error code
+  if  f_isApiError(errCode);
+    clear   rcvm0200;
+    msg = f_cvtApiErrCodeToMsg(errCode);
+  else;
+    p_assert(%size(rcvm0200) >= rcvm0200.bytAvl :
+             'RCVM0200 too small to hold result');
+    msg = f_newMsg(cMsg_ID_OK);
+  endif;
 
-// Check API error code
-if  f_isApiError(errCode);
-   clear   rcvm0200;
-   msg = f_cvtApiErrCodeToMsg(errCode);
-else;
-   p_assert(%size(rcvm0200) >= rcvm0200.bytAvl :
-            'RCVM0200 too small to hold result');
-   msg = f_newMsg(cMsg_ID_OK);
-endif;
-
-// Process optional/omissible message parameter
-if   %parms >= p_msg;
-   CEETSTA(isPresent: p_msg: *omit);
-   if   isPresent = 1;
+  // Process optional/omissible message parameter
+  if   %parms >= p_msg;
+    CEETSTA(isPresent: p_msg: *omit);
+    if   isPresent = 1;
       o_msg = msg;
-   endif;
-else;
-   if   msg.ID <> cMSG_ID_OK;
+    endif;
+  else;
+    if   msg.ID <> cMSG_ID_OK;
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return   rcvm0200;
+  return   rcvm0200;
 
 
-end-proc f_rcvPgmMsg;
+end-proc;
 
 //=========================================================================
 //  Receives a program message and returns a message structure.
@@ -878,158 +861,155 @@ end-proc f_rcvPgmMsg;
 //   msg           - Received message.
 //=========================================================================
 dcl-proc f_rcvPgmMsgObj export;
+  dcl-pi *n likeds(msg_t);
+    i_msgType  char(10) const;
+    i_msgKey   char(4) options(*nopass: *omit) const;
+    i_action   char(10) options(*nopass: *omit) const;
+    i_wait     int(10) options(*nopass: *omit) const;
+    i_fromStkC int(10) options(*nopass: *omit) const;
+    i_fromProc char(256) options(*nopass: *omit) const;
+    i_fromMod  char(10) options(*nopass: *omit) const;
+    i_fromPgm  char(10) options(*nopass: *omit) const;
+    o_msg      likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_rcvPgmMsgObj
-       likeds(msg_t );
-i_msgType       char(10) const;
-i_msgKey        char(4) const  options(*nopass: *omit);
-i_action        char(10) const  options(*nopass: *omit);
-i_wait          int(10) const  options(*nopass: *omit);
-i_fromStkC      int(10) const  options(*nopass: *omit);
-i_fromProc      char(256) const  options(*nopass: *omit);
-i_fromMod       char(10) const  options(*nopass: *omit);
-i_fromPgm       char(10) const  options(*nopass: *omit);
-o_msg           likeds(msg_t    )
-     options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-ds rtnMsg likeds(msg_t) inz;
 
-//  Return value
-dcl-ds rtnMsg likeds(msg_t ) inz;
+  //  Parameter positions
+  dcl-c p_msgKey 2;
+  dcl-c p_action 3;
+  dcl-c p_wait 4;
+  dcl-c p_fromStkC 5;
+  dcl-c p_fromProc 6;
+  dcl-c p_fromMod 7;
+  dcl-c p_fromPgm 8;
+  dcl-c p_msg 9;
 
-//  Parameter positions
-dcl-c p_msgKey const(2);
-dcl-c p_action const(3);
-dcl-c p_wait const(4);
-dcl-c p_fromStkC const(5);
-dcl-c p_fromProc const(6);
-dcl-c p_fromMod const(7);
-dcl-c p_fromPgm const(8);
-dcl-c p_msg const(9);
+  //  Optional parameter fields
+  dcl-s fromStkC like(i_fromStkC) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s fromStkC        like(i_fromStkC) inz;
-dcl-ds msg likeds(o_msg   ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
+  //  Helper fields
+  dcl-s callStkCtr int(10) inz;
+  dcl-ds rcvm0200 likeds(rcvm0200_t) inz;
+  //-------------------------------------------------------------------*
 
-//  Helper fields
-dcl-s callStkCtr      int(10) inz;
-dcl-ds rcvm0200 likeds(rcvm0200_t ) inz;
-//-------------------------------------------------------------------*
+  // Process optional parameter values ...
+  // ... stack counter
+  if (%parms() >= p_fromStkC);
+    CEETSTA(isPresent: p_fromStkC: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... stack counter
-if (%parms() >= p_fromStkC);
-   CEETSTA(isPresent: p_fromStkC: *omit);
-else;
-   isPresent = 0;
-endif;
+  if (isPresent = 1);
+    fromStkC = i_fromStkC;
+  else;
+    fromStkC = cMsg_Same;
+  endif;
 
-if (isPresent = 1);
-   fromStkC = i_fromStkC;
-else;
-   fromStkC = cMsg_Same;
-endif;
+  // Adjust stack counter
+  select;
+  when (fromStkC = cMsg_Ext);
+    callStkCtr = fromStkC;
+  // ... *PERVIOUS
+  when (fromStkC = cMsg_Prv);
+    callStkCtr = 1 + 1;  // let f_rcvPgmMsg() skip f_rcvPgmMsgObj()
+  // ... *SAME
+  when (fromStkC = cMsg_Same);
+    callStkCtr = 0 + 1;  // let f_rcvPgmMsg() skip f_rcvPgmMsgObj()
+  // ... everything else
+  other;
+    callStkCtr = fromStkC + 1;  // let f_rcvPgmMsg() skip f_rcvPgmMsgObj()
+  endsl;
 
-// Adjust stack counter
-select;
-when (fromStkC = cMsg_Ext);
-   callStkCtr = fromStkC;
-   // ... *PERVIOUS
-when (fromStkC = cMsg_Prv);
-   callStkCtr = 1 + 1;  // let f_rcvPgmMsg() skip f_rcvPgmMsgObj()
-   // ... *SAME
-when (fromStkC = cMsg_Same);
-   callStkCtr = 0 + 1;  // let f_rcvPgmMsg() skip f_rcvPgmMsgObj()
-   // ... everything else
-other;
-   callStkCtr = fromStkC + 1;  // let f_rcvPgmMsg() skip f_rcvPgmMsgObj()
-endsl;
+  // Receive the message
+  select;
+  when (%parms() < p_msgKey);    //   1 parameter passed
+    rcvm0200 = f_rcvPgmMsg(i_msgType: *omit: *omit: *omit: callStkCtr
+                           : *omit: *omit: *omit: msg);
 
-// Receive the message
-select;
-when (%parms() < p_msgKey);    //   1 parameter passed
-   rcvm0200 = f_rcvPgmMsg(i_msgType: *omit: *omit: *omit: callStkCtr
-                          : *omit: *omit: *omit: msg);
+  when (%parms() = p_msgKey);    //   2 parameters passed
+    rcvm0200 = f_rcvPgmMsg(i_msgType
+                           : i_msgKey: *omit: *omit: callStkCtr
+                           : *omit: *omit: *omit: msg);
 
-when (%parms() = p_msgKey);    //   2 parameters passed
-   rcvm0200 = f_rcvPgmMsg(i_msgType
-                          : i_msgKey: *omit: *omit: callStkCtr
-                          : *omit: *omit: *omit: msg);
+  when (%parms() = p_action);    //   3 parameters passed
+    rcvm0200 = f_rcvPgmMsg(i_msgType
+                           : i_msgKey
+                           : i_action: *omit: callStkCtr
+                           : *omit: *omit: *omit: msg);
 
-when (%parms() = p_action);    //   3 parameters passed
-   rcvm0200 = f_rcvPgmMsg(i_msgType
-                          : i_msgKey
-                          : i_action: *omit: callStkCtr
-                          : *omit: *omit: *omit: msg);
+  when (%parms() = p_wait);      //   4 parameters passed
+    rcvm0200 = f_rcvPgmMsg(i_msgType
+                           : i_msgKey
+                           : i_action
+                           : i_wait: callStkCtr
+                           : *omit: *omit: *omit: msg);
 
-when (%parms() = p_wait);      //   4 parameters passed
-   rcvm0200 = f_rcvPgmMsg(i_msgType
-                          : i_msgKey
-                          : i_action
-                          : i_wait: callStkCtr
-                          : *omit: *omit: *omit: msg);
+  when (%parms() = p_fromStkC);  //   5 parameters passed
+    rcvm0200 = f_rcvPgmMsg(i_msgType
+                           : i_msgKey
+                           : i_action
+                           : i_wait
+                           : callStkCtr
+                           : *omit: *omit: *omit: msg);
 
-when (%parms() = p_fromStkC);  //   5 parameters passed
-   rcvm0200 = f_rcvPgmMsg(i_msgType
-                          : i_msgKey
-                          : i_action
-                          : i_wait
-                          : callStkCtr
-                          : *omit: *omit: *omit: msg);
+  when (%parms() = p_fromProc);  //   6 parameters passed
+    rcvm0200 = f_rcvPgmMsg(i_msgType
+                           : i_msgKey
+                           : i_action
+                           : i_wait
+                           : callStkCtr
+                           : i_fromProc
+                           : *omit: *omit: msg);
 
-when (%parms() = p_fromProc);  //   6 parameters passed
-   rcvm0200 = f_rcvPgmMsg(i_msgType
-                          : i_msgKey
-                          : i_action
-                          : i_wait
-                          : callStkCtr
-                          : i_fromProc
-                          : *omit: *omit: msg);
+  when (%parms() = p_fromMod);   //   7 parameters passed
+    rcvm0200 = f_rcvPgmMsg(i_msgType
+                           : i_msgKey
+                           : i_action
+                           : i_wait
+                           : callStkCtr
+                           : i_fromProc
+                           : i_fromMod
+                           : *omit: msg);
 
-when (%parms() = p_fromMod);   //   7 parameters passed
-   rcvm0200 = f_rcvPgmMsg(i_msgType
-                          : i_msgKey
-                          : i_action
-                          : i_wait
-                          : callStkCtr
-                          : i_fromProc
-                          : i_fromMod
-                          : *omit: msg);
+  other;                         //   8 or more parameters passed
+    rcvm0200 = f_rcvPgmMsg(i_msgType
+                           : i_msgKey
+                           : i_action
+                           : i_wait
+                           : callStkCtr
+                           : i_fromProc
+                           : i_fromMod
+                           : i_fromPgm
+                           : msg);
+  endsl;
 
-other;                         //   8 or more parameters passed
-   rcvm0200 = f_rcvPgmMsg(i_msgType
-                          : i_msgKey
-                          : i_action
-                          : i_wait
-                          : callStkCtr
-                          : i_fromProc
-                          : i_fromMod
-                          : i_fromPgm
-                          : msg);
-endsl;
+  if (msg.ID = cMSG_ID_OK);
+    rtnMsg = f_cvtRcvMsgToMsg(rcvm0200);
+  endif;
 
-if (msg.ID = cMSG_ID_OK);
-   rtnMsg = f_cvtRcvMsgToMsg(rcvm0200);
-endif;
-
-// Process optional/omissible message parameter
-if   %parms >= p_msg;
-   CEETSTA(isPresent: p_msg: *omit);
-   if   isPresent = 1;
+  // Process optional/omissible message parameter
+  if   %parms >= p_msg;
+    CEETSTA(isPresent: p_msg: *omit);
+    if   isPresent = 1;
       o_msg = msg;
-   endif;
-else;
-   if   msg.ID <> cMSG_ID_OK;
+    endif;
+  else;
+    if   msg.ID <> cMSG_ID_OK;
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return rtnMsg;
+  return rtnMsg;
 
 
-end-proc f_rcvPgmMsgObj;
+end-proc;
 
 //=========================================================================
 //  Removes a program message.
@@ -1069,189 +1049,187 @@ end-proc f_rcvPgmMsgObj;
 //   void
 //=========================================================================
 dcl-proc p_rmvPgmMsg export;
+  dcl-pi *n;
+    i_msgToRemove char(10) const;
+    i_msgKey      char(4) options(*nopass: *omit) const;
+    i_fromStkC    int(10) options(*nopass: *omit) const;
+    i_fromProc    char(256) options(*nopass: *omit) const;
+    i_fromMod     char(10) options(*nopass: *omit) const;
+    i_fromPgm     char(10) options(*nopass: *omit) const;
+    o_msg         likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi p_rmvPgmMsg;
-  i_msgToRemove   char(10) const;
-  i_msgKey        char(4) const  options(*nopass: *omit);
-  i_fromStkC      int(10) const  options(*nopass: *omit);
-  i_fromProc      char(256) const  options(*nopass: *omit);
-  i_fromMod       char(10) const  options(*nopass: *omit);
-  i_fromPgm       char(10) const  options(*nopass: *omit);
-  o_msg           likeds(msg_t    )
-options(*nopass: *omit);
-end-pi;
+  //  Parameter positions
+  dcl-c p_msgKey 2;
+  dcl-c p_fromStkC 3;
+  dcl-c p_fromProc 4;
+  dcl-c p_fromMod 5;
+  dcl-c p_fromPgm 6;
+  dcl-c p_msg 7;
 
-//  Parameter positions
-dcl-c p_msgKey const(2);
-dcl-c p_fromStkC const(3);
-dcl-c p_fromProc const(4);
-dcl-c p_fromMod const(5);
-dcl-c p_fromPgm const(6);
-dcl-c p_msg const(7);
+  //  Optional parameter fields
+  dcl-s msgKey like(i_msgKey) inz;
+  dcl-s fromStkC like(i_fromStkC) inz;
+  dcl-s fromProc like(i_fromProc) inz;
+  dcl-s fromMod like(i_fromMod) inz;
+  dcl-s fromPgm like(i_fromPgm) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s msgKey          like(i_msgKey  ) inz;
-dcl-s fromStkC        like(i_fromStkC) inz;
-dcl-s fromProc        like(i_fromProc) inz;
-dcl-s fromMod         like(i_fromMod ) inz;
-dcl-s fromPgm         like(i_fromPgm ) inz;
-dcl-ds msg likeds(o_msg   ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
+  //  Helper fields QMHSNDPM
+  dcl-s callStkE like(i_fromProc) inz;
+  dcl-s callStkCtr int(10) inz;
+  dcl-ds callStkEQ qualified;
+    module  char(10) inz;
+    program char(10) inz;
+  end-ds;
+  dcl-ds errCode likeds(errCode_t) inz;
+  //-------------------------------------------------------------------*
 
-//  Helper fields QMHSNDPM
-dcl-s callStkE        like(i_fromProc  ) inz;
-dcl-s callStkCtr      int(10) inz;
-dcl-ds callStkEQ qualified;
-  module          char(10) inz;
-  program         char(10) inz;
-end-ds;
-dcl-ds errCode likeds(errCode_t ) inz;
-//-------------------------------------------------------------------*
+  // Process optional parameter values ...
+  // ... message key
+  if  %parms >= p_msgKey;
+    CEETSTA(isPresent: p_msgKey: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... message key
-if  %parms >= p_msgKey;
-   CEETSTA(isPresent: p_msgKey: *omit);
-else;
-   isPresent = 0;
-endif;
+  if  isPresent = 1;
+    msgKey = i_msgKey;
+  else;
+    msgKey = '';
+  endif;
 
-if  isPresent = 1;
-   msgKey = i_msgKey;
-else;
-   msgKey = '';
-endif;
+  // ... stack counter
+  if  %parms >= p_fromStkC;
+    CEETSTA(isPresent: p_fromStkC: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... stack counter
-if  %parms >= p_fromStkC;
-   CEETSTA(isPresent: p_fromStkC: *omit);
-else;
-   isPresent = 0;
-endif;
+  if  isPresent = 1;
+    fromStkC = i_fromStkC;
+  else;
+    fromStkC = cMsg_Same;
+  endif;
 
-if  isPresent = 1;
-   fromStkC = i_fromStkC;
-else;
-   fromStkC = cMsg_Same;
-endif;
+  // ... from procedure
+  if  %parms >= p_fromProc;
+    CEETSTA(isPresent: p_fromProc: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... from procedure
-if  %parms >= p_fromProc;
-   CEETSTA(isPresent: p_fromProc: *omit);
-else;
-   isPresent = 0;
-endif;
+  if  isPresent = 1;
+    fromProc = i_fromProc;
+  else;
+    fromProc = cMsg_toMySelf;
+  endif;
 
-if  isPresent = 1;
-   fromProc = i_fromProc;
-else;
-   fromProc = cMsg_toMySelf;
-endif;
+  // ... from module
+  if  %parms >= p_fromMod;
+    CEETSTA(isPresent: p_fromMod: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... from module
-if  %parms >= p_fromMod;
-   CEETSTA(isPresent: p_fromMod: *omit);
-else;
-   isPresent = 0;
-endif;
+  if  isPresent = 1;
+    fromMod  = i_fromMod;
+  else;
+    fromMod  = '*NONE';
+  endif;
 
-if  isPresent = 1;
-   fromMod  = i_fromMod;
-else;
-   fromMod  = '*NONE';
-endif;
+  // ... from program
+  if  %parms >= p_fromPgm;
+    CEETSTA(isPresent: p_fromPgm: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// ... from program
-if  %parms >= p_fromPgm;
-   CEETSTA(isPresent: p_fromPgm: *omit);
-else;
-   isPresent = 0;
-endif;
+  if  isPresent = 1;
+    fromPgm  = i_fromPgm;
+  else;
+    fromPgm  = '*NONE';
+  endif;
 
-if  isPresent = 1;
-   fromPgm  = i_fromPgm;
-else;
-   fromPgm  = '*NONE';
-endif;
+  // Set values to call QMHRMVPM API:
+  // Call stack counter ...
+  select;
+  // ... *ALLINACT
+  when   fromStkC = cMsg_AllInact;
+    callStkCtr = 0;
+    fromProc   = '*ALLINACT';
+  // ... *EXT
+  when   fromStkC = cMsg_Ext;
+    callStkCtr = 0;
+    fromProc   = '*EXT';
+  // ... *PERVIOUS
+  when   fromStkC = cMsg_Prv;
+    callStkCtr = 1;
+  // ... *SAME
+  when   fromStkC = cMsg_Same;
+    callStkCtr = 0;
+  // ... sonst
+  other;
+    callStkCtr = fromStkC;
+  endsl;
 
-// Set values to call QMHRMVPM API:
-// Call stack counter ...
-select;
-   // ... *ALLINACT
-when   fromStkC = cMsg_AllInact;
-   callStkCtr = 0;
-   fromProc   = '*ALLINACT';
-   // ... *EXT
-when   fromStkC = cMsg_Ext;
-   callStkCtr = 0;
-   fromProc   = '*EXT';
-   // ... *PERVIOUS
-when   fromStkC = cMsg_Prv;
-   callStkCtr = 1;
-   // ... *SAME
-when   fromStkC = cMsg_Same;
-   callStkCtr = 0;
-   // ... sonst
-other;
-   callStkCtr = fromStkC;
-endsl;
+  // From procedure ...
+  select;
+  // ... *
+  when   fromProc = cMsg_ToMyself;
+    callStkE   = '*';
+    // ... add 1 to skip f_rcvPgmMsg() stack entry
+    callStkCtr = callStkCtr + 1;
+  // ... *EXT
+  when   fromProc = '*EXT';
+    callStkE   = '*EXT';
+  // ... *ALLINACT
+  when   fromProc = '*ALLINACT';
+    callStkE   = '*ALLINACT';
+  // ... named procedure
+  other;
+    callStkE   = fromProc;
+  endsl;
 
-// From procedure ...
-select;
-   // ... *
-when   fromProc = cMsg_ToMyself;
-   callStkE   = '*';
-   // ... add 1 to skip f_rcvPgmMsg() stack entry
-   callStkCtr = callStkCtr + 1;
-   // ... *EXT
-when   fromProc = '*EXT';
-   callStkE   = '*EXT';
-   // ... *ALLINACT
-when   fromProc = '*ALLINACT';
-   callStkE   = '*ALLINACT';
-   // ... named procedure
-other;
-   callStkE   = fromProc;
-endsl;
+  // From module ...
+  callStkEQ.module  = fromMod;
 
-// From module ...
-callStkEQ.module  = fromMod;
+  // From program ...
+  callStkEQ.program = fromPgm;
 
-// From program ...
-callStkEQ.program = fromPgm;
+  // Initialize error code ...
+  errCode = f_newApiErrCode(cFalse);
 
-// Initialize error code ...
-errCode = f_newApiErrCode(cFalse);
+  // Finally remove the message ...
+  QMHRMVPM(callStkE: callStkCtr: msgKey: i_msgToRemove: errCode:
+           %len(%trimR(callStkE)): callStkEQ: '*NO');
 
-// Finally remove the message ...
-QMHRMVPM(callStkE: callStkCtr: msgKey: i_msgToRemove: errCode:
-         %len(%trimR(callStkE)): callStkEQ: '*NO');
+  // Check API error code
+  if  f_isApiError(errCode);
+    msg = f_cvtApiErrCodeToMsg(errCode);
+  else;
+    msg = f_newMsg(cMsg_ID_OK);
+  endif;
 
-// Check API error code
-if  f_isApiError(errCode);
-   msg = f_cvtApiErrCodeToMsg(errCode);
-else;
-   msg = f_newMsg(cMsg_ID_OK);
-endif;
-
-// Process optional/omissible message parameter
-if   %parms >= p_msg;
-   CEETSTA(isPresent: p_msg: *omit);
-   if   isPresent = 1;
+  // Process optional/omissible message parameter
+  if   %parms >= p_msg;
+    CEETSTA(isPresent: p_msg: *omit);
+    if   isPresent = 1;
       o_msg = msg;
-   endif;
-else;
-   if   msg.ID <> cMSG_ID_OK;
+    endif;
+  else;
+    if   msg.ID <> cMSG_ID_OK;
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return;
+  return;
 
 
-end-proc p_rmvPgmMsg;
+end-proc;
 
 //=========================================================================
 //  Retrieves the message text of a given message.
@@ -1266,67 +1244,64 @@ end-proc p_rmvPgmMsg;
 //                   the given message.
 //=========================================================================
 dcl-proc f_rtvMsgText export;
+  dcl-pi *n varchar(4096);
+    i_msg likeds(msg_t) const;
+    o_msg likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_rtvMsgText
-       varchar(4096);
-  i_msg           const  likeds(msg_t    );
-o_msg           likeds(msg_t    )
-     options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s msgText varchar(4096) inz;
 
-//  Return value
-dcl-s msgText         varchar(4096) inz;
+  //  Parameter positions
+  dcl-c p_msg 2;
 
-//  Parameter positions
-dcl-c p_msg const(2);
+  //  Optional parameter fields
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-ds msg likeds(o_msg       ) inz;
+  //  Local fields
+  dcl-ds rtvm0100 likeds(rtvm0100_t) based(pRtvm0100);
+  dcl-ds qMsgF likeds(qObj_t) inz;
 
-//  Local fields
-dcl-ds rtvm0100 likeds(rtvm0100_t  ) based(pRtvm0100);
-dcl-ds qMsgF likeds(qObj_t      ) inz;
-
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-//-------------------------------------------------------------------*
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  //-------------------------------------------------------------------*
 
 
-// Retrieve message information
-qMsgF.name = i_msg.file;
-qMsgF.lib  = i_msg.lib;
-pRtvm0100  = lf_rtvMsgD('RTVM0100':
-                        i_msg.ID: %trimR(i_msg.data): qMsgF: msg:
-                        '*YES': '*NO');
+  // Retrieve message information
+  qMsgF.name = i_msg.file;
+  qMsgF.lib  = i_msg.lib;
+  pRtvm0100  = lf_rtvMsgD('RTVM0100':
+                          i_msg.ID: %trimR(i_msg.data): qMsgF: msg:
+                          '*YES': '*NO');
 
-// Retrieve message text from message information
-if   pRtvm0100 <> *NULL;
-   if   rtvm0100.lenMsgRet > 0;
+  // Retrieve message text from message information
+  if   pRtvm0100 <> *NULL;
+    if   rtvm0100.lenMsgRet > 0;
       msgText = %subst(rtvm0100: 25: rtvm0100.lenMsgRet);
       xdealloc(pRtvm0100);
-   else;
+    else;
       msgText = '';
-   endif;
-else;
-   msgText = '';
-endif;
+    endif;
+  else;
+    msgText = '';
+  endif;
 
-// Process optional/omissible message parameter
-if   %parms >= p_msg;
-   CEETSTA(isPresent: p_msg: *omit);
-   if   isPresent = 1;
+  // Process optional/omissible message parameter
+  if   %parms >= p_msg;
+    CEETSTA(isPresent: p_msg: *omit);
+    if   isPresent = 1;
       o_msg = msg;
-   endif;
-else;
-   if   msg.ID <> cMSG_ID_OK;
+    endif;
+  else;
+    if   msg.ID <> cMSG_ID_OK;
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return   msgText;
+  return   msgText;
 
 
-end-proc f_rtvMsgText;
+end-proc;
 
 //=========================================================================
 //  Retrieves the message help text of a given message.
@@ -1345,85 +1320,82 @@ end-proc f_rtvMsgText;
 //                   the given message.
 //=========================================================================
 dcl-proc f_rtvMsgHelpText export;
+  dcl-pi *n varchar(4096);
+    i_msg        likeds(msg_t) const;
+    i_rtnCtrlChr char(10) options(*nopass: *omit) const;
+    o_msg        likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_rtvMsgHelpText
-       varchar(4096);
-  i_msg           const  likeds(msg_t    );
-i_rtnCtrlChr    char(10) const  options(*nopass: *omit);
-o_msg           likeds(msg_t    )
-     options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s msgHelpText varchar(4096) inz;
 
-//  Return value
-dcl-s msgHelpText     varchar(4096) inz;
+  //  Parameter positions
+  dcl-c p_rtnCtrlChr 2;
+  dcl-c p_msg 3;
 
-//  Parameter positions
-dcl-c p_rtnCtrlChr const(2);
-dcl-c p_msg const(3);
+  //  Optional parameter fields
+  dcl-s rtnCtrlChr like(i_rtnCtrlChr) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s rtnCtrlChr      like(i_rtnCtrlChr  ) inz;
-dcl-ds msg likeds(o_msg       ) inz;
+  //  Local fields
+  dcl-ds qMsgF likeds(qObj_t) inz;
+  dcl-ds rtvm0100 likeds(rtvm0100_t) based(pRtvm0100);
 
-//  Local fields
-dcl-ds qMsgF likeds(qObj_t      ) inz;
-dcl-ds rtvm0100 likeds(rtvm0100_t  ) based(pRtvm0100);
-
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-//-------------------------------------------------------------------*
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  //-------------------------------------------------------------------*
 
 
-// Process optional parameter values ...
-// ... rtnCtrlChr
-if   %parms >= p_rtnCtrlChr;
-   CEETSTA(isPresent: p_rtnCtrlChr: *omit);
-else;
-   isPresent = 0;
-endif;
+  // Process optional parameter values ...
+  // ... rtnCtrlChr
+  if   %parms >= p_rtnCtrlChr;
+    CEETSTA(isPresent: p_rtnCtrlChr: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-if   isPresent = 1;
-   rtnCtrlChr = i_rtnCtrlChr;
-else;
-   rtnCtrlChr = '*NO';
-endif;
+  if   isPresent = 1;
+    rtnCtrlChr = i_rtnCtrlChr;
+  else;
+    rtnCtrlChr = '*NO';
+  endif;
 
-// Retrieve message information
-qMsgF.name = i_msg.file;
-qMsgF.lib  = i_msg.lib;
-pRtvm0100  = lf_rtvMsgD('RTVM0100':
-                        i_msg.ID: %trimR(i_msg.data): qMsgF: msg:
-                        '*YES': rtnCtrlChr);
+  // Retrieve message information
+  qMsgF.name = i_msg.file;
+  qMsgF.lib  = i_msg.lib;
+  pRtvm0100  = lf_rtvMsgD('RTVM0100':
+                          i_msg.ID: %trimR(i_msg.data): qMsgF: msg:
+                          '*YES': rtnCtrlChr);
 
-// Retrieve message help text from message information
-if   pRtvm0100 <> *NULL;
-   if   rtvm0100.lenHlpRet > 0;
+  // Retrieve message help text from message information
+  if   pRtvm0100 <> *NULL;
+    if   rtvm0100.lenHlpRet > 0;
       msgHelpText = %subst(rtvm0100: 25 + rtvm0100.lenMsgRet:
                            rtvm0100.lenHlpRet);
       xdealloc(pRtvm0100);
-   else;
+    else;
       msgHelpText = '';
-   endif;
-else;
-   msgHelpText = '';
-endif;
+    endif;
+  else;
+    msgHelpText = '';
+  endif;
 
-// Process optional/omissible message parameter
-if   %parms >= p_msg;
-   CEETSTA(isPresent: p_msg: *omit);
-   if   isPresent = 1;
+  // Process optional/omissible message parameter
+  if   %parms >= p_msg;
+    CEETSTA(isPresent: p_msg: *omit);
+    if   isPresent = 1;
       o_msg = msg;
-   endif;
-else;
-   if   msg.ID <> cMSG_ID_OK;
+    endif;
+  else;
+    if   msg.ID <> cMSG_ID_OK;
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return   msgHelpText;
+  return   msgHelpText;
 
 
-end-proc f_rtvMsgHelpText;
+end-proc;
 
 //=========================================================================
 //  Retrieves the message text of a given message.
@@ -1438,67 +1410,64 @@ end-proc f_rtvMsgHelpText;
 //                   the given message.
 //=========================================================================
 dcl-proc f_rtvMsgTextRaw export;
+  dcl-pi *n varchar(4096);
+    i_msg likeds(msg_t) const;
+    o_msg likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_rtvMsgTextRaw
-       varchar(4096);
-  i_msg           const  likeds(msg_t    );
-o_msg           likeds(msg_t    )
-     options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s msgText varchar(4096) inz;
 
-//  Return value
-dcl-s msgText         varchar(4096) inz;
+  //  Parameter positions
+  dcl-c p_msg 2;
 
-//  Parameter positions
-dcl-c p_msg const(2);
+  //  Optional parameter fields
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-ds msg likeds(o_msg       ) inz;
+  //  Local fields
+  dcl-ds rtvm0100 likeds(rtvm0100_t) based(pRtvm0100);
+  dcl-ds qMsgF likeds(qObj_t) inz;
 
-//  Local fields
-dcl-ds rtvm0100 likeds(rtvm0100_t  ) based(pRtvm0100);
-dcl-ds qMsgF likeds(qObj_t      ) inz;
-
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-//-------------------------------------------------------------------*
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  //-------------------------------------------------------------------*
 
 
-// Retrieve message information
-qMsgF.name = i_msg.file;
-qMsgF.lib  = i_msg.lib;
-pRtvm0100  = lf_rtvMsgD('RTVM0100':
-                        i_msg.ID: %trimR(i_msg.data): qMsgF: msg:
-                        '*NO': '*NO');
+  // Retrieve message information
+  qMsgF.name = i_msg.file;
+  qMsgF.lib  = i_msg.lib;
+  pRtvm0100  = lf_rtvMsgD('RTVM0100':
+                          i_msg.ID: %trimR(i_msg.data): qMsgF: msg:
+                          '*NO': '*NO');
 
-// Retrieve message text from message information
-if   pRtvm0100 <> *NULL;
-   if   rtvm0100.lenMsgRet > 0;
+  // Retrieve message text from message information
+  if   pRtvm0100 <> *NULL;
+    if   rtvm0100.lenMsgRet > 0;
       msgText = %subst(rtvm0100: 25: rtvm0100.lenMsgRet);
       xdealloc(pRtvm0100);
-   else;
+    else;
       msgText = '';
-   endif;
-else;
-   msgText = '';
-endif;
+    endif;
+  else;
+    msgText = '';
+  endif;
 
-// Process optional/omissible message parameter
-if   %parms >= p_msg;
-   CEETSTA(isPresent: p_msg: *omit);
-   if   isPresent = 1;
+  // Process optional/omissible message parameter
+  if   %parms >= p_msg;
+    CEETSTA(isPresent: p_msg: *omit);
+    if   isPresent = 1;
       o_msg = msg;
-   endif;
-else;
-   if   msg.ID <> cMSG_ID_OK;
+    endif;
+  else;
+    if   msg.ID <> cMSG_ID_OK;
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return   msgText;
+  return   msgText;
 
 
-end-proc f_rtvMsgTextRaw;
+end-proc;
 
 //=========================================================================
 //  Retrieves the message help text of a given message.
@@ -1517,85 +1486,82 @@ end-proc f_rtvMsgTextRaw;
 //                   the given message.
 //=========================================================================
 dcl-proc f_rtvMsgHelpTextRaw export;
+  dcl-pi *n varchar(4096);
+    i_msg        likeds(msg_t) const;
+    i_rtnCtrlChr char(10) options(*nopass: *omit) const;
+    o_msg        likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_rtvMsgHelpTextRaw
-       varchar(4096);
-  i_msg           const  likeds(msg_t    );
-i_rtnCtrlChr    char(10) const  options(*nopass: *omit);
-o_msg           likeds(msg_t    )
-     options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-s msgHelpText varchar(4096) inz;
 
-//  Return value
-dcl-s msgHelpText     varchar(4096) inz;
+  //  Parameter positions
+  dcl-c p_rtnCtrlChr 2;
+  dcl-c p_msg 3;
 
-//  Parameter positions
-dcl-c p_rtnCtrlChr const(2);
-dcl-c p_msg const(3);
+  //  Optional parameter fields
+  dcl-s rtnCtrlChr like(i_rtnCtrlChr) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s rtnCtrlChr      like(i_rtnCtrlChr  ) inz;
-dcl-ds msg likeds(o_msg       ) inz;
+  //  Local fields
+  dcl-ds qMsgF likeds(qObj_t) inz;
+  dcl-ds rtvm0100 likeds(rtvm0100_t) based(pRtvm0100);
 
-//  Local fields
-dcl-ds qMsgF likeds(qObj_t      ) inz;
-dcl-ds rtvm0100 likeds(rtvm0100_t  ) based(pRtvm0100);
-
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
-//-------------------------------------------------------------------*
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
+  //-------------------------------------------------------------------*
 
 
-// Process optional parameter values ...
-// ... rtnCtrlChr
-if   %parms >= p_rtnCtrlChr;
-   CEETSTA(isPresent: p_rtnCtrlChr: *omit);
-else;
-   isPresent = 0;
-endif;
+  // Process optional parameter values ...
+  // ... rtnCtrlChr
+  if   %parms >= p_rtnCtrlChr;
+    CEETSTA(isPresent: p_rtnCtrlChr: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-if   isPresent = 1;
-   rtnCtrlChr = i_rtnCtrlChr;
-else;
-   rtnCtrlChr = '*NO';
-endif;
+  if   isPresent = 1;
+    rtnCtrlChr = i_rtnCtrlChr;
+  else;
+    rtnCtrlChr = '*NO';
+  endif;
 
-// Retrieve message information
-qMsgF.name = i_msg.file;
-qMsgF.lib  = i_msg.lib;
-pRtvm0100  = lf_rtvMsgD('RTVM0100':
-                        i_msg.ID: %trimR(i_msg.data): qMsgF: msg:
-                        '*NO': rtnCtrlChr);
+  // Retrieve message information
+  qMsgF.name = i_msg.file;
+  qMsgF.lib  = i_msg.lib;
+  pRtvm0100  = lf_rtvMsgD('RTVM0100':
+                          i_msg.ID: %trimR(i_msg.data): qMsgF: msg:
+                          '*NO': rtnCtrlChr);
 
-// Retrieve message help text from message information
-if   pRtvm0100 <> *NULL;
-   if   rtvm0100.lenHlpRet > 0;
+  // Retrieve message help text from message information
+  if   pRtvm0100 <> *NULL;
+    if   rtvm0100.lenHlpRet > 0;
       msgHelpText = %subst(rtvm0100: 25 + rtvm0100.lenMsgRet:
                            rtvm0100.lenHlpRet);
       xdealloc(pRtvm0100);
-   else;
+    else;
       msgHelpText = '';
-   endif;
-else;
-   msgHelpText = '';
-endif;
+    endif;
+  else;
+    msgHelpText = '';
+  endif;
 
-// Process optional/omissible message parameter
-if   %parms >= p_msg;
-   CEETSTA(isPresent: p_msg: *omit);
-   if   isPresent = 1;
+  // Process optional/omissible message parameter
+  if   %parms >= p_msg;
+    CEETSTA(isPresent: p_msg: *omit);
+    if   isPresent = 1;
       o_msg = msg;
-   endif;
-else;
-   if   msg.ID <> cMSG_ID_OK;
+    endif;
+  else;
+    if   msg.ID <> cMSG_ID_OK;
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return   msgHelpText;
+  return   msgHelpText;
 
 
-end-proc f_rtvMsgHelpTextRaw;
+end-proc;
 
 //=========================================================================
 //  Converts a received message of format RCVM0200 to a message.
@@ -1609,101 +1575,98 @@ end-proc f_rtvMsgHelpTextRaw;
 //   msg           - Message as message structure
 //=========================================================================
 dcl-proc f_cvtRcvMsgToMsg export;
+  dcl-pi *n likeds(msg_t);
+    i_rcvm0200 likeds(rcvm0200_t) const;
+    i_type     like(msg_t.type) options(*omit: *nopass) const;
+  end-pi;
 
-dcl-pi f_cvtRcvMsgToMsg
-       likeds(msg_t     );
-i_rcvm0200      const  likeds(rcvm0200_t);
-i_type          const  like(msg_t.type  )
-     options(*omit: *nopass);
-end-pi;
+  //  Return value
+  dcl-ds msg likeds(msg_t) inz;
 
-//  Return value
-dcl-ds msg likeds(msg_t     ) inz;
+  //  Parameter positions
+  dcl-c p_type 2;
 
-//  Parameter positions
-dcl-c p_type const(2);
+  //  Optional parameter fields
+  dcl-s type like(i_type) inz;
 
-//  Optional parameter fields
-dcl-s type            like(i_type      ) inz;
+  //  Helper fields CEETSTA
+  dcl-s isPresent int(10) inz;
 
-//  Helper fields CEETSTA
-dcl-s isPresent       int(10) inz;
+  //  Helper fields
+  dcl-s msgID like(msg_t.ID) inz;
+  dcl-s msgData like(msg_t.data) inz;
+  //-------------------------------------------------------------------*
 
-//  Helper fields
-dcl-s msgID           like(msg_t.ID    ) inz;
-dcl-s msgData         like(msg_t.data  ) inz;
-//-------------------------------------------------------------------*
+  // Process optional parameter values ...
+  // ... Type
+  if  %parms >= p_type;
+    CEETSTA(isPresent: p_type: *omit);
+  else;
+    isPresent = 0;
+  endif;
 
-// Process optional parameter values ...
-// ... Type
-if  %parms >= p_type;
-   CEETSTA(isPresent: p_type: *omit);
-else;
-   isPresent = 0;
-endif;
-
-if  isPresent = 1;
-   type = i_type;
-else;
-   select;
-   when (i_rcvm0200.msgType = '01');   // Completion
+  if  isPresent = 1;
+    type = i_type;
+  else;
+    select;
+    when (i_rcvm0200.msgType = '01');   // Completion
       type = cMsg_Comp;
-   when (i_rcvm0200.msgType = '02');   // Diagnostic
+    when (i_rcvm0200.msgType = '02');   // Diagnostic
       type = cMsg_Diag;
-   when (i_rcvm0200.msgType = '04');   // Informational
+    when (i_rcvm0200.msgType = '04');   // Informational
       type = cMsg_Info;
-   when (i_rcvm0200.msgType = '05');   // Inquery
+    when (i_rcvm0200.msgType = '05');   // Inquery
       type = cMsg_Inq;
-   when (i_rcvm0200.msgType = '06');   // Sender's copy
+    when (i_rcvm0200.msgType = '06');   // Sender's copy
       type = cMsg_Copy;
-   when (i_rcvm0200.msgType = '08');   // Request
+    when (i_rcvm0200.msgType = '08');   // Request
       type = cMsg_Rqs;
-   when (i_rcvm0200.msgType = '10');   // Request with prompting
+    when (i_rcvm0200.msgType = '10');   // Request with prompting
       type = cMsg_Rqs;
-   when (i_rcvm0200.msgType = '14');   // Notify
+    when (i_rcvm0200.msgType = '14');   // Notify
       type = cMsg_Notify;
-   when (i_rcvm0200.msgType = '15');   // Escape
+    when (i_rcvm0200.msgType = '15');   // Escape
       type = cMsg_Escape;
-   when (i_rcvm0200.msgType = '16');   // Notify, exception not handled when API is c
+    when (i_rcvm0200.msgType = '16');   // Notify, exception not handled when API is c
       type = cMsg_Notify;
-   when (i_rcvm0200.msgType = '17');   // Escape, exception not handled when API is c
+    when (i_rcvm0200.msgType = '17');   // Escape, exception not handled when API is c
       type = cMsg_Escape;
-   when (i_rcvm0200.msgType = '21');   // Reply, not validity checked
+    when (i_rcvm0200.msgType = '21');   // Reply, not validity checked
       type = cMsg_Rpy;
-   when (i_rcvm0200.msgType = '22');   // Reply, validity checked
+    when (i_rcvm0200.msgType = '22');   // Reply, validity checked
       type = cMsg_Rpy;
-   when (i_rcvm0200.msgType = '23');   // Reply, message default used
+    when (i_rcvm0200.msgType = '23');   // Reply, message default used
       type = cMsg_Rpy;
-   when (i_rcvm0200.msgType = '24');   // Reply, system default used
+    when (i_rcvm0200.msgType = '24');   // Reply, system default used
       type = cMsg_Rpy;
-   when (i_rcvm0200.msgType = '25');   // Reply, from system reply list
+    when (i_rcvm0200.msgType = '25');   // Reply, from system reply list
       type = cMsg_Rpy;
-   when (i_rcvm0200.msgType = '26');   // Reply, from exit program
+    when (i_rcvm0200.msgType = '26');   // Reply, from exit program
       type = cMsg_Rpy;
-   other;
+    other;
       type = cMsg_Info;
-   endsl;
-endif;
+    endsl;
+  endif;
 
-if i_rcvm0200.lnRplDtR = 0;
-   msgData = '';
-else;
-   msgData = %subst(i_rcvm0200.value: 1: i_rcvm0200.lnRplDtR);
-endif;
+  if i_rcvm0200.lnRplDtR = 0;
+    msgData = '';
+  else;
+    msgData = %subst(i_rcvm0200.value: 1: i_rcvm0200.lnRplDtR);
+  endif;
 
-if i_rcvm0200.msgID = '';
-   msgID = cMSG_ID_NULL;
-else;
-   msgID = i_rcvm0200.msgID;
-endif;
+  if i_rcvm0200.msgID = '';
+    msgID = cMSG_ID_NULL;
+  else;
+    msgID = i_rcvm0200.msgID;
+  endif;
 
-msg = f_newMsg(msgID: msgData: type
-               : i_rcvm0200.msgF: i_rcvm0200.msgLU);
+  msg = f_newMsg(msgID: msgData: type
+                 : i_rcvm0200.msgF: i_rcvm0200.msgLU);
 
-return   msg;
+  return   msg;
 
 
-end-proc f_cvtRcvMsgToMsg;
+end-proc;
 
 //=========================================================================
 //  Returns the sender information of a receives program message.
@@ -1715,273 +1678,260 @@ end-proc f_cvtRcvMsgToMsg;
 //   sndInf        - Sender information of the received message.
 //=========================================================================
 dcl-proc f_getSndInfOfRcvMsg export;
+  dcl-pi *n likeds(sndInf_t);
+    i_rcvm0200   likeds(rcvm0200_t) const;
+    o_longSndPgm char(256) options(*nopass: *omit);
+    o_longSndPrc char(256) options(*nopass: *omit);
+    o_msg        likeds(msg_t) options(*nopass: *omit);
+  end-pi;
 
-dcl-pi f_getSndInfOfRcvMsg
-       likeds(sndInf_t  );
-i_rcvm0200      const  likeds(rcvm0200_t);
-o_longSndPgm    char(256) options(*nopass: *omit);
-o_longSndPrc    char(256) options(*nopass: *omit);
-o_msg           likeds(msg_t    )
-     options(*nopass: *omit);
-end-pi;
+  //  Return value
+  dcl-ds sndInf likeds(sndInf_t) inz;
 
-//  Return value
-dcl-ds sndInf likeds(sndInf_t  ) inz;
+  //  Parameter positions
+  dcl-c p_longSndPgm 2;
+  dcl-c p_longSndPrc 3;
+  dcl-c p_msg 4;
 
-//  Parameter positions
-dcl-c p_longSndPgm const(2);
-dcl-c p_longSndPrc const(3);
-dcl-c p_msg const(4);
+  //  Optional parameter fields
+  dcl-s longSndPgm like(o_longSndPgm) inz;
+  dcl-s longSndPrc like(o_longSndPrc) inz;
+  dcl-ds msg likeds(o_msg) inz;
 
-//  Optional parameter fields
-dcl-s longSndPgm      like(o_longSndPgm) inz;
-dcl-s longSndPrc      like(o_longSndPrc) inz;
-dcl-ds msg likeds(o_msg     ) inz;
+  //  Helper fields
+  dcl-s memSize int(10) inz;
+  dcl-ds rcvm0300 likeds(rcvm0300_t) based(pRcvm0300);
+  dcl-ds tmpSndInf likeds(sndInf_t) based(pTmpSndInf);
+  dcl-s tmpLongSndPgm like(o_longSndPgm) based(pTmpLongSndPgm);
+  dcl-s tmpLongSndPrc like(o_longSndPrc) based(pTmpLongSndPrc);
+  dcl-ds errCode likeds(errCode_t) inz;
+  //-------------------------------------------------------------------*
 
-//  Helper fields
-dcl-s memSize         int(10) inz;
-dcl-ds rcvm0300 likeds(rcvm0300_t) based(pRcvm0300 );
-dcl-ds tmpSndInf likeds(sndInf_t  )
-based(pTmpSndInf);
-dcl-s tmpLongSndPgm   like(o_longSndPgm) based(pTmpLongSndPgm);
-dcl-s tmpLongSndPrc   like(o_longSndPrc) based(pTmpLongSndPrc);
-dcl-ds errCode likeds(errCode_t ) inz;
-//-------------------------------------------------------------------*
+  memSize   = %size(rcvm0300) + 1024;
+  pRcvm0300 = xalloc(memSize);
+  errCode   = f_newApiErrCode(cFalse);
 
-memSize   = %size(rcvm0300) + 1024;
-pRcvm0300 = xalloc(memSize);
-errCode   = f_newApiErrCode(cFalse);
-
-dou (rcvm0300.bytRet >= rcvm0300.bytAvl or f_isApiError(errCode));
-   QMHRCVPM(rcvm0300: memSize: 'RCVM0300': '*': 0:
-            cMsg_Any: i_rcvm0200.msgKey: 0: cMsg_Act_Same: errCode);
-   if (rcvm0300.bytRet < rcvm0300.bytAvl);
+  dou (rcvm0300.bytRet >= rcvm0300.bytAvl or f_isApiError(errCode));
+    QMHRCVPM(rcvm0300: memSize: 'RCVM0300': '*': 0:
+             cMsg_Any: i_rcvm0200.msgKey: 0: cMsg_Act_Same: errCode);
+    if (rcvm0300.bytRet < rcvm0300.bytAvl);
       memSize   = rcvm0300.bytAvl;
       pRcvm0300 = xrealloc(pRcvm0300: memSize);
-   endif;
-enddo;
+    endif;
+  enddo;
 
-// Check API error code
-if  f_isApiError(errCode);
-   msg = f_cvtApiErrCodeToMsg(errCode);
-   clear sndInf;
-   clear longSndPgm;
-   clear longSndPrc;
-else;
-   msg = f_newMsg(cMsg_ID_OK);
-   pTmpSndInf = %addr(rcvm0300) +
-                %size(rcvm0300) +
-                rcvm0300.lenRplDataR +
-                rcvm0300.lenMsgR +
-                rcvm0300.lenMsgHlpR;
-   pTmpLongSndPgm = pTmpSndInf + tmpSndInf.ofsSndPgmLName;
-   pTmpLongSndPrc = pTmpSndInf + tmpSndInf.ofsSndPrcLName;
-   sndInf     = tmpSndInf;
-   longSndPgm = %subst(tmpLongSndPgm: 1: tmpSndInf.lenSndPgmLName);
-   longSndPrc = %subst(tmpLongSndPrc: 1: tmpSndInf.lenSndPrcLName);
-endif;
+  // Check API error code
+  if  f_isApiError(errCode);
+    msg = f_cvtApiErrCodeToMsg(errCode);
+    clear sndInf;
+    clear longSndPgm;
+    clear longSndPrc;
+  else;
+    msg = f_newMsg(cMsg_ID_OK);
+    pTmpSndInf = %addr(rcvm0300) +
+                 %size(rcvm0300) +
+                 rcvm0300.lenRplDataR +
+                 rcvm0300.lenMsgR +
+                 rcvm0300.lenMsgHlpR;
+    pTmpLongSndPgm = pTmpSndInf + tmpSndInf.ofsSndPgmLName;
+    pTmpLongSndPrc = pTmpSndInf + tmpSndInf.ofsSndPrcLName;
+    sndInf     = tmpSndInf;
+    longSndPgm = %subst(tmpLongSndPgm: 1: tmpSndInf.lenSndPgmLName);
+    longSndPrc = %subst(tmpLongSndPrc: 1: tmpSndInf.lenSndPrcLName);
+  endif;
 
-xdealloc(pRcvm0300);
+  xdealloc(pRcvm0300);
 
-// Set optional output parameters
-if (%parms() >= p_longSndPgm and %addr(o_longSndPgm) <> *NULL);
-   o_longSndPgm = longSndPgm;
-endif;
+  // Set optional output parameters
+  if (%parms() >= p_longSndPgm and %addr(o_longSndPgm) <> *NULL);
+    o_longSndPgm = longSndPgm;
+  endif;
 
-if (%parms() >= p_longSndPrc and %addr(o_longSndPrc) <> *NULL);
-   o_longSndPrc = longSndPrc;
-endif;
+  if (%parms() >= p_longSndPrc and %addr(o_longSndPrc) <> *NULL);
+    o_longSndPrc = longSndPrc;
+  endif;
 
-// Process optional/omissible message parameter
-if (%parms() >= p_msg);
-   if (%addr(o_msg) <> *NULL);
+  // Process optional/omissible message parameter
+  if (%parms() >= p_msg);
+    if (%addr(o_msg) <> *NULL);
       o_msg = msg;
-   endif;
-else;
-   if (msg.ID <> cMSG_ID_OK);
+    endif;
+  else;
+    if (msg.ID <> cMSG_ID_OK);
       f_sndPgmMsg(msg: cMsg_Prv);
-   endif;
-endif;
+    endif;
+  endif;
 
-return sndInf;
+  return sndInf;
 
 
-end-proc f_getSndInfOfRcvMsg;
+end-proc;
 
 //=========================================================================
 //  *** Private ***
 //  Get application message file name
 //=========================================================================
 dcl-proc lf_getAppMsgFileName;
+  dcl-pi *n char(10);
+  end-pi;
 
-dcl-pi lf_getAppMsgFileName
-       char(10);
-end-pi;
-
-//  Return value
-dcl-s appMsgFileName  char(10) inz;
-//-------------------------------------------------------------------*
+  //  Return value
+  dcl-s appMsgFileName char(10) inz;
+  //-------------------------------------------------------------------*
 
 
-if  g_qAppMsgFile.name = '';
-   appMsgFileName = 'QCPFMSG';
-else;
-   appMsgFileName = g_qAppMsgFile.name;
-endif;
+  if  g_qAppMsgFile.name = '';
+    appMsgFileName = 'QCPFMSG';
+  else;
+    appMsgFileName = g_qAppMsgFile.name;
+  endif;
 
-return   appMsgFileName;
+  return   appMsgFileName;
 
 
-end-proc lf_getAppMsgFileName;
+end-proc;
 
 //=========================================================================
 //  *** Private ***
 //  Get application message file library name
 //=========================================================================
 dcl-proc lf_getAppMsgFileLibrary;
+  dcl-pi *n char(10);
+  end-pi;
 
-dcl-pi lf_getAppMsgFileLibrary
-       char(10);
-end-pi;
-
-//  Return value
-dcl-s appMsgFileLib   char(10) inz;
-//-------------------------------------------------------------------*
+  //  Return value
+  dcl-s appMsgFileLib char(10) inz;
+  //-------------------------------------------------------------------*
 
 
-if  g_qAppMsgFile.name = '';
-   appMsgFileLib = '*LIBL';
-else;
-   appMsgFileLib = g_qAppMsgFile.lib;
-endif;
+  if  g_qAppMsgFile.name = '';
+    appMsgFileLib = '*LIBL';
+  else;
+    appMsgFileLib = g_qAppMsgFile.lib;
+  endif;
 
-return   appMsgFileLib;
+  return   appMsgFileLib;
 
 
-end-proc lf_getAppMsgFileLibrary;
+end-proc;
 
 //=========================================================================
 //  *** Private ***
 //  Set application message file name
 //=========================================================================
 dcl-proc lp_setAppMsgFileName;
-
-dcl-pi lp_setAppMsgFileName;
-  i_file          char(10) const;
-end-pi;
-//-------------------------------------------------------------------*
-
-
-g_qAppMsgFile.name = i_file;
-
-return;
+  dcl-pi *n;
+    i_file char(10) const;
+  end-pi;
+  //-------------------------------------------------------------------*
 
 
-end-proc lp_setAppMsgFileName;
+  g_qAppMsgFile.name = i_file;
+
+  return;
+
+
+end-proc;
 
 //=========================================================================
 //  *** Private ***
 //  Set application message file library name
 //=========================================================================
 dcl-proc lp_setAppMsgFileLibrary;
-
-dcl-pi lp_setAppMsgFileLibrary;
-  i_lib           char(10) const;
-end-pi;
-//-------------------------------------------------------------------*
-
-
-g_qAppMsgFile.lib = i_lib;
-
-return;
+  dcl-pi *n;
+    i_lib char(10) const;
+  end-pi;
+  //-------------------------------------------------------------------*
 
 
-end-proc lp_setAppMsgFileLibrary;
+  g_qAppMsgFile.lib = i_lib;
+
+  return;
+
+
+end-proc;
 
 //=========================================================================
 //  *** Private ***
 //  Retrieve message description
 //=========================================================================
 dcl-proc lf_rtvMsgD;
+  dcl-pi *n pointer;
+    i_format     char(8) const;
+    i_msgID      char(7) const;
+    i_rplData    varchar(4096) const;
+    i_qMsgF      likeds(qObj_t) const;
+    o_msg        likeds(msg_t);
+    i_rplVars    char(10) options(*nopass) const;
+    i_rtnCtrlChr char(10) options(*nopass) const;
+  end-pi;
 
-dcl-pi lf_rtvMsgD
-       pointer;
-  i_format        char(8) const;
-  i_msgID         char(7) const;
-  i_rplData       varchar(4096) const;
-  i_qMsgF         const  likeds(qObj_t    );
-o_msg           likeds(msg_t     );
-i_rplVars       char(10) const  options(*nopass);
-i_rtnCtrlChr    char(10) const  options(*nopass);
-end-pi;
+  //  Return value
+  dcl-s pMsgInf pointer inz;
 
-//  Return value
-dcl-s pMsgInf         pointer inz;
+  //  Parameter positions
+  dcl-c p_rplVars 6;
+  dcl-c p_rtnCtrlChr 7;
 
-//  Parameter positions
-dcl-c p_rplVars const(6);
-dcl-c p_rtnCtrlChr const(7);
+  //  Optional parameter fields
+  dcl-s rplVars like(i_rplVars) inz;
+  dcl-s rtnCtrlChr like(i_rtnCtrlChr) inz;
 
-//  Optional parameter fields
-dcl-s rplVars         like(i_rplVars   ) inz;
-dcl-s rtnCtrlChr      like(i_rtnCtrlChr) inz;
+  //  Local fields
+  dcl-ds msgInf based(pMsgInf) qualified;
+    bytRet int(10);
+    bytAvl int(10);
+  end-ds;
+  dcl-ds errCode likeds(errCode_t) inz;
 
-//  Local fields
-dcl-ds msgInf based(pMsgInf) qualified;
-  bytRet          int(10);
-  bytAvl          int(10);
-end-ds;
-dcl-ds errCode likeds(errCode_t ) inz;
-
-dcl-s memSize         int(10) inz;
-//-------------------------------------------------------------------*
+  dcl-s memSize int(10) inz;
+  //-------------------------------------------------------------------*
 
 
-// Process optional parameter values ...
-// ... rplvars
-if   %parms >= p_rplvars;
-   rplvars = i_rplvars;
-else;
-   rplvars = '*YES';
-endif;
+  // Process optional parameter values ...
+  // ... rplvars
+  if   %parms >= p_rplvars;
+    rplvars = i_rplvars;
+  else;
+    rplvars = '*YES';
+  endif;
 
-// ... rtnCtrlChr
-if   %parms >= p_rtnCtrlChr;
-   rtnCtrlChr = i_rtnCtrlChr;
-else;
-   rtnCtrlChr = '*NO';
-endif;
+  // ... rtnCtrlChr
+  if   %parms >= p_rtnCtrlChr;
+    rtnCtrlChr = i_rtnCtrlChr;
+  else;
+    rtnCtrlChr = '*NO';
+  endif;
 
-// Allocate memory and set initial parameter values
-memSize = 8;
-pMsgInf = xalloc(memSize);
-errCode = f_newApiErrCode(cTrue);
+  // Allocate memory and set initial parameter values
+  memSize = 8;
+  pMsgInf = xalloc(memSize);
+  errCode = f_newApiErrCode(cTrue);
 
-// Loop until complete message information is received ...
-dou   msgInf.bytRet >= msgInf.bytAvl;
-   // ... call the API
-   QMHRTVM(msgInf: memSize: i_format: i_msgID: i_qMsgF:
-           i_rplData: %len(i_rplData): rplVars: rtnCtrlChr: errCode);
+  // Loop until complete message information is received ...
+  dou   msgInf.bytRet >= msgInf.bytAvl;
+    // ... call the API
+    QMHRTVM(msgInf: memSize: i_format: i_msgID: i_qMsgF:
+            i_rplData: %len(i_rplData): rplVars: rtnCtrlChr: errCode);
 
-   // ... check for errors
-   if  f_isApiError(errCode);
+    // ... check for errors
+    if  f_isApiError(errCode);
       xdealloc(pMsgInf);
       o_msg = f_cvtApiErrCodeToMsg(errCode);
       leave;
-   else;
+    else;
       // ... get more memory
       if   memSize < msgInf.bytAvl;
-         memSize = msgInf.bytAvl;
-         pMsgInf = xrealloc(pMsgInf: memSize);
+        memSize = msgInf.bytAvl;
+        pMsgInf = xrealloc(pMsgInf: memSize);
       else;
-         o_msg = f_newMsg(cMsg_ID_OK);
+        o_msg = f_newMsg(cMsg_ID_OK);
       endif;
-   endif;
+    endif;
 
-enddo;
+  enddo;
 
-return   pMsgInf;
+  return   pMsgInf;
 
 
-end-proc lf_rtvMsgD;
-
+end-proc;
