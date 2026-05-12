@@ -14,7 +14,7 @@ dcl-pr MemoryWriter_new like(memWtr_handle_t) extproc('BASICS1RH_MemoryWriter_ne
 end-pr;
 
 //  Write to a given memory buffer descriptor.
-dcl-pr MemoryWriter_write like(ssize_t);
+dcl-pr MemoryWriter_write like(ssize_t) extproc('BASICS1RH_MemoryWriter_write');
   i_fd      like(memWtr_handle_t) value; // = int
   i_pBuffer pointer value; // = *buf
   i_buflen  like(size_t) value; // = size_t
@@ -36,7 +36,7 @@ dcl-pr MemoryReader_new like(memRdr_handle_t) extproc('BASICS1RH_MemoryReader_ne
 end-pr;
 
 //  Reads from a given memory buffer descriptor.
-dcl-pr MemoryReader_read like(ssize_t);
+dcl-pr MemoryReader_read like(ssize_t) extproc('BASICS1RH_MemoryReader_read');
   i_fd      like(memRdr_handle_t) value; // = int
   i_pBuffer pointer value; // = *buf
   i_nByte   like(size_t) value; // = size_t
