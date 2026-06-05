@@ -120,7 +120,7 @@ dcl-proc main;
   anArray( 5).data = 'Track';
   anArray( 6).data = 'Daisy';
   anArray( 7).data = 'Klaas Klever';
-  anArray( 8).data = 'Daniel Dsentrieb';
+  anArray( 8).data = 'Daniel Düsentrieb';
   anArray( 9).data = 'Micky Maus';
   anArray(10).data = 'Goofy';
 

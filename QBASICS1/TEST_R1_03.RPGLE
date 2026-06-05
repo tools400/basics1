@@ -95,18 +95,18 @@ dcl-proc main;
   msgRcv = f_rcvPgmMsgObj(cMsg_Last: *omit: cMsg_Act_Same: 0
                           : cMsg_Same: cMsg_ToMyself);
   p_assert(msg.ID = msgRcv.ID
-           : 'msgRcv.ID und msg.ID drfen nicht voneinander abweichen');
+           : 'msgRcv.ID und msg.ID dürfen nicht voneinander abweichen');
   p_assert(msg.data = msgRcv.data
-           : 'msgRcv.data und msg.data drfen +
+           : 'msgRcv.data und msg.data dürfen +
               nicht voneinander abweichen');
   p_assert(msg.type = msgRcv.type
-           : 'msgRcv.type und msg.type drfen +
+           : 'msgRcv.type und msg.type dürfen +
               nicht voneinander abweichen');
   p_assert(msg.file = msgRcv.file
-           : 'msgRcv.file und msg.file drfen +
+           : 'msgRcv.file und msg.file dürfen +
               nicht voneinander abweichen');
   p_assert(msg.lib = msgRcv.lib
-           : 'msgRcv.lib und msg.lib drfen +
+           : 'msgRcv.lib und msg.lib dürfen +
               nicht voneinander abweichen');
 
   // Create a message, send it to 'previous' and then receive it
@@ -116,18 +116,18 @@ dcl-proc main;
   msgRcv = f_rcvPgmMsgObj(cMsg_Last: *omit: cMsg_Act_Same: 0
                           : cMsg_Prv: cMsg_ToMyself);
   p_assert(msg.ID = msgRcv.ID
-           : 'msgRcv.ID und msg.ID drfen nicht voneinander abweichen');
+           : 'msgRcv.ID und msg.ID dürfen nicht voneinander abweichen');
   p_assert(msg.data = msgRcv.data
-           : 'msgRcv.data und msg.data drfen +
+           : 'msgRcv.data und msg.data dürfen +
               nicht voneinander abweichen');
   p_assert(msg.type = msgRcv.type
-           : 'msgRcv.type und msg.type drfen +
+           : 'msgRcv.type und msg.type dürfen +
               nicht voneinander abweichen');
   p_assert(msg.file = msgRcv.file
-           : 'msgRcv.file und msg.file drfen +
+           : 'msgRcv.file und msg.file dürfen +
               nicht voneinander abweichen');
   p_assert(msg.lib = msgRcv.lib
-           : 'msgRcv.lib und msg.lib drfen +
+           : 'msgRcv.lib und msg.lib dürfen +
               nicht voneinander abweichen');
 
   // Create a message, send it to 'extern' and then receive it
@@ -137,18 +137,18 @@ dcl-proc main;
   msgRcv = f_rcvPgmMsgObj(cMsg_Last: *omit: cMsg_Act_Same: 0
                           : cMsg_Ext);
   p_assert(msg.ID = msgRcv.ID
-           : 'msgRcv.ID und msg.ID drfen nicht voneinander abweichen');
+           : 'msgRcv.ID und msg.ID dürfen nicht voneinander abweichen');
   p_assert(msg.data = msgRcv.data
-           : 'msgRcv.data und msg.data drfen +
+           : 'msgRcv.data und msg.data dürfen +
               nicht voneinander abweichen');
   p_assert(msg.type = msgRcv.type
-           : 'msgRcv.type und msg.type drfen +
+           : 'msgRcv.type und msg.type dürfen +
               nicht voneinander abweichen');
   p_assert(msg.file = msgRcv.file
-           : 'msgRcv.file und msg.file drfen +
+           : 'msgRcv.file und msg.file dürfen +
               nicht voneinander abweichen');
   p_assert(msg.lib = msgRcv.lib
-           : 'msgRcv.lib und msg.lib drfen +
+           : 'msgRcv.lib und msg.lib dürfen +
               nicht voneinander abweichen');
 
   return;

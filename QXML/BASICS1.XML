@@ -51,7 +51,7 @@
       appblddate CDATA #REQUIRED
      >
      ]>
-<upload  appname="BASICS1"  appauthor="Thomas Raddatz"  appblddate=" 5/20/2026">
+<upload  appname="BASICS1"  appauthor="Thomas Raddatz"  appblddate=" 6/05/2026">
 <install_instructions><![CDATA[
      *----------------------------------------------------------------      ------
      *  1. Upload entire XML to your AS/400 to a source file 112 long, into any mbr
@@ -13603,7 +13603,7 @@ dcl-proc Url_getMbr export;
   dcl-c p_mbr 4;
   dcl-c p_rc 5;
 
-  //  Felder f r optionale Parameter
+  //  Felder für optionale Parameter
   dcl-s file like(o_file) inz;
   dcl-s lib like(o_lib) inz;
   dcl-s mbr like(o_mbr) inz;
@@ -19895,7 +19895,7 @@ dcl-proc f_replace export;
   //  Parameter positions
   dcl-c p_startPos 4;
 
-  //  Standardwerte f r nicht  bergebene Parameter
+  //  Standardwerte für nicht übergebene Parameter
   dcl-s startPos like(i_startPos) inz;
 
   //  Local fields
@@ -32843,7 +32843,7 @@ dcl-proc main;
   anArray( 5).data = 'Track';
   anArray( 6).data = 'Daisy';
   anArray( 7).data = 'Klaas Klever';
-  anArray( 8).data = 'Daniel D sentrieb';
+  anArray( 8).data = 'Daniel Düsentrieb';
   anArray( 9).data = 'Micky Maus';
   anArray(10).data = 'Goofy';
 
@@ -33202,7 +33202,7 @@ dcl-proc main;
   anArray( 5).data = 'Track';
   anArray( 6).data = 'Daisy';
   anArray( 7).data = 'Klaas Klever';
-  anArray( 8).data = 'Daniel D sentrieb';
+  anArray( 8).data = 'Daniel Düsentrieb';
   anArray( 9).data = 'Micky Maus';
   anArray(10).data = 'Goofy';
 
@@ -33422,7 +33422,7 @@ dcl-proc main;
   anArray( 5).data = 'Track';
   anArray( 6).data = 'Daisy';
   anArray( 7).data = 'Klaas Klever';
-  anArray( 8).data = 'Daniel D sentrieb';
+  anArray( 8).data = 'Daniel Düsentrieb';
   anArray( 9).data = 'Micky Maus';
   anArray(10).data = 'Goofy';
 
@@ -33622,7 +33622,7 @@ dcl-proc main;
   anArray( 5).data = 'Track';
   anArray( 6).data = 'Daisy';
   anArray( 7).data = 'Klaas Klever';
-  anArray( 8).data = 'Daniel D sentrieb';
+  anArray( 8).data = 'Daniel Düsentrieb';
   anArray( 9).data = 'Micky Maus';
   anArray(10).data = 'Goofy';
 
@@ -33842,7 +33842,7 @@ dcl-proc main;
   anArray( 5).data = 'Track';
   anArray( 6).data = 'Daisy';
   anArray( 7).data = 'Klaas Klever';
-  anArray( 8).data = 'Daniel D sentrieb';
+  anArray( 8).data = 'Daniel Düsentrieb';
   anArray( 9).data = 'Micky Maus';
   anArray(10).data = 'Goofy';
 
@@ -33850,7 +33850,7 @@ dcl-proc main;
   for x = 1 to %elem(anArray);
     anArray(x).size     = %len(anArray(x).data);
     anArray(x).trimSize = %len(%trimR(anArray(x).data));
-    p_assert(anArray(x).size <> anArray(x).trimSize                                   //RADDAT
+    p_assert(anArray(x).size <> anArray(x).trimSize
              : 'Size and trimmed size must be different');
   endfor;
 
@@ -36460,18 +36460,18 @@ dcl-proc main;
   msgRcv = f_rcvPgmMsgObj(cMsg_Last: *omit: cMsg_Act_Same: 0
                           : cMsg_Same: cMsg_ToMyself);
   p_assert(msg.ID = msgRcv.ID
-           : 'msgRcv.ID und msg.ID d rfen nicht voneinander abweichen');
+           : 'msgRcv.ID und msg.ID dürfen nicht voneinander abweichen');
   p_assert(msg.data = msgRcv.data
-           : 'msgRcv.data und msg.data d rfen +
+           : 'msgRcv.data und msg.data dürfen +
               nicht voneinander abweichen');
   p_assert(msg.type = msgRcv.type
-           : 'msgRcv.type und msg.type d rfen +
+           : 'msgRcv.type und msg.type dürfen +
               nicht voneinander abweichen');
   p_assert(msg.file = msgRcv.file
-           : 'msgRcv.file und msg.file d rfen +
+           : 'msgRcv.file und msg.file dürfen +
               nicht voneinander abweichen');
   p_assert(msg.lib = msgRcv.lib
-           : 'msgRcv.lib und msg.lib d rfen +
+           : 'msgRcv.lib und msg.lib dürfen +
               nicht voneinander abweichen');
 
   // Create a message, send it to 'previous' and then receive it
@@ -36481,18 +36481,18 @@ dcl-proc main;
   msgRcv = f_rcvPgmMsgObj(cMsg_Last: *omit: cMsg_Act_Same: 0
                           : cMsg_Prv: cMsg_ToMyself);
   p_assert(msg.ID = msgRcv.ID
-           : 'msgRcv.ID und msg.ID d rfen nicht voneinander abweichen');
+           : 'msgRcv.ID und msg.ID dürfen nicht voneinander abweichen');
   p_assert(msg.data = msgRcv.data
-           : 'msgRcv.data und msg.data d rfen +
+           : 'msgRcv.data und msg.data dürfen +
               nicht voneinander abweichen');
   p_assert(msg.type = msgRcv.type
-           : 'msgRcv.type und msg.type d rfen +
+           : 'msgRcv.type und msg.type dürfen +
               nicht voneinander abweichen');
   p_assert(msg.file = msgRcv.file
-           : 'msgRcv.file und msg.file d rfen +
+           : 'msgRcv.file und msg.file dürfen +
               nicht voneinander abweichen');
   p_assert(msg.lib = msgRcv.lib
-           : 'msgRcv.lib und msg.lib d rfen +
+           : 'msgRcv.lib und msg.lib dürfen +
               nicht voneinander abweichen');
 
   // Create a message, send it to 'extern' and then receive it
@@ -36502,18 +36502,18 @@ dcl-proc main;
   msgRcv = f_rcvPgmMsgObj(cMsg_Last: *omit: cMsg_Act_Same: 0
                           : cMsg_Ext);
   p_assert(msg.ID = msgRcv.ID
-           : 'msgRcv.ID und msg.ID d rfen nicht voneinander abweichen');
+           : 'msgRcv.ID und msg.ID dürfen nicht voneinander abweichen');
   p_assert(msg.data = msgRcv.data
-           : 'msgRcv.data und msg.data d rfen +
+           : 'msgRcv.data und msg.data dürfen +
               nicht voneinander abweichen');
   p_assert(msg.type = msgRcv.type
-           : 'msgRcv.type und msg.type d rfen +
+           : 'msgRcv.type und msg.type dürfen +
               nicht voneinander abweichen');
   p_assert(msg.file = msgRcv.file
-           : 'msgRcv.file und msg.file d rfen +
+           : 'msgRcv.file und msg.file dürfen +
               nicht voneinander abweichen');
   p_assert(msg.lib = msgRcv.lib
-           : 'msgRcv.lib und msg.lib d rfen +
+           : 'msgRcv.lib und msg.lib dürfen +
               nicht voneinander abweichen');
 
   return;
@@ -37223,7 +37223,7 @@ srccssid=  "01141">
 <copysrc><![CDATA[
 **free
 //===============================================================*
-//    CALL PGM(TEST_R3_05) PARM('Hello World!       ')           *
+//    CALL PGM(TEST_R3_05) PARM('Hello World!')                  *
 //===============================================================*
 //   >>PRE-COMPILER<<                                            *
 //                                                               *

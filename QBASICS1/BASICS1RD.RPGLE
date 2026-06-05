@@ -1068,7 +1068,7 @@ dcl-proc Url_getMbr export;
   dcl-c p_mbr 4;
   dcl-c p_rc 5;
 
-  //  Felder fr optionale Parameter
+  //  Felder für optionale Parameter
   dcl-s file like(o_file) inz;
   dcl-s lib like(o_lib) inz;
   dcl-s mbr like(o_mbr) inz;

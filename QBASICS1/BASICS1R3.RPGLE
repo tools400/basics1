@@ -614,7 +614,7 @@ dcl-proc f_replace export;
   //  Parameter positions
   dcl-c p_startPos 4;
 
-  //  Standardwerte fr nicht bergebene Parameter
+  //  Standardwerte für nicht übergebene Parameter
   dcl-s startPos like(i_startPos) inz;
 
   //  Local fields
