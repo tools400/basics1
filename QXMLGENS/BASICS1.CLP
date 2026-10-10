@@ -242,11 +242,6 @@
                           XTOSRCF(QBASICS1  ) XOBJTYPE(*FILE  ) +
                           XGENCRT(*NO ) XPARAM(*BLANK)
 
-             XMLGENMBR  XMBR(HEAPAPI   ) XMBRATR(RPGLE) +
-                          XFROMSRCF(QBASICS1  ) XFROMSRCL(BASICS1DVP) +
-                          XTOSRCF(QBASICS1  ) XOBJTYPE(*FILE  ) +
-                          XGENCRT(*NO ) XPARAM(*BLANK)
-
              XMLGENMBR  XMBR(MEMMGR    ) XMBRATR(RPGLE) +
                           XFROMSRCF(QBASICS1  ) XFROMSRCL(BASICS1DVP) +
                           XTOSRCF(QBASICS1  ) XOBJTYPE(*FILE  ) +

@@ -96,7 +96,7 @@ end-ds;
 // -----------------------------------------
 //  Imported Prototypes
 // -----------------------------------------
-/copy QBASICS1,HEAPAPI
+/copy QBASICS1,CEELIB
 
 // -----------------------------------------
 //  Private prototypes
